@@ -6,6 +6,6 @@ import org.apache.pdfbox.pdmodel.PDPageContentStream;
 
 public interface DrawableText extends Area {
 
-	Coords drawText(PDPageContentStream contentStream, Coords beginOfText,
+	void drawText(PDPageContentStream contentStream, Coords beginOfText,
 			Alignment alignment) throws IOException;
 }

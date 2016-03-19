@@ -10,7 +10,7 @@ import org.apache.pdfbox.pdmodel.PDPageContentStream;
 public class TextFlow implements TextSequence {
 
 	public static final float DEFAULT_LINE_SPACING = 1.3f;
-	
+
 	private final List<TextFragment> text = new ArrayList<TextFragment>();
 	private float lineSpacing = DEFAULT_LINE_SPACING;
 	private float preferredMaxWidth = -1;
@@ -41,7 +41,7 @@ public class TextFlow implements TextSequence {
 	public void setPreferredMaxWidth(float maxWidth) {
 		this.preferredMaxWidth = maxWidth;
 	}
-	
+
 	public float getLineSpacing() {
 		return lineSpacing;
 	}
@@ -52,40 +52,26 @@ public class TextFlow implements TextSequence {
 
 	@Override
 	public float getWidth() throws IOException {
-		List<? extends TextSequence> lines = PdfUtil.wordWrapToLines(this, getPreferredMaxWidth());
-		float max = 0;
-		for (TextSequence line : lines) {
-			max = Math.max(max, line.getWidth());
-		}
-		return max;
+		return PdfUtil.getWidth(this, getPreferredMaxWidth());
 	}
 
 	@Override
 	public float getHeight() throws IOException {
-		List<? extends TextSequence> lines = PdfUtil.wordWrapToLines(this, preferredMaxWidth);
-		float sum = 0;
-		for (int i = 0; i < lines.size(); i++) {
-			TextSequence line = lines.get(i);
-			float lineHeight = line.getHeight();
-			if (i < lines.size() - 1) {
-				lineHeight *= getLineSpacing();
-			}
-			sum += lineHeight;
-		}
-		return sum;
+		return PdfUtil
+				.getHeight(this, getPreferredMaxWidth(), getLineSpacing());
 	}
 
 	@Override
-	public Coords drawText(PDPageContentStream contentStream,
+	public void drawText(PDPageContentStream contentStream,
 			Coords beginOfFirstLine, Alignment alignment) throws IOException {
-		return PdfUtil.drawText(this, contentStream, beginOfFirstLine, alignment,
-				preferredMaxWidth);
+		PdfUtil.drawText(this, contentStream, beginOfFirstLine, alignment,
+				getPreferredMaxWidth(), getLineSpacing());
 	}
 
-	public Coords drawTextRightAligned(PDPageContentStream contentStream,
+	public void drawTextRightAligned(PDPageContentStream contentStream,
 			Coords endOfFirstLine) throws IOException {
-		return PdfUtil.drawTextRightAligned(this, contentStream,
-				endOfFirstLine, preferredMaxWidth);
+		drawText(contentStream, endOfFirstLine.add(-getWidth(), 0),
+				Alignment.Right);
 	}
 
 	@Override

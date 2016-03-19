@@ -178,34 +178,25 @@ public class PdfUtil {
 		return result;
 	}
 
-	public static Coords drawTextRightAligned(TextSequence text,
-			PDPageContentStream contentStream, Coords endOfFirstLine,
-			float maxWidth) throws IOException {
-		List<TextLine> lines = wordWrapToLines(text, maxWidth);
-		Coords current = endOfFirstLine;
-		for (TextLine textLine : lines) {
-			current = new Coords(endOfFirstLine.getX() - textLine.getWidth(),
-					current.getY());
-			textLine.drawText(contentStream, current, Alignment.Right);
-			current = current.add(0, textLine.getHeight());
-		}
-		return current;
-	}
-
-	public static Coords drawText(TextSequence text,
+	public static void drawText(TextSequence text,
 			PDPageContentStream contentStream, Coords beginOfFirstLine,
-			Alignment alignment, float maxWidth) throws IOException {
+			Alignment alignment, float maxWidth, final float lineSpacing) throws IOException {
 		List<TextLine> lines = wordWrapToLines(text, maxWidth);
 		float targetWidth = getMaxWidth(lines);
-		Coords current = beginOfFirstLine;
-		for (TextLine textLine : lines) {
+		Coords coords = beginOfFirstLine;
+		for (int i = 0; i < lines.size(); i++) {
+			TextLine textLine = lines.get(i);
 			float offset = getOffset(textLine, targetWidth, alignment);
-			current = new Coords(beginOfFirstLine.getX() + offset,
-					current.getY());
-			textLine.drawText(contentStream, current, alignment);
-			current = current.add(0, -textLine.getHeight());
+			coords = new Coords(beginOfFirstLine.getX() + offset,
+					coords.getY());
+			textLine.drawText(contentStream, coords, alignment);
+			
+			if (i < lines.size() - 1) {
+				float nextLineHeight = lines.get(i+1).getHeight();
+				nextLineHeight *= lineSpacing;
+				coords = coords.add(0, -nextLineHeight);
+			}
 		}
-		return current;
 	}
 
 	public static float getOffset(final TextLine textLine,
@@ -277,6 +268,31 @@ public class PdfUtil {
 		}
 		return result;
 	}
+	
+	
+	public static float getWidth(final TextSequence textSequence, final float preferredMaxWidth) throws IOException {
+		List<TextLine> lines = PdfUtil.wordWrapToLines(textSequence, preferredMaxWidth);
+		float max = 0;
+		for (TextLine line : lines) {
+			max = Math.max(max, line.getWidth());
+		}
+		return max;
+	}
+
+	public static float getHeight(final TextSequence textSequence, final float preferredMaxWidth, final float lineSpacing) throws IOException {
+		List<TextLine> lines = PdfUtil.wordWrapToLines(textSequence, preferredMaxWidth);
+		float sum = 0;
+		for (int i = 0; i < lines.size(); i++) {
+			TextLine line = lines.get(i);
+			float lineHeight = line.getHeight();
+			if (i < lines.size() - 1) {
+				lineHeight *= lineSpacing;
+			}
+			sum += lineHeight;
+		}
+		return sum;
+	}
+
 
 	public static void main(final String[] args) throws Exception {
 		String text = "The MIT License (MIT)\n\nCopyright (c) 2016 Ralf Stuckert\n\n"

@@ -67,7 +67,7 @@ public class TextLine implements TextSequence {
 	}
 
 	@Override
-	public Coords drawText(PDPageContentStream contentStream, Coords beginOfText,
+	public void drawText(PDPageContentStream contentStream, Coords beginOfText,
 			Alignment alignment) throws IOException {
 		contentStream.saveGraphicsState();
 		contentStream.beginText();
@@ -87,7 +87,6 @@ public class TextLine implements TextSequence {
 		}
 		contentStream.endText();
 		contentStream.restoreGraphicsState();
-		return beginOfText.add(getWidth(), 0);
 	}
 
 
