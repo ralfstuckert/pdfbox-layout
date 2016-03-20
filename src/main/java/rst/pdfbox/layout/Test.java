@@ -29,12 +29,13 @@ public class Test {
 		line.add(new StyledText(" ist ", PDType1Font.HELVETICA_BOLD_OBLIQUE, 20));
 		line.add(new StyledText("too", PDType1Font.HELVETICA, 7));
 		text.add(line);
-		System.out.println(line.getHeight());
-		
+
 		paragraph.add(text);
 		paragraph.setPreferredMaxWidth(100);
 		float x = 400 - paragraph.getWidth();
 		paragraph.drawText(contentStream, new Coords(x, 600), Alignment.Right);
+		paragraph.drawText(contentStream,
+				new Coords(x, 600 - paragraph.getHeight()), Alignment.Right);
 		contentStream.close();
 		test.save(outputStream);
 		test.close();

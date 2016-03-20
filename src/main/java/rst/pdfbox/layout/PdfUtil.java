@@ -192,8 +192,7 @@ public class PdfUtil {
 			textLine.drawText(contentStream, coords, alignment);
 			
 			if (i < lines.size() - 1) {
-				float nextLineHeight = lines.get(i+1).getHeight();
-				nextLineHeight *= lineSpacing;
+				float nextLineHeight = lines.get(i+1).getLineHeight(lineSpacing);
 				coords = coords.add(0, -nextLineHeight);
 			}
 		}

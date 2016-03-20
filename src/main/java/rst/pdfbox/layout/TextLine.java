@@ -66,6 +66,17 @@ public class TextLine implements TextSequence {
 		return max;
 	}
 
+	public float getLineHeight(float lineSpacing) throws IOException {
+		float width = getWidth();
+		float max = 0;
+		float weightedHeight = 0;
+		for (TextFragment fragment : fragments) {
+			max = Math.max(max, fragment.getHeight());
+			weightedHeight += (fragment.getWidth()/width) * fragment.getHeight();
+		}
+		return Math.max(max, weightedHeight*lineSpacing);
+	}
+	
 	@Override
 	public void drawText(PDPageContentStream contentStream, Coords beginOfText,
 			Alignment alignment) throws IOException {
