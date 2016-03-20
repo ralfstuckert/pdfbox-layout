@@ -41,9 +41,9 @@ public class TextLine implements TextSequence {
 	@Override
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public Iterator<TextFragment> iterator() {
-		return (Iterator)getStyledTexts().iterator();
+		return (Iterator) getStyledTexts().iterator();
 	}
-	
+
 	public boolean isEmpty() {
 		return fragments.isEmpty();
 	}
@@ -66,29 +66,37 @@ public class TextLine implements TextSequence {
 		return max;
 	}
 
-	public float getLineHeight(float lineSpacing) throws IOException {
+	public float getLineHeightWithSpacing(float lineSpacing) throws IOException {
 		float width = getWidth();
 		float max = 0;
 		float weightedHeight = 0;
 		for (TextFragment fragment : fragments) {
 			max = Math.max(max, fragment.getHeight());
-			weightedHeight += (fragment.getWidth()/width) * fragment.getHeight();
+			if (width > 0) {
+				weightedHeight += (fragment.getWidth() / width)
+						* fragment.getHeight();
+			}
 		}
-		return Math.max(max, weightedHeight*lineSpacing);
+		if (weightedHeight > 0) {
+			return Math.max(max, weightedHeight * lineSpacing);
+		}
+		return max * lineSpacing;
 	}
-	
+
 	@Override
 	public void drawText(PDPageContentStream contentStream, Coords beginOfText,
 			Alignment alignment) throws IOException {
 		contentStream.saveGraphicsState();
 		contentStream.beginText();
-		contentStream.setTextMatrix(new Matrix(1, 0, 0, 1, beginOfText.getX(), beginOfText.getY()));
+		contentStream.setTextMatrix(new Matrix(1, 0, 0, 1, beginOfText.getX(),
+				beginOfText.getY()));
 		FontDescriptor lastFontDesc = null;
 		Color lastColor = null;
 		for (StyledText styledText : fragments) {
 			if (!styledText.getFontDescriptor().equals(lastFontDesc)) {
 				lastFontDesc = styledText.getFontDescriptor();
-				contentStream.setFont(lastFontDesc.getFont(), lastFontDesc.getSize());
+				contentStream.setFont(lastFontDesc.getFont(),
+						lastFontDesc.getSize());
 			}
 			if (!styledText.getColor().equals(lastColor)) {
 				lastColor = styledText.getColor();
@@ -100,12 +108,9 @@ public class TextLine implements TextSequence {
 		contentStream.restoreGraphicsState();
 	}
 
-
-	
 	@Override
 	public String toString() {
 		return "TextLine [line=" + fragments + "]";
 	}
 
-	
 }

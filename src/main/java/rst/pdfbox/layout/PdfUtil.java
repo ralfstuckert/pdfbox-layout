@@ -6,13 +6,19 @@
 
 package rst.pdfbox.layout;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.font.PDFont;
+import org.apache.pdfbox.pdmodel.font.PDType1Font;
 
 /**
  * 
@@ -180,19 +186,20 @@ public class PdfUtil {
 
 	public static void drawText(TextSequence text,
 			PDPageContentStream contentStream, Coords beginOfFirstLine,
-			Alignment alignment, float maxWidth, final float lineSpacing) throws IOException {
+			Alignment alignment, float maxWidth, final float lineSpacing)
+			throws IOException {
 		List<TextLine> lines = wordWrapToLines(text, maxWidth);
 		float targetWidth = getMaxWidth(lines);
 		Coords coords = beginOfFirstLine;
 		for (int i = 0; i < lines.size(); i++) {
 			TextLine textLine = lines.get(i);
 			float offset = getOffset(textLine, targetWidth, alignment);
-			coords = new Coords(beginOfFirstLine.getX() + offset,
-					coords.getY());
+			coords = new Coords(beginOfFirstLine.getX() + offset, coords.getY());
 			textLine.drawText(contentStream, coords, alignment);
-			
+
 			if (i < lines.size() - 1) {
-				float nextLineHeight = lines.get(i+1).getLineHeight(lineSpacing);
+				float nextLineHeight = lines.get(i + 1).getLineHeightWithSpacing(
+						lineSpacing);
 				coords = coords.add(0, -nextLineHeight);
 			}
 		}
@@ -267,10 +274,11 @@ public class PdfUtil {
 		}
 		return result;
 	}
-	
-	
-	public static float getWidth(final TextSequence textSequence, final float preferredMaxWidth) throws IOException {
-		List<TextLine> lines = PdfUtil.wordWrapToLines(textSequence, preferredMaxWidth);
+
+	public static float getWidth(final TextSequence textSequence,
+			final float preferredMaxWidth) throws IOException {
+		List<TextLine> lines = PdfUtil.wordWrapToLines(textSequence,
+				preferredMaxWidth);
 		float max = 0;
 		for (TextLine line : lines) {
 			max = Math.max(max, line.getWidth());
@@ -278,20 +286,22 @@ public class PdfUtil {
 		return max;
 	}
 
-	public static float getHeight(final TextSequence textSequence, final float preferredMaxWidth, final float lineSpacing) throws IOException {
-		List<TextLine> lines = PdfUtil.wordWrapToLines(textSequence, preferredMaxWidth);
+	public static float getHeight(final TextSequence textSequence,
+			final float preferredMaxWidth, final float lineSpacing)
+			throws IOException {
+		List<TextLine> lines = PdfUtil.wordWrapToLines(textSequence,
+				preferredMaxWidth);
 		float sum = 0;
 		for (int i = 0; i < lines.size(); i++) {
 			TextLine line = lines.get(i);
 			float lineHeight = line.getHeight();
-			if (i < lines.size() - 1) {
-				lineHeight *= lineSpacing;
+			if (i > 0) {
+				lineHeight = line.getLineHeightWithSpacing(lineSpacing);
 			}
 			sum += lineHeight;
 		}
 		return sum;
 	}
-
 
 	public static void main(final String[] args) throws Exception {
 		String text = "The MIT License (MIT)\n\nCopyright (c) 2016 Ralf Stuckert\n\n"
@@ -312,24 +322,24 @@ public class PdfUtil {
 				+ "WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN "
 				+ "CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.*\n";
 
-		Iterable<CharSequence> lineBreak = fromMarkup(text);
-		for (CharSequence charSequence : lineBreak) {
-			System.out.println(charSequence);
+		final PDDocument test = new PDDocument();
+		final OutputStream outputStream = new FileOutputStream("test.pdf");
+		final PDPage page = new PDPage(PDRectangle.A4);
+		test.addPage(page);
+		PDPageContentStream contentStream = new PDPageContentStream(test, page,
+				true, true);
+		TextFlow paragraph = PdfUtil.createTextFlowFromMarkup(text, 11,
+				BaseFont.Times);
+		for (TextFragment fragment : paragraph) {
+			System.out.println(fragment);
 		}
 
-		// TextFlow styledText = createStyledText(text, 11);
-		// System.out.println(styledText);
-		// System.out.println();
-		//
-		// float maxWidth = ((194.5f * 72) / 25.4f) - 64f;
-		// System.out.println(maxWidth);
-		// TextFlow wordWrap = wordWrap(styledText, 240);
-		// List<TextLine> lines = getLinesWithoutLineBreak(wordWrap);
-		// for (TextLine line : lines) {
-		// for (TextFragment fragment : line) {
-		// System.out.print(fragment.getText());
-		// }
-		// System.out.println();
-		// }
+		paragraph.setPreferredMaxWidth(300);
+		System.out.println(paragraph.getHeight());
+		float x = 20;
+		paragraph.drawText(contentStream, new Coords(x, 700), Alignment.Right);
+		contentStream.close();
+		test.save(outputStream);
+		test.close();
 	}
 }

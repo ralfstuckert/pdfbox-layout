@@ -9,11 +9,13 @@ public class ControlFragment implements TextFragment {
 	
 	private final static FontDescriptor DEFAULT_FONT_DESCRIPTOR = new FontDescriptor(PDType1Font.HELVETICA, 11);
 
-	public final static ControlFragment NEWLINE = new ControlFragment("\n");
+	public final static ControlFragment NEWLINE = new ControlFragment("NEWLINE", "\n");
 	
+	private String name;
 	private String text;
 	
-	public ControlFragment(String text) {
+	public ControlFragment(final String name, final String text) {
+		this.name = name;
 		this.text = text;
 	}
 
@@ -40,6 +42,11 @@ public class ControlFragment implements TextFragment {
 	@Override
 	public Color getColor() {
 		return Color.black;
+	}
+
+	@Override
+	public String toString() {
+		return "ControlFragment [" + name + "]";
 	}
 
 }

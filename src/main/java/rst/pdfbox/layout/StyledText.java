@@ -65,4 +65,10 @@ public class StyledText implements TextFragment {
 		return line;
 	}
 
+	@Override
+	public String toString() {
+		return "StyledText [text=" + text + ", fontDescriptor="
+				+ fontDescriptor + ", color=" + color + "]";
+	}
+
 }
