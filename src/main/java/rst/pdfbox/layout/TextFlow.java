@@ -13,11 +13,8 @@ public class TextFlow implements TextSequence {
 
 	private final List<TextFragment> text = new ArrayList<TextFragment>();
 	private float lineSpacing = DEFAULT_LINE_SPACING;
-	private float preferredMaxWidth = -1;
+	private float maxWidth = -1;
 
-	TextFlow() {
-		super();
-	}
 
 	public void add(final TextSequence sequence) {
 		for (TextFragment fragment : sequence) {
@@ -34,12 +31,12 @@ public class TextFlow implements TextSequence {
 		return text.iterator();
 	}
 
-	public float getPreferredMaxWidth() {
-		return preferredMaxWidth;
+	public float getMaxWidth() {
+		return maxWidth;
 	}
 
-	public void setPreferredMaxWidth(float maxWidth) {
-		this.preferredMaxWidth = maxWidth;
+	public void setMaxWidth(float maxWidth) {
+		this.maxWidth = maxWidth;
 	}
 
 	public float getLineSpacing() {
@@ -52,20 +49,20 @@ public class TextFlow implements TextSequence {
 
 	@Override
 	public float getWidth() throws IOException {
-		return PdfUtil.getWidth(this, getPreferredMaxWidth());
+		return PdfUtil.getWidth(this, getMaxWidth());
 	}
 
 	@Override
 	public float getHeight() throws IOException {
 		return PdfUtil
-				.getHeight(this, getPreferredMaxWidth(), getLineSpacing());
+				.getHeight(this, getMaxWidth(), getLineSpacing());
 	}
 
 	@Override
 	public void drawText(PDPageContentStream contentStream,
-			Coords beginOfFirstLine, Alignment alignment) throws IOException {
-		PdfUtil.drawText(this, contentStream, beginOfFirstLine, alignment,
-				getPreferredMaxWidth(), getLineSpacing());
+			Coords origin, Alignment alignment) throws IOException {
+		PdfUtil.drawText(this, contentStream, origin, alignment,
+				getMaxWidth(), getLineSpacing());
 	}
 
 	public void drawTextRightAligned(PDPageContentStream contentStream,

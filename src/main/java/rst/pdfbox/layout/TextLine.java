@@ -66,6 +66,17 @@ public class TextLine implements TextSequence {
 		return max;
 	}
 
+	protected float getAscent() throws IOException {
+		float max = 0;
+		for (TextFragment fragment : fragments) {
+			float ascent = fragment.getFontDescriptor().getSize()
+					* fragment.getFontDescriptor().getFont()
+							.getFontDescriptor().getAscent() / 1000;
+			max = Math.max(max, ascent);
+		}
+		return max;
+	}
+
 	public float getLineHeightWithSpacing(float lineSpacing) throws IOException {
 		float width = getWidth();
 		float max = 0;
@@ -84,12 +95,12 @@ public class TextLine implements TextSequence {
 	}
 
 	@Override
-	public void drawText(PDPageContentStream contentStream, Coords beginOfText,
-			Alignment alignment) throws IOException {
+	public void drawText(PDPageContentStream contentStream,
+			Coords originUpperLeft, Alignment alignment) throws IOException {
 		contentStream.saveGraphicsState();
 		contentStream.beginText();
-		contentStream.setTextMatrix(new Matrix(1, 0, 0, 1, beginOfText.getX(),
-				beginOfText.getY()));
+		contentStream.setTextMatrix(new Matrix(1, 0, 0, 1, originUpperLeft
+				.getX(), originUpperLeft.getY() - getAscent()));
 		FontDescriptor lastFontDesc = null;
 		Color lastColor = null;
 		for (StyledText styledText : fragments) {

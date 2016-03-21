@@ -31,7 +31,7 @@ public class Test {
 		text.add(line);
 
 		paragraph.add(text);
-		paragraph.setPreferredMaxWidth(100);
+		paragraph.setMaxWidth(100);
 		float x = 400 - paragraph.getWidth();
 		paragraph.drawText(contentStream, new Coords(x, 600), Alignment.Right);
 		paragraph.drawText(contentStream,

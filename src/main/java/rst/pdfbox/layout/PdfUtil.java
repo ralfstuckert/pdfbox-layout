@@ -185,16 +185,16 @@ public class PdfUtil {
 	}
 
 	public static void drawText(TextSequence text,
-			PDPageContentStream contentStream, Coords beginOfFirstLine,
+			PDPageContentStream contentStream, Coords originUpperLeft,
 			Alignment alignment, float maxWidth, final float lineSpacing)
 			throws IOException {
 		List<TextLine> lines = wordWrapToLines(text, maxWidth);
 		float targetWidth = getMaxWidth(lines);
-		Coords coords = beginOfFirstLine;
+		Coords coords = originUpperLeft;
 		for (int i = 0; i < lines.size(); i++) {
 			TextLine textLine = lines.get(i);
 			float offset = getOffset(textLine, targetWidth, alignment);
-			coords = new Coords(beginOfFirstLine.getX() + offset, coords.getY());
+			coords = new Coords(originUpperLeft.getX() + offset, coords.getY());
 			textLine.drawText(contentStream, coords, alignment);
 
 			if (i < lines.size() - 1) {
@@ -334,7 +334,7 @@ public class PdfUtil {
 			System.out.println(fragment);
 		}
 
-		paragraph.setPreferredMaxWidth(300);
+		paragraph.setMaxWidth(300);
 		System.out.println(paragraph.getHeight());
 		float x = 20;
 		paragraph.drawText(contentStream, new Coords(x, 700), Alignment.Right);
