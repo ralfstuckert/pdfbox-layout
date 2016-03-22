@@ -48,74 +48,60 @@ public class Document {
 	public void remove(final Element element) {
 		elements.remove(element);
 	}
+	
+	public float getMarginLeft() {
+		return marginLeft;
+	}
+
+	public float getMarginRight() {
+		return marginRight;
+	}
+
+	public float getMarginTop() {
+		return marginTop;
+	}
+
+	public float getMarginBottom() {
+		return marginBottom;
+	}
+
+	public PDRectangle getMediaBox() {
+		return mediaBox;
+	}
 
 	public PDDocument render() throws IOException {
 		PDDocument document = new PDDocument();
-		PDPage page = new PDPage(mediaBox);
-		float width = page.getMediaBox().getWidth() - marginLeft - marginRight;
-		float height = page.getMediaBox().getHeight() - marginTop
-				- marginBottom;
-		PDRectangle cropBox = new PDRectangle(mediaBox.getLowerLeftX()
-				+ marginLeft, mediaBox.getLowerLeftY() + marginBottom, width,
-				height);
-		document.addPage(page);
-		PDPageContentStream contentStream = new PDPageContentStream(document,
-				page, true, true);
-		Coords origin = new Coords(marginLeft, page.getMediaBox().getHeight()
-				- marginTop);
+		RenderContext renderContext = new RenderContext(this, document);
 		for (Element element : elements) {
-			element.setMaxWidth(width);
+			float oldMaxWidth = element.getMaxWidth();
+			if (oldMaxWidth < 0) {
+				element.setMaxWidth(renderContext.getWidth());
+			}
 			Drawable drawable = element;
-			float remainingHeight = height;
-			while (remainingHeight < drawable.getHeight()) {
+			while (renderContext.getRemainingHeight() < drawable.getHeight()) {
 				Dividable dividable = null;
 				if (drawable instanceof Dividable) {
 					dividable = (Dividable) drawable;
 				} else {
 					dividable = new Cutter(drawable);
 				}
-				Divided divided = dividable.divide(remainingHeight);
-				divided.getFirst().draw(contentStream, origin);
+				Divided divided = dividable.divide(renderContext.getRemainingHeight());
+				renderContext.draw(divided.getFirst());
 
 				// new page
-				contentStream.close();
-				page = new PDPage(mediaBox);
-				document.addPage(page);
-				contentStream = new PDPageContentStream(document, page, true,
-						true);
-				remainingHeight = height;
-				origin = new Coords(marginLeft, page.getMediaBox().getHeight()
-						- marginTop);
+				renderContext.newPage();
+
 				drawable = divided.getRest();
+				
+				if (oldMaxWidth < 0) {
+					element.setMaxWidth(oldMaxWidth);
+				}
 			}
 
-			drawable.draw(contentStream, origin);
-			float drawableHeight = drawable.getHeight();
-			origin = origin.add(0, -drawableHeight);
-			remainingHeight -= drawableHeight;
+			renderContext.draw(drawable);
 		}
 
-		// for (Element element : elements) {
-		// element.setMaxWidth(width);
-		// float drawnHeight = 0;
-		// float remainingHeight = height;
-		// while (drawnHeight < element.getHeight()) {
-		// origin = origin.add(0, drawnHeight);
-		// element.draw(contentStream, origin);
-		// float drawnOnPage = Math.min(element.getHeight(), remainingHeight);
-		// remainingHeight -= drawnOnPage;
-		// drawnHeight += drawnOnPage;
-		// if (remainingHeight <= 0) {
-		// contentStream.close();
-		// page = new PDPage(mediaBox);
-		// document.addPage(page);
-		// contentStream = new PDPageContentStream(document, page,
-		// true, true);
-		// remainingHeight = height;
-		// }
-		// }
-		// }
-		contentStream.close();
+		renderContext.close();
 		return document;
 	}
 
