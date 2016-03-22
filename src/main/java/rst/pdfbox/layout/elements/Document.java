@@ -8,15 +8,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.pdmodel.PDPage;
-import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 
 import rst.pdfbox.layout.BaseFont;
 import rst.pdfbox.layout.Coords;
 import rst.pdfbox.layout.PdfUtil;
 import rst.pdfbox.layout.TextFlow;
-import rst.pdfbox.layout.elements.Dividable.Divided;
 
 public class Document {
 
@@ -73,34 +70,8 @@ public class Document {
 		PDDocument document = new PDDocument();
 		RenderContext renderContext = new RenderContext(this, document);
 		for (Element element : elements) {
-			float oldMaxWidth = element.getMaxWidth();
-			if (oldMaxWidth < 0) {
-				element.setMaxWidth(renderContext.getWidth());
-			}
-			Drawable drawable = element;
-			while (renderContext.getRemainingHeight() < drawable.getHeight()) {
-				Dividable dividable = null;
-				if (drawable instanceof Dividable) {
-					dividable = (Dividable) drawable;
-				} else {
-					dividable = new Cutter(drawable);
-				}
-				Divided divided = dividable.divide(renderContext.getRemainingHeight());
-				renderContext.draw(divided.getFirst());
-
-				// new page
-				renderContext.newPage();
-
-				drawable = divided.getRest();
-				
-				if (oldMaxWidth < 0) {
-					element.setMaxWidth(oldMaxWidth);
-				}
-			}
-
-			renderContext.draw(drawable);
+			renderContext.draw(element);
 		}
-
 		renderContext.close();
 		return document;
 	}
@@ -151,7 +122,15 @@ public class Document {
 		TextFlow textFlow = PdfUtil.createTextFlowFromMarkup(text, 11,
 				BaseFont.Times);
 		paragraph.add(textFlow);
+		
+		Paragraph para2 = new Paragraph();
+		para2.add(PdfUtil.createTextFlowFromMarkup("Huhu", 30,
+				BaseFont.Times));
+		para2.setAbsolutePosition(new Coords(40, 100));
+		document.add(para2);
+		
 		document.add(paragraph);
+		
 		final OutputStream outputStream = new FileOutputStream("test.pdf");
 		document.safe(outputStream);
 	}

@@ -8,6 +8,7 @@ import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 
 import rst.pdfbox.layout.Coords;
+import rst.pdfbox.layout.elements.Dividable.Divided;
 
 public class RenderContext implements Closeable {
 
@@ -85,7 +86,43 @@ public class RenderContext implements Closeable {
 		currentPosition = getUpperLeft();
 	}
 
-	public void draw(final Drawable drawable) throws IOException {
+	public void draw(final Element element) throws IOException {
+		if (element.getAbsolutePosition() != null) {
+			element.draw(getContentStream(), element.getAbsolutePosition());
+		} else {
+			drawReleative(element);
+		}
+	}
+
+	protected void drawReleative(final Element element) throws IOException {
+		float oldMaxWidth = element.getMaxWidth();
+		if (oldMaxWidth < 0) {
+			element.setMaxWidth(getWidth());
+		}
+		Drawable drawable = element;
+		while (getRemainingHeight() < drawable.getHeight()) {
+			Dividable dividable = null;
+			if (drawable instanceof Dividable) {
+				dividable = (Dividable) drawable;
+			} else {
+				dividable = new Cutter(drawable);
+			}
+			Divided divided = dividable.divide(getRemainingHeight());
+			draw(divided.getFirst());
+
+			// new page
+			newPage();
+
+			drawable = divided.getRest();
+
+			if (oldMaxWidth < 0) {
+				element.setMaxWidth(oldMaxWidth);
+			}
+		}
+		draw(drawable);
+	}
+
+	protected void draw(final Drawable drawable) throws IOException {
 		drawable.draw(getContentStream(), getCurrentPosition());
 		movePositionBy(0, -drawable.getHeight());
 	}
@@ -95,7 +132,7 @@ public class RenderContext implements Closeable {
 			contentStream.close();
 		}
 	}
-	
+
 	@Override
 	public void close() throws IOException {
 		closePage();
