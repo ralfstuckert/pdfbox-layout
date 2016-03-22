@@ -16,6 +16,7 @@ import rst.pdfbox.layout.BaseFont;
 import rst.pdfbox.layout.Coords;
 import rst.pdfbox.layout.PdfUtil;
 import rst.pdfbox.layout.TextFlow;
+import rst.pdfbox.layout.elements.Dividable.Divided;
 
 public class Document {
 
@@ -51,22 +52,73 @@ public class Document {
 	public PDDocument render() throws IOException {
 		PDDocument document = new PDDocument();
 		PDPage page = new PDPage(mediaBox);
-		document.addPage(page);
-		PDPageContentStream contentStream = new PDPageContentStream(document,
-				page, true, true);
 		float width = page.getMediaBox().getWidth() - marginLeft - marginRight;
 		float height = page.getMediaBox().getHeight() - marginTop
 				- marginBottom;
+		PDRectangle cropBox = new PDRectangle(mediaBox.getLowerLeftX()
+				+ marginLeft, mediaBox.getLowerLeftY() + marginBottom, width,
+				height);
+		document.addPage(page);
+		PDPageContentStream contentStream = new PDPageContentStream(document,
+				page, true, true);
 		Coords origin = new Coords(marginLeft, page.getMediaBox().getHeight()
 				- marginTop);
 		for (Element element : elements) {
 			element.setMaxWidth(width);
-			element.draw(contentStream, origin);
+			Drawable drawable = element;
+			float remainingHeight = height;
+			while (remainingHeight < drawable.getHeight()) {
+				Dividable dividable = null;
+				if (drawable instanceof Dividable) {
+					dividable = (Dividable) drawable;
+				} else {
+					dividable = new Cutter(drawable);
+				}
+				Divided divided = dividable.divide(remainingHeight);
+				divided.getFirst().draw(contentStream, origin);
+
+				// new page
+				contentStream.close();
+				page = new PDPage(mediaBox);
+				document.addPage(page);
+				contentStream = new PDPageContentStream(document, page, true,
+						true);
+				remainingHeight = height;
+				origin = new Coords(marginLeft, page.getMediaBox().getHeight()
+						- marginTop);
+				drawable = divided.getRest();
+			}
+
+			drawable.draw(contentStream, origin);
+			float drawableHeight = drawable.getHeight();
+			origin = origin.add(0, -drawableHeight);
+			remainingHeight -= drawableHeight;
 		}
+
+		// for (Element element : elements) {
+		// element.setMaxWidth(width);
+		// float drawnHeight = 0;
+		// float remainingHeight = height;
+		// while (drawnHeight < element.getHeight()) {
+		// origin = origin.add(0, drawnHeight);
+		// element.draw(contentStream, origin);
+		// float drawnOnPage = Math.min(element.getHeight(), remainingHeight);
+		// remainingHeight -= drawnOnPage;
+		// drawnHeight += drawnOnPage;
+		// if (remainingHeight <= 0) {
+		// contentStream.close();
+		// page = new PDPage(mediaBox);
+		// document.addPage(page);
+		// contentStream = new PDPageContentStream(document, page,
+		// true, true);
+		// remainingHeight = height;
+		// }
+		// }
+		// }
 		contentStream.close();
 		return document;
 	}
-	
+
 	public void safe(final File file) throws IOException {
 		try (PDDocument document = render()) {
 			document.save(file);
@@ -98,9 +150,20 @@ public class Document {
 				+ "WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN "
 				+ "CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.*\n";
 
-		Document document = new Document(PDRectangle.A4);
+		text += text;
+		text += text;
+		text += text;
+		text += text;
+		// text += text;
+		// text += text;
+		// text += text;
+		// text += text;
+		// text += text;
+
+		Document document = new Document(PDRectangle.A4, 20, 40, 20, 40);
 		Paragraph paragraph = new Paragraph();
-		TextFlow textFlow = PdfUtil.createTextFlowFromMarkup(text, 11, BaseFont.Times);
+		TextFlow textFlow = PdfUtil.createTextFlowFromMarkup(text, 11,
+				BaseFont.Times);
 		paragraph.add(textFlow);
 		document.add(paragraph);
 		final OutputStream outputStream = new FileOutputStream("test.pdf");

@@ -25,7 +25,18 @@ public class TextFlow implements TextSequence {
 	public void add(final TextFragment fragment) {
 		text.add(fragment);
 	}
+	
+	public TextFragment removeLast() {
+		if (text.size() > 0) {
+			return text.remove(text.size()-1);
+		}
+		return null;
+	}
 
+	public boolean isEmpty() {
+		return text.isEmpty();
+	}
+	
 	@Override
 	public Iterator<TextFragment> iterator() {
 		return text.iterator();

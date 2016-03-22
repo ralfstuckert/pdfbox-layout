@@ -6,9 +6,10 @@ import org.apache.pdfbox.pdmodel.PDPageContentStream;
 
 import rst.pdfbox.layout.Alignment;
 import rst.pdfbox.layout.Coords;
+import rst.pdfbox.layout.PdfUtil;
 import rst.pdfbox.layout.TextFlow;
 
-public class Paragraph extends TextFlow implements Element {
+public class Paragraph extends TextFlow implements Element, Dividable {
 
 	private Coords absolutePosition;
 	private Alignment alignment = Alignment.Left;
@@ -34,6 +35,11 @@ public class Paragraph extends TextFlow implements Element {
 	public void draw(PDPageContentStream contentStream, Coords origin)
 			throws IOException {
 		drawText(contentStream, origin, getAlignment());
+	}
+
+	@Override
+	public Divided divide(float maxHeight) throws IOException {
+		return PdfUtil.divide(this, getMaxWidth(), maxHeight);
 	}
 
 }

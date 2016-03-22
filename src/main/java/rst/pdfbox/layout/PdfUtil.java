@@ -18,7 +18,9 @@ import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.font.PDFont;
-import org.apache.pdfbox.pdmodel.font.PDType1Font;
+
+import rst.pdfbox.layout.elements.Dividable.Divided;
+import rst.pdfbox.layout.elements.Paragraph;
 
 /**
  * 
@@ -119,6 +121,58 @@ public class PdfUtil {
 		return result;
 	}
 
+	public static List<TextSequence> getLines(final TextSequence text)
+			throws IOException {
+		final List<TextSequence> result = new ArrayList<TextSequence>();
+
+		TextFlow line = new TextFlow();
+		for (TextFragment fragment : text) {
+			line.add(fragment);
+			if (fragment == ControlFragment.NEWLINE) {
+				result.add(line);
+				line = new TextFlow();
+			}
+		}
+		if (!line.isEmpty()) {
+			result.add(line);
+		}
+		return result;
+	}
+
+	public static Divided divide(final TextSequence text, final float maxWidth,
+			final float maxHeight) throws IOException {
+		TextFlow wrapped = wordWrap(text, maxWidth);
+		List<TextSequence> lines = getLines(wrapped);
+
+		Paragraph first = new Paragraph();
+		Paragraph last = new Paragraph();
+		if (text instanceof TextFlow) {
+			TextFlow flow = (TextFlow) text;
+			first.setMaxWidth(flow.getMaxWidth());
+			first.setLineSpacing(flow.getLineSpacing());
+			last.setMaxWidth(flow.getMaxWidth());
+			last.setLineSpacing(flow.getLineSpacing());
+		}
+
+		int index = 0;
+		do {
+			TextSequence line = lines.get(index);
+			first.add(line);
+			++index;
+		} while (index < lines.size() && first.getHeight() < maxHeight);
+		
+		if (first.getHeight() < maxHeight) {
+			first.removeLast();
+			--index;
+		}
+		
+
+		for (int i = index; i < lines.size(); ++i) {
+			last.add(lines.get(i));
+		}
+		return new Divided(first, last);
+	}
+
 	public static TextFlow wordWrap(final TextSequence text,
 			final float maxWidth) throws IOException {
 
@@ -198,8 +252,8 @@ public class PdfUtil {
 			textLine.drawText(contentStream, coords, alignment);
 
 			if (i < lines.size() - 1) {
-				float nextLineHeight = lines.get(i + 1).getLineHeightWithSpacing(
-						lineSpacing);
+				float nextLineHeight = lines.get(i + 1)
+						.getLineHeightWithSpacing(lineSpacing);
 				coords = coords.add(0, -nextLineHeight);
 			}
 		}
