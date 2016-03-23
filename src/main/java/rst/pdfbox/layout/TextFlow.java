@@ -7,7 +7,7 @@ import java.util.List;
 
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 
-public class TextFlow implements TextSequence {
+public class TextFlow implements TextSequence, WidthRespecting {
 
 	public static final float DEFAULT_LINE_SPACING = 1.3f;
 
@@ -42,10 +42,12 @@ public class TextFlow implements TextSequence {
 		return text.iterator();
 	}
 
+	@Override
 	public float getMaxWidth() {
 		return maxWidth;
 	}
 
+	@Override
 	public void setMaxWidth(float maxWidth) {
 		this.maxWidth = maxWidth;
 	}

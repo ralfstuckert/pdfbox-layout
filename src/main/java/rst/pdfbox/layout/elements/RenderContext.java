@@ -8,6 +8,7 @@ import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 
 import rst.pdfbox.layout.Coords;
+import rst.pdfbox.layout.WidthRespecting;
 import rst.pdfbox.layout.elements.Dividable.Divided;
 
 public class RenderContext implements Closeable {
@@ -113,8 +114,8 @@ public class RenderContext implements Closeable {
 	protected void drawReleative(final Drawable drawable) throws IOException {
 
 		float oldMaxWidth = -1;
-		if (drawable instanceof Flowing) {
-			Flowing flowing = (Flowing) drawable;
+		if (drawable instanceof WidthRespecting) {
+			WidthRespecting flowing = (WidthRespecting) drawable;
 			flowing.getMaxWidth();
 			if (oldMaxWidth < 0) {
 				flowing.setMaxWidth(getWidth());
@@ -136,13 +137,14 @@ public class RenderContext implements Closeable {
 			newPage();
 
 			drawablePart = divided.getRest();
-
-			if (drawable instanceof Flowing) {
-				if (oldMaxWidth < 0) {
-					((Flowing) drawable).setMaxWidth(oldMaxWidth);
-				}
+		}
+		
+		if (drawable instanceof WidthRespecting) {
+			if (oldMaxWidth < 0) {
+				((WidthRespecting) drawable).setMaxWidth(oldMaxWidth);
 			}
 		}
+		
 		drawReletiveAndMovePosition(drawablePart);
 	}
 

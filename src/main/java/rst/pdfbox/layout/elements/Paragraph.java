@@ -8,8 +8,10 @@ import rst.pdfbox.layout.Alignment;
 import rst.pdfbox.layout.Coords;
 import rst.pdfbox.layout.PdfUtil;
 import rst.pdfbox.layout.TextFlow;
+import rst.pdfbox.layout.WidthRespecting;
 
-public class Paragraph extends TextFlow implements DrawableElement, Flowing,  Dividable {
+public class Paragraph extends TextFlow implements DrawableElement,
+		WidthRespecting, Dividable {
 
 	private Coords absolutePosition;
 	private Alignment alignment = Alignment.Left;

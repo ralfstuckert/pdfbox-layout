@@ -114,8 +114,8 @@ public class Document {
 
 		text += text;
 		text += text;
-//		text += text;
-//		text += text;
+		text += text;
+		text += text;
 		// text += text;
 		// text += text;
 		// text += text;
@@ -134,10 +134,10 @@ public class Document {
 		document.add(para2);
 
 		document.add(paragraph);
-		document.add(ControlElement.NEWPAGE);
-		document.add(paragraph);
-		document.add(ControlElement.NEWPAGE);
-		document.add(ControlElement.NEWPAGE);
+//		document.add(ControlElement.NEWPAGE);
+//		document.add(paragraph);
+//		document.add(ControlElement.NEWPAGE);
+//		document.add(ControlElement.NEWPAGE);
 
 		final OutputStream outputStream = new FileOutputStream("test.pdf");
 		document.safe(outputStream);
