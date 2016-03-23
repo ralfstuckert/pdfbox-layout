@@ -1,11 +1,7 @@
 package rst.pdfbox.layout.elements;
 
-import rst.pdfbox.layout.Coords;
 
-public interface Element extends Drawable {
+public interface Element {
 
-	float getMaxWidth();
-
-	void setMaxWidth(float maxWidth);
 
 }

@@ -9,7 +9,7 @@ import rst.pdfbox.layout.Coords;
 import rst.pdfbox.layout.PdfUtil;
 import rst.pdfbox.layout.TextFlow;
 
-public class Paragraph extends TextFlow implements Element, Dividable {
+public class Paragraph extends TextFlow implements DrawableElement, Flowing,  Dividable {
 
 	private Coords absolutePosition;
 	private Alignment alignment = Alignment.Left;

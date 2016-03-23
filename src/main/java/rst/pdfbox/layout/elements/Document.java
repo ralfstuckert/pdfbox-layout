@@ -45,7 +45,7 @@ public class Document {
 	public void remove(final Element element) {
 		elements.remove(element);
 	}
-	
+
 	public float getMarginLeft() {
 		return marginLeft;
 	}
@@ -70,7 +70,12 @@ public class Document {
 		PDDocument document = new PDDocument();
 		RenderContext renderContext = new RenderContext(this, document);
 		for (Element element : elements) {
-			renderContext.draw(element);
+			if (element instanceof Drawable) {
+				renderContext.draw((Drawable)element);
+			}
+			if (element == ControlElement.NEWPAGE) {
+				renderContext.newPage();
+			}
 		}
 		renderContext.close();
 		return document;
@@ -109,8 +114,8 @@ public class Document {
 
 		text += text;
 		text += text;
-		text += text;
-		text += text;
+//		text += text;
+//		text += text;
 		// text += text;
 		// text += text;
 		// text += text;
@@ -122,15 +127,18 @@ public class Document {
 		TextFlow textFlow = PdfUtil.createTextFlowFromMarkup(text, 11,
 				BaseFont.Times);
 		paragraph.add(textFlow);
-		
+
 		Paragraph para2 = new Paragraph();
-		para2.add(PdfUtil.createTextFlowFromMarkup("Huhu", 30,
-				BaseFont.Times));
+		para2.add(PdfUtil.createTextFlowFromMarkup("Huhu", 30, BaseFont.Times));
 		para2.setAbsolutePosition(new Coords(40, 100));
 		document.add(para2);
-		
+
 		document.add(paragraph);
-		
+		document.add(ControlElement.NEWPAGE);
+		document.add(paragraph);
+		document.add(ControlElement.NEWPAGE);
+		document.add(ControlElement.NEWPAGE);
+
 		final OutputStream outputStream = new FileOutputStream("test.pdf");
 		document.safe(outputStream);
 	}

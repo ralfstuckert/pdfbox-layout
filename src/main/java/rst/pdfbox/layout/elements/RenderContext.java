@@ -86,47 +86,60 @@ public class RenderContext implements Closeable {
 		currentPosition = getUpperLeft();
 	}
 
-	public void draw(final Element element) throws IOException {
-		if (element.getAbsolutePosition() != null) {
-			element.draw(getContentStream(), element.getAbsolutePosition());
+	public void draw(final Drawable drawable) throws IOException {
+		if (drawable.getAbsolutePosition() != null) {
+			drawAbsolute(drawable, drawable.getAbsolutePosition());
 		} else {
-			drawReleative(element);
+			drawReleative(drawable);
 		}
 	}
 
-	protected void drawReleative(final Element element) throws IOException {
-		float oldMaxWidth = element.getMaxWidth();
-		if (oldMaxWidth < 0) {
-			element.setMaxWidth(getWidth());
+	protected void drawReletiveAndMovePosition(final Drawable drawable) throws IOException {
+		drawable.draw(getContentStream(), getCurrentPosition());
+		movePositionBy(0, -drawable.getHeight());
+	}
+	
+	protected void drawAbsolute(final Drawable drawable, final Coords coords) throws IOException {
+		drawable.draw(getContentStream(), coords);
+	}
+	
+	protected void drawReleative(final Drawable drawable) throws IOException {
+
+		float oldMaxWidth = -1;
+		if (drawable instanceof Flowing) {
+			Flowing flowing = (Flowing) drawable;
+			flowing.getMaxWidth();
+			if (oldMaxWidth < 0) {
+				flowing.setMaxWidth(getWidth());
+			}
 		}
-		Drawable drawable = element;
-		while (getRemainingHeight() < drawable.getHeight()) {
+
+		Drawable drawablePart = drawable;
+		while (getRemainingHeight() < drawablePart.getHeight()) {
 			Dividable dividable = null;
-			if (drawable instanceof Dividable) {
-				dividable = (Dividable) drawable;
+			if (drawablePart instanceof Dividable) {
+				dividable = (Dividable) drawablePart;
 			} else {
-				dividable = new Cutter(drawable);
+				dividable = new Cutter(drawablePart);
 			}
 			Divided divided = dividable.divide(getRemainingHeight());
-			draw(divided.getFirst());
+			drawReletiveAndMovePosition(divided.getFirst());
 
 			// new page
 			newPage();
 
-			drawable = divided.getRest();
+			drawablePart = divided.getRest();
 
-			if (oldMaxWidth < 0) {
-				element.setMaxWidth(oldMaxWidth);
+			if (drawable instanceof Flowing) {
+				if (oldMaxWidth < 0) {
+					((Flowing) drawable).setMaxWidth(oldMaxWidth);
+				}
 			}
 		}
-		draw(drawable);
+		drawReletiveAndMovePosition(drawablePart);
 	}
 
-	protected void draw(final Drawable drawable) throws IOException {
-		drawable.draw(getContentStream(), getCurrentPosition());
-		movePositionBy(0, -drawable.getHeight());
-	}
-
+	
 	public void closePage() throws IOException {
 		if (contentStream != null) {
 			contentStream.close();
