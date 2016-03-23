@@ -95,7 +95,14 @@ public class RenderContext implements Closeable {
 	}
 
 	protected void drawReletiveAndMovePosition(final Drawable drawable) throws IOException {
+		getContentStream().saveGraphicsState();
+		getContentStream().addRect(document.getMarginLeft(), document.getMarginBottom(), getWidth(),getHeight());
+		getContentStream().clip();
+		
 		drawable.draw(getContentStream(), getCurrentPosition());
+		
+		getContentStream().restoreGraphicsState();
+
 		movePositionBy(0, -drawable.getHeight());
 	}
 	
