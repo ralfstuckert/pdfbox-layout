@@ -6,8 +6,11 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 
 import rst.pdfbox.layout.BaseFont;
@@ -15,7 +18,7 @@ import rst.pdfbox.layout.Coords;
 import rst.pdfbox.layout.PdfUtil;
 import rst.pdfbox.layout.TextFlow;
 
-public class Document {
+public class Document implements RenderListener {
 
 	private final float marginLeft;
 	private final float marginRight;
@@ -24,6 +27,8 @@ public class Document {
 	private final PDRectangle mediaBox;
 
 	private final List<Element> elements = new ArrayList<Element>();
+	private final List<RenderListener> renderListener = new CopyOnWriteArrayList<RenderListener>();
+
 
 	public Document(PDRectangle mediaBox) {
 		this(mediaBox, 0, 0, 0, 0);
@@ -71,7 +76,7 @@ public class Document {
 		RenderContext renderContext = new RenderContext(this, document);
 		for (Element element : elements) {
 			if (element instanceof Drawable) {
-				renderContext.draw((Drawable)element);
+				renderContext.draw((Drawable) element);
 			}
 			if (element == ControlElement.NEWPAGE) {
 				renderContext.newPage();
@@ -90,6 +95,32 @@ public class Document {
 	public void safe(final OutputStream output) throws IOException {
 		try (PDDocument document = render()) {
 			document.save(output);
+		}
+	}
+
+	public void addRenderListener(final RenderListener listener) {
+		if (listener != null) {
+			renderListener.add(listener);
+		}
+	}
+
+	public void removeRenderListener(final RenderListener listener) {
+		renderListener.remove(listener);
+	}
+
+	@Override
+	public void beforePage(Document document, PDDocument pdDocument,
+			int pageIndex, PDPage page, PDPageContentStream contentStream) {
+		for (RenderListener listener : renderListener) {
+			listener.beforePage(document, pdDocument, pageIndex, page, contentStream);
+		}
+	}
+
+	@Override
+	public void afterPage(Document document, PDDocument pdDocument,
+			int pageIndex, PDPage page, PDPageContentStream contentStream) {
+		for (RenderListener listener : renderListener) {
+			listener.afterPage(document, pdDocument, pageIndex, page, contentStream);
 		}
 	}
 
@@ -114,8 +145,8 @@ public class Document {
 
 		text += text;
 		text += text;
-		text += text;
-		text += text;
+		// text += text;
+		// text += text;
 		// text += text;
 		// text += text;
 		// text += text;
@@ -133,11 +164,31 @@ public class Document {
 		para2.setAbsolutePosition(new Coords(40, 100));
 		document.add(para2);
 
+		document.add(new VerticalSpacer(100));
 		document.add(paragraph);
-//		document.add(ControlElement.NEWPAGE);
-//		document.add(paragraph);
-//		document.add(ControlElement.NEWPAGE);
-//		document.add(ControlElement.NEWPAGE);
+		document.add(new VerticalSpacer(200));
+		document.add(paragraph);
+		document.add(new VerticalSpacer(2000));
+		// document.add(ControlElement.NEWPAGE);
+		// document.add(paragraph);
+		// document.add(ControlElement.NEWPAGE);
+		// document.add(ControlElement.NEWPAGE);
+		
+		document.addRenderListener(new RenderListener() {
+			
+			@Override
+			public void beforePage(Document document, PDDocument pdDocument,
+					int pageIndex, PDPage page, PDPageContentStream contentStream) {
+				System.out.println("before page " + pageIndex);
+			}
+			
+			@Override
+			public void afterPage(Document document, PDDocument pdDocument,
+					int pageIndex, PDPage page, PDPageContentStream contentStream) {
+				System.out.println("after page " + pageIndex);
+				
+			}
+		});
 
 		final OutputStream outputStream = new FileOutputStream("test.pdf");
 		document.safe(outputStream);
