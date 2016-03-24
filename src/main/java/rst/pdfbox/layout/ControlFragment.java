@@ -6,17 +6,19 @@ import java.io.IOException;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 
 public class ControlFragment implements TextFragment {
-	
-	private final static FontDescriptor DEFAULT_FONT_DESCRIPTOR = new FontDescriptor(PDType1Font.HELVETICA, 11);
 
-	public final static ControlFragment NEWLINE = new ControlFragment("NEWLINE", "\n");
-	
+	protected final static FontDescriptor DEFAULT_FONT_DESCRIPTOR = new FontDescriptor(
+			PDType1Font.HELVETICA, 11);
+
 	private String name;
 	private String text;
-	
-	public ControlFragment(final String name, final String text) {
+	private FontDescriptor fontDescriptor;
+
+	protected ControlFragment(final String name, final String text,
+			final FontDescriptor fontDescriptor) {
 		this.name = name;
 		this.text = text;
+		this.fontDescriptor = fontDescriptor;
 	}
 
 	@Override
@@ -31,7 +33,7 @@ public class ControlFragment implements TextFragment {
 
 	@Override
 	public FontDescriptor getFontDescriptor() {
-		return DEFAULT_FONT_DESCRIPTOR;
+		return fontDescriptor;
 	}
 
 	@Override

@@ -69,7 +69,7 @@ public class PdfUtil {
 		for (final CharSequence fragment : parts) {
 			if (fragment instanceof ControlCharacter) {
 				if (fragment == ControlCharacter.NEWLINE) {
-					result.add(ControlFragment.NEWLINE);
+					result.add(new NewLine(fontSize));
 				}
 				if (fragment == ControlCharacter.BOLD) {
 					bold = !bold;
@@ -108,7 +108,10 @@ public class PdfUtil {
 
 		TextLine line = new TextLine();
 		for (TextFragment fragment : text) {
-			if (fragment == ControlFragment.NEWLINE) {
+			if (fragment instanceof NewLine) {
+				if (line.isEmpty()) {
+					line.add(((NewLine) fragment).asBlankLine());
+				}
 				result.add(line);
 				line = new TextLine();
 			} else {
@@ -128,7 +131,7 @@ public class PdfUtil {
 		TextFlow line = new TextFlow();
 		for (TextFragment fragment : text) {
 			line.add(fragment);
-			if (fragment == ControlFragment.NEWLINE) {
+			if (fragment instanceof NewLine) {
 				result.add(line);
 				line = new TextFlow();
 			}
@@ -160,12 +163,11 @@ public class PdfUtil {
 			first.add(line);
 			++index;
 		} while (index < lines.size() && first.getHeight() < maxHeight);
-		
+
 		if (first.getHeight() < maxHeight) {
 			first.removeLast();
 			--index;
 		}
-		
 
 		for (int i = index; i < lines.size(); ++i) {
 			last.add(lines.get(i));
@@ -179,7 +181,7 @@ public class PdfUtil {
 		TextFlow result = new TextFlow();
 		float lineLength = 0;
 		for (TextFragment fragment : text) {
-			if (fragment == ControlFragment.NEWLINE) {
+			if (fragment instanceof NewLine) {
 				result.add(fragment);
 				lineLength = 0;
 			} else {
@@ -201,7 +203,7 @@ public class PdfUtil {
 					if (maxWidth > 0 && lineLength > 0
 							&& lineLength + length + extraSpace > maxWidth) {
 						// word exceeds max width, so create new line
-						result.add(ControlFragment.NEWLINE);
+						result.add(new NewLine(fontDescriptor));
 						lineLength = 0;
 					}
 					if (lineLength > 0 && word.getText().length() > 0) {
@@ -227,8 +229,8 @@ public class PdfUtil {
 
 	public static TextFlow splitWords(final TextFragment text) {
 		TextFlow result = new TextFlow();
-		if (text == ControlFragment.NEWLINE) {
-			result.add(ControlFragment.NEWLINE);
+		if (text instanceof NewLine) {
+			result.add(text);
 		} else {
 			String[] words = text.getText().split(" ");
 			for (String word : words) {
@@ -319,8 +321,10 @@ public class PdfUtil {
 					if (i > 0) {
 						result.add(ctrl);
 					}
-					String unescaped = ctrl.unescape(parts[i]);
-					result.add(unescaped);
+					if (!parts[i].isEmpty()) {
+						String unescaped = ctrl.unescape(parts[i]);
+						result.add(unescaped);
+					}
 				}
 			} else {
 				result.add(current);
