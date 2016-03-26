@@ -9,8 +9,6 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.pdmodel.PDPage;
-import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 
 import rst.pdfbox.layout.BaseFont;
@@ -109,18 +107,16 @@ public class Document implements RenderListener {
 	}
 
 	@Override
-	public void beforePage(Document document, PDDocument pdDocument,
-			int pageIndex, PDPage page, PDPageContentStream contentStream) {
+	public void beforePage(final RenderContext renderContext) {
 		for (RenderListener listener : renderListener) {
-			listener.beforePage(document, pdDocument, pageIndex, page, contentStream);
+			listener.beforePage(renderContext);
 		}
 	}
 
 	@Override
-	public void afterPage(Document document, PDDocument pdDocument,
-			int pageIndex, PDPage page, PDPageContentStream contentStream) {
+	public void afterPage(final RenderContext renderContext) {
 		for (RenderListener listener : renderListener) {
-			listener.afterPage(document, pdDocument, pageIndex, page, contentStream);
+			listener.afterPage(renderContext);
 		}
 	}
 
@@ -177,15 +173,13 @@ public class Document implements RenderListener {
 		document.addRenderListener(new RenderListener() {
 			
 			@Override
-			public void beforePage(Document document, PDDocument pdDocument,
-					int pageIndex, PDPage page, PDPageContentStream contentStream) {
-				System.out.println("before page " + pageIndex);
+			public void beforePage(final RenderContext renderContext) {
+				System.out.println("before page " + renderContext.getPageIndex());
 			}
 			
 			@Override
-			public void afterPage(Document document, PDDocument pdDocument,
-					int pageIndex, PDPage page, PDPageContentStream contentStream) {
-				System.out.println("after page " + pageIndex);
+			public void afterPage(final RenderContext renderContext) {
+				System.out.println("after page " + renderContext.getPageIndex());
 				
 			}
 		});

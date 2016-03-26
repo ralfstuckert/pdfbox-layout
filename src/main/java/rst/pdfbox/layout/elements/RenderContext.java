@@ -69,6 +69,10 @@ public class RenderContext implements Closeable {
 	public PDPageContentStream getContentStream() {
 		return contentStream;
 	}
+	
+	public int getPageIndex() {
+		return pageIndex;
+	}
 
 	public void draw(final Drawable drawable) throws IOException {
 		if (drawable.getAbsolutePosition() != null) {
@@ -144,14 +148,12 @@ public class RenderContext implements Closeable {
 				true);
 		currentPosition = getUpperLeft();
 
-		document.beforePage(document, pdDocument, pageIndex, page,
-				contentStream);
+		document.beforePage(this);
 	}
 
 	public boolean closePage() throws IOException {
 		if (contentStream != null) {
-			document.afterPage(document, pdDocument, pageIndex, page,
-					contentStream);
+			document.afterPage(this);
 			
 			contentStream.close();
 			contentStream = null;
