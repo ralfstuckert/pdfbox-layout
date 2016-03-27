@@ -129,13 +129,13 @@ public class RenderContext implements Closeable {
 			drawablePart = divided.getRest();
 		}
 
+		drawReletiveAndMovePosition(drawablePart);
+		
 		if (drawable instanceof WidthRespecting) {
 			if (oldMaxWidth < 0) {
 				((WidthRespecting) drawable).setMaxWidth(oldMaxWidth);
 			}
 		}
-
-		drawReletiveAndMovePosition(drawablePart);
 	}
 
 	public void newPage() throws IOException {
