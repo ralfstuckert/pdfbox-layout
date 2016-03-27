@@ -7,9 +7,9 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 
-import rst.pdfbox.layout.Coords;
-import rst.pdfbox.layout.WidthRespecting;
 import rst.pdfbox.layout.elements.Dividable.Divided;
+import rst.pdfbox.layout.text.Coords;
+import rst.pdfbox.layout.text.WidthRespecting;
 
 public class RenderContext implements Closeable {
 

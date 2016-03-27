@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 
-import rst.pdfbox.layout.Coords;
+import rst.pdfbox.layout.text.Coords;
 
 public class VerticalSpacer implements DrawableElement, Dividable {
 

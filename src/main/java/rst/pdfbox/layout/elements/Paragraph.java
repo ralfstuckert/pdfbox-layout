@@ -4,11 +4,11 @@ import java.io.IOException;
 
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 
-import rst.pdfbox.layout.Alignment;
-import rst.pdfbox.layout.Coords;
-import rst.pdfbox.layout.TextFlow;
-import rst.pdfbox.layout.TextSequenceUtil;
-import rst.pdfbox.layout.WidthRespecting;
+import rst.pdfbox.layout.text.Alignment;
+import rst.pdfbox.layout.text.Coords;
+import rst.pdfbox.layout.text.TextFlow;
+import rst.pdfbox.layout.text.TextSequenceUtil;
+import rst.pdfbox.layout.text.WidthRespecting;
 
 public class Paragraph extends TextFlow implements DrawableElement,
 		WidthRespecting, Dividable {

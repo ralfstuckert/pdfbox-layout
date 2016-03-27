@@ -11,8 +11,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 
-import rst.pdfbox.layout.BaseFont;
-import rst.pdfbox.layout.Coords;
+import rst.pdfbox.layout.text.BaseFont;
+import rst.pdfbox.layout.text.Coords;
 
 public class Document implements RenderListener {
 

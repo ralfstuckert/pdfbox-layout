@@ -1,4 +1,4 @@
-package rst.pdfbox.layout;
+package rst.pdfbox.layout.text;
 
 /**
  * A NewLine introduced by wrapping. 

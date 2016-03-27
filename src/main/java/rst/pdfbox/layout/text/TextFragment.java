@@ -1,4 +1,4 @@
-package rst.pdfbox.layout;
+package rst.pdfbox.layout.text;
 
 import java.awt.Color;
 

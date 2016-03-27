@@ -4,7 +4,7 @@
  * accompanying materials are subject to license terms.
  */
 
-package rst.pdfbox.layout;
+package rst.pdfbox.layout.text;
 
 import java.awt.Color;
 import java.io.IOException;

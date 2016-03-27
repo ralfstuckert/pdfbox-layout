@@ -1,4 +1,4 @@
-package rst.pdfbox.layout;
+package rst.pdfbox.layout.text;
 
 import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
