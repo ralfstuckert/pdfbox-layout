@@ -18,14 +18,15 @@ import org.apache.pdfbox.util.Matrix;
 
 public class TextLine implements TextSequence {
 
-	private final List<StyledText> fragments = new ArrayList<StyledText>();
+	private final List<StyledText> styledText = new ArrayList<StyledText>();
+	private NewLine newLine;
 
 	TextLine() {
 		super();
 	}
 
 	public void add(final StyledText fragment) {
-		fragments.add(fragment);
+		styledText.add(fragment);
 	}
 
 	public void add(final TextLine textLine) {
@@ -34,24 +35,31 @@ public class TextLine implements TextSequence {
 		}
 	}
 
+	public NewLine getNewLine() {
+		return newLine;
+	}
+
+	public void setNewLine(NewLine newLine) {
+		this.newLine = newLine;
+	}
+
 	public List<StyledText> getStyledTexts() {
-		return Collections.unmodifiableList(fragments);
+		return Collections.unmodifiableList(styledText);
 	}
 
 	@Override
-	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public Iterator<TextFragment> iterator() {
-		return (Iterator) getStyledTexts().iterator();
+		return new TextLineIterator(styledText.iterator(), newLine);
 	}
 
 	public boolean isEmpty() {
-		return fragments.isEmpty();
+		return styledText.isEmpty() && newLine == null;
 	}
 
 	@Override
 	public float getWidth() throws IOException {
 		float sum = 0;
-		for (TextFragment fragment : fragments) {
+		for (TextFragment fragment : this) {
 			sum += fragment.getWidth();
 		}
 		return sum;
@@ -60,7 +68,7 @@ public class TextLine implements TextSequence {
 	@Override
 	public float getHeight() throws IOException {
 		float max = 0;
-		for (TextFragment fragment : fragments) {
+		for (TextFragment fragment : this) {
 			max = Math.max(max, fragment.getHeight());
 		}
 		return max;
@@ -68,7 +76,7 @@ public class TextLine implements TextSequence {
 
 	protected float getAscent() throws IOException {
 		float max = 0;
-		for (TextFragment fragment : fragments) {
+		for (TextFragment fragment : this) {
 			float ascent = fragment.getFontDescriptor().getSize()
 					* fragment.getFontDescriptor().getFont()
 							.getFontDescriptor().getAscent() / 1000;
@@ -81,7 +89,7 @@ public class TextLine implements TextSequence {
 		float width = getWidth();
 		float max = 0;
 		float weightedHeight = 0;
-		for (TextFragment fragment : fragments) {
+		for (TextFragment fragment : this) {
 			max = Math.max(max, fragment.getHeight());
 			if (width > 0) {
 				weightedHeight += (fragment.getWidth() / width)
@@ -103,7 +111,7 @@ public class TextLine implements TextSequence {
 				.getX(), originUpperLeft.getY() - getAscent()));
 		FontDescriptor lastFontDesc = null;
 		Color lastColor = null;
-		for (StyledText styledText : fragments) {
+		for (StyledText styledText : styledText) {
 			if (!styledText.getFontDescriptor().equals(lastFontDesc)) {
 				lastFontDesc = styledText.getFontDescriptor();
 				contentStream.setFont(lastFontDesc.getFont(),
@@ -119,9 +127,54 @@ public class TextLine implements TextSequence {
 		contentStream.restoreGraphicsState();
 	}
 
+	
 	@Override
 	public String toString() {
-		return "TextLine [line=" + fragments + "]";
+		return "TextLine [styledText=" + styledText + ", newLine=" + newLine
+				+ "]";
+	}
+
+
+	private static class TextLineIterator implements Iterator<TextFragment> {
+
+		private Iterator<StyledText> styledText;
+		private NewLine newLine;
+		
+		public TextLineIterator(Iterator<StyledText> styledText, NewLine newLine) {
+			super();
+			this.styledText = styledText;
+			this.newLine = newLine;
+		}
+
+		@Override
+		public boolean hasNext() {
+			return styledText.hasNext() || newLine != null;
+		}
+
+		@Override
+		public TextFragment next() {
+			TextFragment next = null;
+			if (styledText.hasNext()) {
+				next = styledText.next();
+			} else if (newLine != null) {
+				next = newLine;
+				newLine = null;
+			}
+			return next;
+		}
+
+		@Override
+		public void remove() {
+			throw new UnsupportedOperationException();
+		}
+		
+	}
+	
+	public static void main(String[] args) throws Exception {
+		TextLine emptyLine = new TextLine();
+		emptyLine.setNewLine(new NewLine(14));
+		System.out.println(emptyLine.getHeight());
+		System.out.println(emptyLine.getLineHeightWithSpacing(1.3f));
 	}
 
 }

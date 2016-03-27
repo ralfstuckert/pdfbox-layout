@@ -28,7 +28,7 @@ public class ControlFragment implements TextFragment {
 
 	@Override
 	public float getHeight() throws IOException {
-		return 0;
+		return getFontDescriptor() == null ? 0 : getFontDescriptor().getSize();
 	}
 
 	@Override

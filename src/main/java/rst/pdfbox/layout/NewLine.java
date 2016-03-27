@@ -14,8 +14,5 @@ public class NewLine extends ControlFragment {
 		this(new FontDescriptor(DEFAULT_FONT_DESCRIPTOR.getFont(), fontSize));
 	}
 	
-	public StyledText asBlankLine() {
-		return new StyledText("", getFontDescriptor());
-	}
 
 }

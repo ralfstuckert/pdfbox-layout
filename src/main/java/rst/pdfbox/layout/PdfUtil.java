@@ -102,16 +102,14 @@ public class PdfUtil {
 		return font;
 	}
 
-	public static List<TextLine> getLinesWithoutLineBreak(
+	public static List<TextLine> getLines(
 			final TextSequence text) throws IOException {
 		final List<TextLine> result = new ArrayList<TextLine>();
 
 		TextLine line = new TextLine();
 		for (TextFragment fragment : text) {
 			if (fragment instanceof NewLine) {
-				if (line.isEmpty()) {
-					line.add(((NewLine) fragment).asBlankLine());
-				}
+				line.setNewLine((NewLine)fragment);
 				result.add(line);
 				line = new TextLine();
 			} else {
@@ -124,28 +122,10 @@ public class PdfUtil {
 		return result;
 	}
 
-	public static List<TextSequence> getLines(final TextSequence text)
-			throws IOException {
-		final List<TextSequence> result = new ArrayList<TextSequence>();
-
-		TextFlow line = new TextFlow();
-		for (TextFragment fragment : text) {
-			line.add(fragment);
-			if (fragment instanceof NewLine) {
-				result.add(line);
-				line = new TextFlow();
-			}
-		}
-		if (!line.isEmpty()) {
-			result.add(line);
-		}
-		return result;
-	}
-
 	public static Divided divide(final TextSequence text, final float maxWidth,
 			final float maxHeight) throws IOException {
 		TextFlow wrapped = wordWrap(text, maxWidth);
-		List<TextSequence> lines = getLines(wrapped);
+		List<TextLine> lines = getLines(wrapped);
 
 		Paragraph first = new Paragraph();
 		Paragraph last = new Paragraph();
@@ -159,7 +139,7 @@ public class PdfUtil {
 
 		int index = 0;
 		do {
-			TextSequence line = lines.get(index);
+			TextLine line = lines.get(index);
 			first.add(line);
 			++index;
 		} while (index < lines.size() && first.getHeight() < maxHeight);
@@ -203,7 +183,7 @@ public class PdfUtil {
 					if (maxWidth > 0 && lineLength > 0
 							&& lineLength + length + extraSpace > maxWidth) {
 						// word exceeds max width, so create new line
-						result.add(new NewLine(fontDescriptor));
+						result.add(new WrappingNewLine(fontDescriptor));
 						lineLength = 0;
 					}
 					if (lineLength > 0 && word.getText().length() > 0) {
@@ -223,7 +203,7 @@ public class PdfUtil {
 	public static List<TextLine> wordWrapToLines(final TextSequence text,
 			final float maxWidth) throws IOException {
 		TextFlow wrapped = PdfUtil.wordWrap(text, maxWidth);
-		List<TextLine> lines = PdfUtil.getLinesWithoutLineBreak(wrapped);
+		List<TextLine> lines = PdfUtil.getLines(wrapped);
 		return lines;
 	}
 
