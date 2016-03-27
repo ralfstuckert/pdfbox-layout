@@ -13,8 +13,6 @@ import org.apache.pdfbox.pdmodel.common.PDRectangle;
 
 import rst.pdfbox.layout.BaseFont;
 import rst.pdfbox.layout.Coords;
-import rst.pdfbox.layout.PdfUtil;
-import rst.pdfbox.layout.TextFlow;
 
 public class Document implements RenderListener {
 
@@ -26,7 +24,6 @@ public class Document implements RenderListener {
 
 	private final List<Element> elements = new ArrayList<Element>();
 	private final List<RenderListener> renderListener = new CopyOnWriteArrayList<RenderListener>();
-
 
 	public Document(PDRectangle mediaBox) {
 		this(mediaBox, 0, 0, 0, 0);
@@ -151,12 +148,10 @@ public class Document implements RenderListener {
 
 		Document document = new Document(PDRectangle.A4, 20, 40, 20, 40);
 		Paragraph paragraph = new Paragraph();
-		TextFlow textFlow = PdfUtil.createTextFlowFromMarkup(text, 11,
-				BaseFont.Times);
-		paragraph.add(textFlow);
+		paragraph.addMarkup(text, 11, BaseFont.Times);
 
 		Paragraph para2 = new Paragraph();
-		para2.add(PdfUtil.createTextFlowFromMarkup("Huhu", 30, BaseFont.Times));
+		para2.addMarkup("Huhu", 30, BaseFont.Times);
 		para2.setAbsolutePosition(new Coords(40, 100));
 		document.add(para2);
 
@@ -169,18 +164,19 @@ public class Document implements RenderListener {
 		// document.add(paragraph);
 		// document.add(ControlElement.NEWPAGE);
 		// document.add(ControlElement.NEWPAGE);
-		
+
 		document.addRenderListener(new RenderListener() {
-			
+
 			@Override
 			public void beforePage(final RenderContext renderContext) {
-				System.out.println("before page " + renderContext.getPageIndex());
+				System.out.println("before page "
+						+ renderContext.getPageIndex());
 			}
-			
+
 			@Override
 			public void afterPage(final RenderContext renderContext) {
 				System.out.println("after page " + renderContext.getPageIndex());
-				
+
 			}
 		});
 

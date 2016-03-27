@@ -6,8 +6,8 @@ import org.apache.pdfbox.pdmodel.PDPageContentStream;
 
 import rst.pdfbox.layout.Alignment;
 import rst.pdfbox.layout.Coords;
-import rst.pdfbox.layout.PdfUtil;
 import rst.pdfbox.layout.TextFlow;
+import rst.pdfbox.layout.TextSequenceUtil;
 import rst.pdfbox.layout.WidthRespecting;
 
 public class Paragraph extends TextFlow implements DrawableElement,
@@ -41,7 +41,7 @@ public class Paragraph extends TextFlow implements DrawableElement,
 
 	@Override
 	public Divided divide(float maxHeight) throws IOException {
-		return PdfUtil.divide(this, getMaxWidth(), maxHeight);
+		return TextSequenceUtil.divide(this, getMaxWidth(), maxHeight);
 	}
 
 }

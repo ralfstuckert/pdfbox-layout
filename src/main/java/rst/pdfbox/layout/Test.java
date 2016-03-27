@@ -20,7 +20,7 @@ public class Test {
 		PDPageContentStream contentStream = new PDPageContentStream(test, page,
 				true, true);
 		TextFlow paragraph = new TextFlow();
-		TextFlow text = PdfUtil
+		TextFlow text = TextFlowUtil
 				.createTextFlowFromMarkup(
 						"Hallo *bold _italic boldend* italicend_af\n hdsafkhkhds \\*dsjhfs",
 						11, BaseFont.Times);
