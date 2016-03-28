@@ -106,7 +106,7 @@ public class RenderContext implements Closeable {
 		float oldMaxWidth = -1;
 		if (drawable instanceof WidthRespecting) {
 			WidthRespecting flowing = (WidthRespecting) drawable;
-			flowing.getMaxWidth();
+			oldMaxWidth = flowing.getMaxWidth();
 			if (oldMaxWidth < 0) {
 				flowing.setMaxWidth(getWidth());
 			}

@@ -15,19 +15,10 @@ import org.apache.pdfbox.pdmodel.font.PDFont;
 public class TextFlowUtil {
 
 	public static TextFlow createTextFlow(final String text,
-			final float fontSize, final BaseFont baseFont) {
-		return createTextFlow(text, fontSize, baseFont.getPlainFont(),
-				baseFont.getBoldFont(), baseFont.getItalicFont(),
-				baseFont.getBoldItalicFont());
-	}
-
-	public static TextFlow createTextFlow(final String text,
-			final float fontSize, final PDFont plainFont,
-			final PDFont boldFont, final PDFont italicFont,
-			final PDFont boldItalicFont) {
+			final float fontSize, final PDFont font) {
 		final Iterable<CharSequence> parts = fromPlainText(text);
-		return createTextFlow(parts, fontSize, plainFont, boldFont, italicFont,
-				boldItalicFont);
+		return createTextFlow(parts, fontSize, font, font, font,
+				font);
 	}
 
 	public static TextFlow createTextFlowFromMarkup(final String markup,

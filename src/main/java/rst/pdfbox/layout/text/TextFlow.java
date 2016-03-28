@@ -17,15 +17,8 @@ public class TextFlow implements TextSequence, WidthRespecting {
 	private float maxWidth = -1;
 
 
-	public void addText(final String text, final float fontSize, final BaseFont baseFont) {
-		add(TextFlowUtil.createTextFlow(text, fontSize, baseFont));
-	}
-	
-	public void addText(final String text,
-			final float fontSize, final PDFont plainFont,
-			final PDFont boldFont, final PDFont italicFont,
-			final PDFont boldItalicFont) {
-		add(TextFlowUtil.createTextFlow(text, fontSize, plainFont, boldFont, italicFont, boldItalicFont));
+	public void addText(final String text, final float fontSize, final PDFont font) {
+		add(TextFlowUtil.createTextFlow(text, fontSize, font));
 	}
 	
 	public void addMarkup(final String markup, final float fontSize, final BaseFont baseFont) {
