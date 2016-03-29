@@ -4,13 +4,21 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 
+import rst.pdfbox.layout.elements.render.VerticalLayout;
+import rst.pdfbox.layout.elements.render.VerticalLayoutHint;
+import rst.pdfbox.layout.elements.render.Layout;
+import rst.pdfbox.layout.elements.render.LayoutHint;
+import rst.pdfbox.layout.elements.render.RenderContext;
+import rst.pdfbox.layout.elements.render.RenderListener;
 import rst.pdfbox.layout.text.BaseFont;
 import rst.pdfbox.layout.text.Coords;
 
@@ -22,8 +30,10 @@ public class Document implements RenderListener {
 	private final float marginBottom;
 	private final PDRectangle mediaBox;
 
-	private final List<Element> elements = new ArrayList<Element>();
+	private final Map<Element, LayoutHint> elements = new LinkedHashMap<>();
 	private final List<RenderListener> renderListener = new CopyOnWriteArrayList<RenderListener>();
+
+	private Layout layout = new VerticalLayout();
 
 	public Document(PDRectangle mediaBox) {
 		this(mediaBox, 0, 0, 0, 0);
@@ -39,7 +49,11 @@ public class Document implements RenderListener {
 	}
 
 	public void add(final Element element) {
-		elements.add(element);
+		add(element, new VerticalLayoutHint());
+	}
+
+	public void add(final Element element, final LayoutHint layoutHint) {
+		elements.put(element, layoutHint);
 	}
 
 	public void remove(final Element element) {
@@ -69,12 +83,18 @@ public class Document implements RenderListener {
 	public PDDocument render() throws IOException {
 		PDDocument document = new PDDocument();
 		RenderContext renderContext = new RenderContext(this, document);
-		for (Element element : elements) {
+		for (Entry<Element, LayoutHint> entry : elements.entrySet()) {
+			Element element = entry.getKey();
+			LayoutHint layoutHint = entry.getValue();
+			
 			if (element instanceof Drawable) {
-				renderContext.draw((Drawable) element);
+				layout.render(renderContext, (Drawable) element, layoutHint);
 			}
 			if (element == ControlElement.NEWPAGE) {
 				renderContext.newPage();
+			}
+			if (element instanceof Layout) {
+				layout = (Layout) element;
 			}
 		}
 		renderContext.close();

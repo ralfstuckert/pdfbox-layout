@@ -1,4 +1,4 @@
-package rst.pdfbox.layout.elements;
+package rst.pdfbox.layout.elements.render;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -7,9 +7,8 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 
-import rst.pdfbox.layout.elements.Dividable.Divided;
+import rst.pdfbox.layout.elements.Document;
 import rst.pdfbox.layout.text.Coords;
-import rst.pdfbox.layout.text.WidthRespecting;
 
 public class RenderContext implements Closeable {
 
@@ -72,70 +71,6 @@ public class RenderContext implements Closeable {
 	
 	public int getPageIndex() {
 		return pageIndex;
-	}
-
-	public void draw(final Drawable drawable) throws IOException {
-		if (drawable.getAbsolutePosition() != null) {
-			drawAbsolute(drawable, drawable.getAbsolutePosition());
-		} else {
-			drawReleative(drawable);
-		}
-	}
-
-	protected void drawReletiveAndMovePosition(final Drawable drawable)
-			throws IOException {
-		getContentStream().saveGraphicsState();
-		getContentStream().addRect(document.getMarginLeft(),
-				document.getMarginBottom(), getWidth(), getHeight());
-		getContentStream().clip();
-
-		drawable.draw(getContentStream(), getCurrentPosition());
-
-		getContentStream().restoreGraphicsState();
-
-		movePositionBy(0, -drawable.getHeight());
-	}
-
-	protected void drawAbsolute(final Drawable drawable, final Coords coords)
-			throws IOException {
-		drawable.draw(getContentStream(), coords);
-	}
-
-	protected void drawReleative(final Drawable drawable) throws IOException {
-
-		float oldMaxWidth = -1;
-		if (drawable instanceof WidthRespecting) {
-			WidthRespecting flowing = (WidthRespecting) drawable;
-			oldMaxWidth = flowing.getMaxWidth();
-			if (oldMaxWidth < 0) {
-				flowing.setMaxWidth(getWidth());
-			}
-		}
-
-		Drawable drawablePart = drawable;
-		while (getRemainingHeight() < drawablePart.getHeight()) {
-			Dividable dividable = null;
-			if (drawablePart instanceof Dividable) {
-				dividable = (Dividable) drawablePart;
-			} else {
-				dividable = new Cutter(drawablePart);
-			}
-			Divided divided = dividable.divide(getRemainingHeight());
-			drawReletiveAndMovePosition(divided.getFirst());
-
-			// new page
-			newPage();
-
-			drawablePart = divided.getRest();
-		}
-
-		drawReletiveAndMovePosition(drawablePart);
-		
-		if (drawable instanceof WidthRespecting) {
-			if (oldMaxWidth < 0) {
-				((WidthRespecting) drawable).setMaxWidth(oldMaxWidth);
-			}
-		}
 	}
 
 	public void newPage() throws IOException {
