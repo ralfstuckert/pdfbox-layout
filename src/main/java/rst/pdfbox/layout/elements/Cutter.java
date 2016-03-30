@@ -6,18 +6,21 @@ import org.apache.pdfbox.pdmodel.PDPageContentStream;
 
 import rst.pdfbox.layout.text.Coords;
 
+/**
+ * A cutter transforms any Drawable element into a {@link Dividable}. It simply
+ * <em>cuts</em> the drawable vertically into pieces matching the target height.
+ */
 public class Cutter implements Dividable, Drawable {
 
 	private final Drawable undividable;
 	private final float viewPortY;
 	private final float viewPortHeight;
-	
 
 	public Cutter(Drawable undividableElement) throws IOException {
 		this(undividableElement, 0, undividableElement.getHeight());
 	}
 
-	Cutter(Drawable undividable, float viewPortY, float viewPortHeight) {
+	protected Cutter(Drawable undividable, float viewPortY, float viewPortHeight) {
 		this.undividable = undividable;
 		this.viewPortY = viewPortY;
 		this.viewPortHeight = viewPortHeight;
@@ -26,7 +29,8 @@ public class Cutter implements Dividable, Drawable {
 	@Override
 	public Divided divide(float maxHeight) {
 		return new Divided(new Cutter(undividable, viewPortY, maxHeight),
-				new Cutter(undividable, viewPortY- maxHeight, viewPortHeight-maxHeight));
+				new Cutter(undividable, viewPortY - maxHeight, viewPortHeight
+						- maxHeight));
 	}
 
 	@Override

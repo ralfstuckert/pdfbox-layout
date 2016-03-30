@@ -10,7 +10,12 @@ import rst.pdfbox.layout.text.TextFlow;
 import rst.pdfbox.layout.text.TextSequenceUtil;
 import rst.pdfbox.layout.text.WidthRespecting;
 
-public class Paragraph extends TextFlow implements DrawableElement,
+/**
+ * A paragraph is used as a container for {@link TextFlow text} that is drawn as
+ * one element. A paragraph has a {@link #setAlignment(Alignment) (text-) alignment}, 
+ * and {@link WidthRespecting respects a given width} by applying word-wrap.
+ */
+public class Paragraph extends TextFlow implements Drawable, Element,
 		WidthRespecting, Dividable {
 
 	private Coords absolutePosition;
@@ -25,10 +30,17 @@ public class Paragraph extends TextFlow implements DrawableElement,
 		this.absolutePosition = absolutePosition;
 	}
 
+	/**
+	 * @return the text alignment to apply. Default is left.
+	 */
 	public Alignment getAlignment() {
 		return alignment;
 	}
 
+	/**
+	 * Sets the alignment to apply.
+	 * @param alignment
+	 */
 	public void setAlignment(Alignment alignment) {
 		this.alignment = alignment;
 	}

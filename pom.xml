@@ -10,11 +10,26 @@
         Helper library for layouting text with pdfbox.
     </description>
 	<inceptionYear>2016</inceptionYear>
+	<licenses>
+		<license>
+			<name>The MIT License</name>
+			<url>https://raw.githubusercontent.com/ralfstuckert/pdfbox-layout/master/LICENSE</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+	<developers>
+		<developer>
+			<id>ralfstuckert</id>
+			<name>Ralf Stuckert</name>
+			<email>ralf.stuckert@googlemail.com</email>
+		</developer>
+	</developers>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java.version>1.7</java.version>
 		<maven.build.timestamp.format>yyyy</maven.build.timestamp.format>
+		<distribution.dir>${project.build.directory}/dist</distribution.dir>
 	</properties>
 
 	<dependencies>
@@ -25,15 +40,39 @@
 		</dependency>
 	</dependencies>
 	<build>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <configuration>
-          <source>${java.version}</source>
-          <target>${java.version}</target>
-        </configuration>
-      </plugin>
-    </plugins>
-    </build>
-    </project>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>${java.version}</source>
+					<target>${java.version}</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>attach-javadocs</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+</project>

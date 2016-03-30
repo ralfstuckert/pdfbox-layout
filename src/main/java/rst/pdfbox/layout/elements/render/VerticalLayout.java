@@ -92,7 +92,7 @@ public class VerticalLayout implements Layout {
 			// new page
 			renderContext.newPage();
 
-			drawablePart = divided.getRest();
+			drawablePart = divided.getTail();
 		}
 
 		drawReletivePartAndMovePosition(renderContext, drawablePart, layoutHint);

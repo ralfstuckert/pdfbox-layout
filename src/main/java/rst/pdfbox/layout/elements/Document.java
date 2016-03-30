@@ -1,7 +1,6 @@
 package rst.pdfbox.layout.elements;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.LinkedHashMap;
@@ -13,15 +12,16 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 
-import rst.pdfbox.layout.elements.render.VerticalLayout;
-import rst.pdfbox.layout.elements.render.VerticalLayoutHint;
 import rst.pdfbox.layout.elements.render.Layout;
 import rst.pdfbox.layout.elements.render.LayoutHint;
 import rst.pdfbox.layout.elements.render.RenderContext;
 import rst.pdfbox.layout.elements.render.RenderListener;
-import rst.pdfbox.layout.text.BaseFont;
-import rst.pdfbox.layout.text.Coords;
+import rst.pdfbox.layout.elements.render.VerticalLayout;
+import rst.pdfbox.layout.elements.render.VerticalLayoutHint;
 
+/**
+ * The central class for creating a document.
+ */
 public class Document implements RenderListener {
 
 	private final float marginLeft;
@@ -35,10 +35,28 @@ public class Document implements RenderListener {
 
 	private Layout layout = new VerticalLayout();
 
+	/**
+	 * Creates a Document based on the given media box. By default, a
+	 * {@link VerticalLayout} is used.
+	 * 
+	 * @param mediaBox
+	 *            the media box to use.
+	 */
 	public Document(PDRectangle mediaBox) {
 		this(mediaBox, 0, 0, 0, 0);
 	}
 
+	/**
+	 * Creates a Document based on the given media box and margins. By default,
+	 * a {@link VerticalLayout} is used.
+	 * 
+	 * @param mediaBox
+	 *            the media box to use.
+	 * @param marginLeft
+	 * @param marginRight
+	 * @param marginTop
+	 * @param marginBottom
+	 */
 	public Document(PDRectangle mediaBox, float marginLeft, float marginRight,
 			float marginTop, float marginBottom) {
 		this.mediaBox = mediaBox;
@@ -48,30 +66,55 @@ public class Document implements RenderListener {
 		this.marginBottom = marginBottom;
 	}
 
+	/**
+	 * Adds an element to the document using a {@link VerticalLayoutHint}.
+	 * @param element
+	 */
 	public void add(final Element element) {
 		add(element, new VerticalLayoutHint());
 	}
 
+	/**
+	 * Adds an element with the given layout hint.
+	 * @param element
+	 * @param layoutHint
+	 */
 	public void add(final Element element, final LayoutHint layoutHint) {
 		elements.put(element, layoutHint);
 	}
 
+	/**
+	 * Removes the given element.
+	 * @param element
+	 */
 	public void remove(final Element element) {
 		elements.remove(element);
 	}
 
+	/**
+	 * @return the left document margin.
+	 */
 	public float getMarginLeft() {
 		return marginLeft;
 	}
 
+	/**
+	 * @return the right document margin.
+	 */
 	public float getMarginRight() {
 		return marginRight;
 	}
 
+	/**
+	 * @return the top document margin.
+	 */
 	public float getMarginTop() {
 		return marginTop;
 	}
 
+	/**
+	 * @return the bottom document margin.
+	 */
 	public float getMarginBottom() {
 		return marginBottom;
 	}
@@ -80,13 +123,18 @@ public class Document implements RenderListener {
 		return mediaBox;
 	}
 
+	/**
+	 * Renders all elements and returns the resulting {@link PDDocument}.
+	 * @return the resulting {@link PDDocument}
+	 * @throws IOException
+	 */
 	public PDDocument render() throws IOException {
 		PDDocument document = new PDDocument();
 		RenderContext renderContext = new RenderContext(this, document);
 		for (Entry<Element, LayoutHint> entry : elements.entrySet()) {
 			Element element = entry.getKey();
 			LayoutHint layoutHint = entry.getValue();
-			
+
 			if (element instanceof Drawable) {
 				layout.render(renderContext, (Drawable) element, layoutHint);
 			}
@@ -101,24 +149,42 @@ public class Document implements RenderListener {
 		return document;
 	}
 
-	public void safe(final File file) throws IOException {
+	/**
+	 * {@link #render() Renders} the document and saves it to the given file.
+	 * @param file
+	 * @throws IOException
+	 */
+	public void save(final File file) throws IOException {
 		try (PDDocument document = render()) {
 			document.save(file);
 		}
 	}
 
-	public void safe(final OutputStream output) throws IOException {
+	/**
+	 * {@link #render() Renders} the document and saves it to the given output stream.
+	 * @param output
+	 * @throws IOException
+	 */
+	public void save(final OutputStream output) throws IOException {
 		try (PDDocument document = render()) {
 			document.save(output);
 		}
 	}
 
+	/**
+	 * Adds a {@link RenderListener} that will be notified during {@link #render() rendering}.
+	 * @param listener
+	 */
 	public void addRenderListener(final RenderListener listener) {
 		if (listener != null) {
 			renderListener.add(listener);
 		}
 	}
 
+	/**
+	 * Removes a {@link RenderListener} .
+	 * @param listener
+	 */
 	public void removeRenderListener(final RenderListener listener) {
 		renderListener.remove(listener);
 	}
@@ -137,70 +203,4 @@ public class Document implements RenderListener {
 		}
 	}
 
-	public static void main(String[] args) throws IOException {
-		String text = "The MIT License (MIT)\n\nCopyright (c) 2016 Ralf Stuckert\n\n"
-				+ "Permission is hereby granted, free of charge, to any person obtaining a "
-				+ "copy of this software and associated documentation files (the _Software_), "
-				+ "to deal in the Software without restriction, including without limitation "
-				+ "the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or "
-				+ "sell copies of the Software, and to permit persons to whom the Software is "
-				+ "furnished to do so, subject to the following conditions:"
-				+ "\n\n"
-				+ "The above copyright notice and this permission notice shall be included "
-				+ "in all copies or substantial portions of the Software."
-				+ "\n\n"
-				+ "*THE SOFTWARE IS PROVIDED _AS IS_, WITHOUT WARRANTY OF ANY KIND, EXPRESS "
-				+ "OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, "
-				+ "FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE "
-				+ "AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, "
-				+ "WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN "
-				+ "CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.*\n";
-
-		text += text;
-		text += text;
-		// text += text;
-		// text += text;
-		// text += text;
-		// text += text;
-		// text += text;
-		// text += text;
-		// text += text;
-
-		Document document = new Document(PDRectangle.A4, 20, 40, 20, 40);
-		Paragraph paragraph = new Paragraph();
-		paragraph.addMarkup(text, 11, BaseFont.Times);
-
-		Paragraph para2 = new Paragraph();
-		para2.addMarkup("Huhu", 30, BaseFont.Times);
-		para2.setAbsolutePosition(new Coords(40, 100));
-		document.add(para2);
-
-		document.add(new VerticalSpacer(100));
-		document.add(paragraph);
-		document.add(new VerticalSpacer(200));
-		document.add(paragraph);
-		document.add(new VerticalSpacer(2000));
-		// document.add(ControlElement.NEWPAGE);
-		// document.add(paragraph);
-		// document.add(ControlElement.NEWPAGE);
-		// document.add(ControlElement.NEWPAGE);
-
-		document.addRenderListener(new RenderListener() {
-
-			@Override
-			public void beforePage(final RenderContext renderContext) {
-				System.out.println("before page "
-						+ renderContext.getPageIndex());
-			}
-
-			@Override
-			public void afterPage(final RenderContext renderContext) {
-				System.out.println("after page " + renderContext.getPageIndex());
-
-			}
-		});
-
-		final OutputStream outputStream = new FileOutputStream("test.pdf");
-		document.safe(outputStream);
-	}
 }

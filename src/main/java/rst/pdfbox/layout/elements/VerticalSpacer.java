@@ -6,10 +6,17 @@ import org.apache.pdfbox.pdmodel.PDPageContentStream;
 
 import rst.pdfbox.layout.text.Coords;
 
-public class VerticalSpacer implements DrawableElement, Dividable {
+/**
+ * A drawable element that occupies some vertical space without any graphical representation.
+ */
+public class VerticalSpacer implements Drawable, Element, Dividable {
 
 	private float height;
 
+	/**
+	 * Creates a vertical space with the given height.
+	 * @param height
+	 */
 	public VerticalSpacer(float height) {
 		this.height = height;
 	}

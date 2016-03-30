@@ -18,7 +18,7 @@ import org.apache.pdfbox.util.Matrix;
 
 public class TextLine implements TextSequence {
 
-	private final List<StyledText> styledText = new ArrayList<StyledText>();
+	private final List<StyledText> styledTextList = new ArrayList<StyledText>();
 	private NewLine newLine;
 
 	TextLine() {
@@ -26,7 +26,7 @@ public class TextLine implements TextSequence {
 	}
 
 	public void add(final StyledText fragment) {
-		styledText.add(fragment);
+		styledTextList.add(fragment);
 	}
 
 	public void add(final TextLine textLine) {
@@ -44,16 +44,16 @@ public class TextLine implements TextSequence {
 	}
 
 	public List<StyledText> getStyledTexts() {
-		return Collections.unmodifiableList(styledText);
+		return Collections.unmodifiableList(styledTextList);
 	}
 
 	@Override
 	public Iterator<TextFragment> iterator() {
-		return new TextLineIterator(styledText.iterator(), newLine);
+		return new TextLineIterator(styledTextList.iterator(), newLine);
 	}
 
 	public boolean isEmpty() {
-		return styledText.isEmpty() && newLine == null;
+		return styledTextList.isEmpty() && newLine == null;
 	}
 
 	@Override
@@ -111,7 +111,7 @@ public class TextLine implements TextSequence {
 				.getX(), originUpperLeft.getY() - getAscent()));
 		FontDescriptor lastFontDesc = null;
 		Color lastColor = null;
-		for (StyledText styledText : styledText) {
+		for (StyledText styledText : styledTextList) {
 			if (!styledText.getFontDescriptor().equals(lastFontDesc)) {
 				lastFontDesc = styledText.getFontDescriptor();
 				contentStream.setFont(lastFontDesc.getFont(),
@@ -130,7 +130,7 @@ public class TextLine implements TextSequence {
 	
 	@Override
 	public String toString() {
-		return "TextLine [styledText=" + styledText + ", newLine=" + newLine
+		return "TextLine [styledText=" + styledTextList + ", newLine=" + newLine
 				+ "]";
 	}
 

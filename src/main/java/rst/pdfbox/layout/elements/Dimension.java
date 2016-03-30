@@ -1,5 +1,8 @@
 package rst.pdfbox.layout.elements;
 
+/**
+ * In order to avoid dependencies to AWT, we use our own Dimension class here.
+ */
 public class Dimension {
 
 	private final float width;

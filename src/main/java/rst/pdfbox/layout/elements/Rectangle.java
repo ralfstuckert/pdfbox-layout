@@ -1,5 +1,9 @@
 package rst.pdfbox.layout.elements;
 
+
+/**
+ * In order to avoid dependencies to AWT, we use our own Rectangle class here.
+ */
 public class Rectangle extends Dimension {
 
 	private final float x;
