@@ -2,6 +2,10 @@ package rst.pdfbox.layout.text;
 
 import java.util.regex.Pattern;
 
+/**
+ * A control character represents the regex and esca
+ *
+ */
 public class ControlCharacter implements CharSequence {
 
 	public static final ControlCharacter BOLD = new ControlCharacter("BOLD", "(?<!\\\\)(\\\\\\\\)*\\*", "*");
@@ -9,19 +13,19 @@ public class ControlCharacter implements CharSequence {
 	public static final ControlCharacter NEWLINE = new ControlCharacter("NEWLINE", "(\r\n|\n)", null);
 
 	private String description;
-	private String regex;
+	private Pattern pattern;
 	private String charaterToEscape;
 	
 	private ControlCharacter(final String description, final String regex, final String charaterToEscape ) {
 		this.description = description;
-		this.regex = regex;
+		this.pattern = Pattern.compile(regex);
 		this.charaterToEscape = charaterToEscape;
 	}
 	
 	
 	
-	public String getRegex() {
-		return regex;
+	public Pattern getPattern() {
+		return pattern;
 	}
 
 	public String getCharaterToEscape() {

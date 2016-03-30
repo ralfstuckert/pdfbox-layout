@@ -113,7 +113,7 @@ public class TextFlowUtil {
 		for (CharSequence current : markup) {
 			if (current instanceof String) {
 				String string = (String) current;
-				String[] parts = string.split(ctrl.getRegex(), -1);
+				String[] parts = ctrl.getPattern().split(string, -1);
 				for (int i = 0; i < parts.length; i++) {
 					if (i > 0) {
 						result.add(ctrl);
