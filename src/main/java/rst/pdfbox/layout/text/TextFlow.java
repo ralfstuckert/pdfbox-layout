@@ -13,13 +13,28 @@ import org.apache.pdfbox.pdmodel.font.PDFont;
  * width} by word wrapping the text. The text may contain line breaks ('\n').<br/>
  * In order to ease creation of styled text, this class supports a kind of
  * {@link #addMarkup(String, float, BaseFont) markup}. The following raw text
- * <pre>Markup supports *bold*, _italic_, and *even _mixed* markup_.</pre>
+ * 
+ * <pre>
+ * Markup supports *bold*, _italic_, and *even _mixed* markup_.
+ * </pre>
+ * 
  * is rendered like this:
- * <pre>Markup supports <b>bold</b>, <em>italic</em>, and <b>even <em>mixed</b> markup</em>.</pre>
+ * 
+ * <pre>
+ * Markup supports <b>bold</b>, <em>italic</em>, and <b>even <em>mixed</b> markup</em>.
+ * </pre>
+ * 
  * Use backslash to escape special characters '*', '_' and '\' itself:
- * <pre>Escape \* with \\\* and \_ with \\\_ in markup.</pre>
+ * 
+ * <pre>
+ * Escape \* with \\\* and \_ with \\\_ in markup.
+ * </pre>
+ * 
  * is rendered like this:
- * <pre>Escape * with \* and _ with \_ in markup.</pre>
+ * 
+ * <pre>
+ * Escape * with \* and _ with \_ in markup.
+ * </pre>
  */
 public class TextFlow implements TextSequence, WidthRespecting {
 
@@ -48,9 +63,13 @@ public class TextFlow implements TextSequence, WidthRespecting {
 	/**
 	 * Adds some markup to the text flow.
 	 * 
-	 * @param markup the markup to add.
-	 * @param fontSize the font size to use.
-	 * @param baseFont the base font describing the bundle of plain/blold/italic/bold-italic fonts.
+	 * @param markup
+	 *            the markup to add.
+	 * @param fontSize
+	 *            the font size to use.
+	 * @param baseFont
+	 *            the base font describing the bundle of
+	 *            plain/blold/italic/bold-italic fonts.
 	 */
 	public void addMarkup(final String markup, final float fontSize,
 			final BaseFont baseFont) {
@@ -60,12 +79,18 @@ public class TextFlow implements TextSequence, WidthRespecting {
 	/**
 	 * Adds some markup to the text flow.
 	 * 
-	 * @param markup the markup to add.
-	 * @param fontSize the font size to use.
-	 * @param plainFont the plain font to use.
-	 * @param boldFont the bold font to use.
-	 * @param italicFont the italic font to use.
-	 * @param boldItalicFont the bold-italic font to use.
+	 * @param markup
+	 *            the markup to add.
+	 * @param fontSize
+	 *            the font size to use.
+	 * @param plainFont
+	 *            the plain font to use.
+	 * @param boldFont
+	 *            the bold font to use.
+	 * @param italicFont
+	 *            the italic font to use.
+	 * @param boldItalicFont
+	 *            the bold-italic font to use.
 	 */
 	public void addMarkup(final String markup, final float fontSize,
 			final PDFont plainFont, final PDFont boldFont,
@@ -76,6 +101,7 @@ public class TextFlow implements TextSequence, WidthRespecting {
 
 	/**
 	 * Adds a text sequence to this flow.
+	 * 
 	 * @param sequence
 	 */
 	public void add(final TextSequence sequence) {
@@ -86,6 +112,7 @@ public class TextFlow implements TextSequence, WidthRespecting {
 
 	/**
 	 * Adds a text fragment to this flow.
+	 * 
 	 * @param fragment
 	 */
 	public void add(final TextFragment fragment) {
@@ -94,6 +121,7 @@ public class TextFlow implements TextSequence, WidthRespecting {
 
 	/**
 	 * Removes the last added fragment.
+	 * 
 	 * @return the removed fragment (if any).
 	 */
 	public TextFragment removeLast() {
@@ -125,10 +153,19 @@ public class TextFlow implements TextSequence, WidthRespecting {
 		this.maxWidth = maxWidth;
 	}
 
+	/**
+	 * @return the factor multiplied with the height to calculate the line
+	 *         spacing.
+	 */
 	public float getLineSpacing() {
 		return lineSpacing;
 	}
 
+	/**
+	 * Sets the factor multiplied with the height to calculate the line spacing.
+	 * 
+	 * @param lineSpacing
+	 */
 	public void setLineSpacing(float lineSpacing) {
 		this.lineSpacing = lineSpacing;
 	}

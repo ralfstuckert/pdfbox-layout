@@ -16,33 +16,50 @@ import java.util.List;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.util.Matrix;
 
+/**
+ * A text of line containing only {@link StyledText}s. It may be terminated by a {@link #getNewLine() new line}.
+ */
 public class TextLine implements TextSequence {
 
 	private final List<StyledText> styledTextList = new ArrayList<StyledText>();
 	private NewLine newLine;
 
-	TextLine() {
-		super();
-	}
-
+	/**
+	 * Adds a styled text.
+	 * @param fragment
+	 */
 	public void add(final StyledText fragment) {
 		styledTextList.add(fragment);
 	}
 
+	/**
+	 * Adds all styled texts of the given text line.
+	 * @param textLine
+	 */
 	public void add(final TextLine textLine) {
 		for (StyledText fragment : textLine.getStyledTexts()) {
 			add(fragment);
 		}
 	}
 
+	/** 
+	 * @return the terminating new line, may be <code>null</code>.
+	 */
 	public NewLine getNewLine() {
 		return newLine;
 	}
 
+	/**
+	 * Sets the new line.
+	 * @param newLine
+	 */
 	public void setNewLine(NewLine newLine) {
 		this.newLine = newLine;
 	}
 
+	/**
+	 * @return the styled texts building up this line.
+	 */
 	public List<StyledText> getStyledTexts() {
 		return Collections.unmodifiableList(styledTextList);
 	}
@@ -52,6 +69,9 @@ public class TextLine implements TextSequence {
 		return new TextLineIterator(styledTextList.iterator(), newLine);
 	}
 
+	/**
+	 * @return <code>true</code> if the line contains neither styled text nor a new line.
+	 */
 	public boolean isEmpty() {
 		return styledTextList.isEmpty() && newLine == null;
 	}
@@ -74,6 +94,10 @@ public class TextLine implements TextSequence {
 		return max;
 	}
 
+	/**
+	 * @return the (max) ascent of this line.
+	 * @throws IOException
+	 */
 	protected float getAscent() throws IOException {
 		float max = 0;
 		for (TextFragment fragment : this) {
@@ -85,6 +109,9 @@ public class TextLine implements TextSequence {
 		return max;
 	}
 
+	/**
+	 * @Deprecated
+	 */
 	public float getLineHeightWithSpacing(float lineSpacing) throws IOException {
 		float width = getWidth();
 		float max = 0;
@@ -170,11 +197,5 @@ public class TextLine implements TextSequence {
 		
 	}
 	
-	public static void main(String[] args) throws Exception {
-		TextLine emptyLine = new TextLine();
-		emptyLine.setNewLine(new NewLine(14));
-		System.out.println(emptyLine.getHeight());
-		System.out.println(emptyLine.getLineHeightWithSpacing(1.3f));
-	}
 
 }
