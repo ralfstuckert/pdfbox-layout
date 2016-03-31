@@ -5,7 +5,7 @@ import java.io.IOException;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 
 import rst.pdfbox.layout.text.Alignment;
-import rst.pdfbox.layout.text.Coords;
+import rst.pdfbox.layout.text.Position;
 import rst.pdfbox.layout.text.TextFlow;
 import rst.pdfbox.layout.text.TextSequenceUtil;
 import rst.pdfbox.layout.text.WidthRespecting;
@@ -18,15 +18,15 @@ import rst.pdfbox.layout.text.WidthRespecting;
 public class Paragraph extends TextFlow implements Drawable, Element,
 		WidthRespecting, Dividable {
 
-	private Coords absolutePosition;
+	private Position absolutePosition;
 	private Alignment alignment = Alignment.Left;
 
 	@Override
-	public Coords getAbsolutePosition() {
+	public Position getAbsolutePosition() {
 		return absolutePosition;
 	}
 
-	public void setAbsolutePosition(Coords absolutePosition) {
+	public void setAbsolutePosition(Position absolutePosition) {
 		this.absolutePosition = absolutePosition;
 	}
 
@@ -46,7 +46,7 @@ public class Paragraph extends TextFlow implements Drawable, Element,
 	}
 
 	@Override
-	public void draw(PDPageContentStream contentStream, Coords origin)
+	public void draw(PDPageContentStream contentStream, Position origin)
 			throws IOException {
 		drawText(contentStream, origin, getAlignment());
 	}

@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 
-import rst.pdfbox.layout.text.Coords;
+import rst.pdfbox.layout.text.Position;
 
 /**
  * A cutter transforms any Drawable element into a {@link Dividable}. It simply
@@ -44,14 +44,14 @@ public class Cutter implements Dividable, Drawable {
 	}
 
 	@Override
-	public Coords getAbsolutePosition() {
+	public Position getAbsolutePosition() {
 		return null;
 	}
 
 	@Override
-	public void draw(PDPageContentStream contentStream, Coords origin)
+	public void draw(PDPageContentStream contentStream, Position origin)
 			throws IOException {
-		Coords viewPortOrigin = origin.add(0, -viewPortY);
+		Position viewPortOrigin = origin.add(0, -viewPortY);
 		undividable.draw(contentStream, viewPortOrigin);
 	}
 

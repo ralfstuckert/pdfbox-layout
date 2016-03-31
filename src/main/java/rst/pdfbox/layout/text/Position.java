@@ -4,7 +4,7 @@ package rst.pdfbox.layout.text;
  * In order to avoid dependencies to AWT classes (e.g. Point), we have our own
  * silly implemenation of a position.
  */
-public class Coords {
+public class Position {
 
 	private final float x;
 	private final float y;
@@ -14,7 +14,7 @@ public class Coords {
 	 * @param x
 	 * @param y
 	 */
-	public Coords(float x, float y) {
+	public Position(float x, float y) {
 		this.x = x;
 		this.y = y;
 	}
@@ -39,13 +39,13 @@ public class Coords {
 	 * @param y the y offset to add.
 	 * @return the new position.
 	 */
-	public Coords add(final float x, final float y) {
-		return new Coords(this.x + x, this.y + y);
+	public Position add(final float x, final float y) {
+		return new Position(this.x + x, this.y + y);
 	}
 
 	@Override
 	public String toString() {
-		return "Coords [x=" + x + ", y=" + y + "]";
+		return "Position [x=" + x + ", y=" + y + "]";
 	}
 
 	@Override
@@ -65,7 +65,7 @@ public class Coords {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Coords other = (Coords) obj;
+		Position other = (Position) obj;
 		if (Float.floatToIntBits(x) != Float.floatToIntBits(other.x))
 			return false;
 		if (Float.floatToIntBits(y) != Float.floatToIntBits(other.y))

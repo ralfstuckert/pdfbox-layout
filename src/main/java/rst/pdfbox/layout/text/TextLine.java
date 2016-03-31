@@ -131,7 +131,7 @@ public class TextLine implements TextSequence {
 
 	@Override
 	public void drawText(PDPageContentStream contentStream,
-			Coords originUpperLeft, Alignment alignment) throws IOException {
+			Position originUpperLeft, Alignment alignment) throws IOException {
 		contentStream.saveGraphicsState();
 		contentStream.beginText();
 		contentStream.setTextMatrix(new Matrix(1, 0, 0, 1, originUpperLeft

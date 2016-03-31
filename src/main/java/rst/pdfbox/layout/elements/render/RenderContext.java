@@ -8,7 +8,7 @@ import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 
 import rst.pdfbox.layout.elements.Document;
-import rst.pdfbox.layout.text.Coords;
+import rst.pdfbox.layout.text.Position;
 
 /**
  * The render context is a container providing all state of the current
@@ -21,7 +21,7 @@ public class RenderContext implements Closeable {
 	private PDPage page;
 	private int pageIndex = 0;
 	private PDPageContentStream contentStream;
-	private Coords currentPosition;
+	private Position currentPosition;
 
 	/**
 	 * Creates a render context.
@@ -41,15 +41,15 @@ public class RenderContext implements Closeable {
 	 * @return the upper left position in the document respecting the
 	 *         {@link Document document} margins.
 	 */
-	public Coords getUpperLeft() {
-		return new Coords(document.getMarginLeft(), page.getMediaBox()
+	public Position getUpperLeft() {
+		return new Position(document.getMarginLeft(), page.getMediaBox()
 				.getHeight() - document.getMarginTop());
 	}
 
 	/**
 	 * @return the current rendering position.
 	 */
-	public Coords getCurrentPosition() {
+	public Position getCurrentPosition() {
 		return currentPosition;
 	}
 

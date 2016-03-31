@@ -182,14 +182,14 @@ public class TextFlow implements TextSequence, WidthRespecting {
 	}
 
 	@Override
-	public void drawText(PDPageContentStream contentStream, Coords origin,
+	public void drawText(PDPageContentStream contentStream, Position origin,
 			Alignment alignment) throws IOException {
 		TextSequenceUtil.drawText(this, contentStream, origin, alignment,
 				getMaxWidth(), getLineSpacing());
 	}
 
 	public void drawTextRightAligned(PDPageContentStream contentStream,
-			Coords endOfFirstLine) throws IOException {
+			Position endOfFirstLine) throws IOException {
 		drawText(contentStream, endOfFirstLine.add(-getWidth(), 0),
 				Alignment.Right);
 	}

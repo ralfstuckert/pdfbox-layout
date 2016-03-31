@@ -33,9 +33,9 @@ public class Test {
 		paragraph.add(text);
 		paragraph.setMaxWidth(100);
 		float x = 400 - paragraph.getWidth();
-		paragraph.drawText(contentStream, new Coords(x, 600), Alignment.Right);
+		paragraph.drawText(contentStream, new Position(x, 600), Alignment.Right);
 		paragraph.drawText(contentStream,
-				new Coords(x, 600 - paragraph.getHeight()), Alignment.Right);
+				new Position(x, 600 - paragraph.getHeight()), Alignment.Right);
 		contentStream.close();
 		test.save(outputStream);
 		test.close();

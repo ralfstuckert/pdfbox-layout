@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 
-import rst.pdfbox.layout.text.Coords;
+import rst.pdfbox.layout.text.Position;
 
 /**
  * A drawable element that occupies some vertical space without any graphical representation.
@@ -32,12 +32,12 @@ public class VerticalSpacer implements Drawable, Element, Dividable {
 	}
 
 	@Override
-	public Coords getAbsolutePosition() {
+	public Position getAbsolutePosition() {
 		return null;
 	}
 
 	@Override
-	public void draw(PDPageContentStream contentStream, Coords origin)
+	public void draw(PDPageContentStream contentStream, Position origin)
 			throws IOException {
 		// nothing to draw
 	}

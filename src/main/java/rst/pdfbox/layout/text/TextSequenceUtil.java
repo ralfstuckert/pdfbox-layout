@@ -188,22 +188,22 @@ public class TextSequenceUtil {
 	 * @throws IOException
 	 */
 	public static void drawText(TextSequence text,
-			PDPageContentStream contentStream, Coords cursorPosition,
+			PDPageContentStream contentStream, Position cursorPosition,
 			Alignment alignment, float maxWidth, final float lineSpacing)
 			throws IOException {
 		List<TextLine> lines = wordWrapToLines(text, maxWidth);
 		float targetWidth = getMaxWidth(lines);
-		Coords coords = cursorPosition;
+		Position position = cursorPosition;
 		for (int i = 0; i < lines.size(); i++) {
 			TextLine textLine = lines.get(i);
 			float offset = getOffset(textLine, targetWidth, alignment);
-			coords = new Coords(cursorPosition.getX() + offset, coords.getY());
-			textLine.drawText(contentStream, coords, alignment);
+			position = new Position(cursorPosition.getX() + offset, position.getY());
+			textLine.drawText(contentStream, position, alignment);
 
 			if (i < lines.size() - 1) {
 				float nextLineHeight = lines.get(i + 1)
 						.getLineHeightWithSpacing(lineSpacing);
-				coords = coords.add(0, -nextLineHeight);
+				position = position.add(0, -nextLineHeight);
 			}
 		}
 	}

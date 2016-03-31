@@ -5,7 +5,7 @@ import java.io.IOException;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 
 import rst.pdfbox.layout.elements.render.Layout;
-import rst.pdfbox.layout.text.Coords;
+import rst.pdfbox.layout.text.Position;
 
 /**
  * Common interface for drawable objects.
@@ -31,7 +31,7 @@ public interface Drawable {
 	 * @return the absolute position.
 	 * @throws IOException
 	 */
-	Coords getAbsolutePosition();
+	Position getAbsolutePosition();
 
 	/**
 	 * Draws the object at the given position.
@@ -39,7 +39,7 @@ public interface Drawable {
 	 * @param origin
 	 * @throws IOException
 	 */
-	void draw(PDPageContentStream contentStream, Coords origin)
+	void draw(PDPageContentStream contentStream, Position origin)
 			throws IOException;
 
 }

@@ -16,6 +16,6 @@ public interface DrawableText extends Area {
 	 * @param alignment
 	 * @throws IOException
 	 */
-	void drawText(PDPageContentStream contentStream, Coords cursorPosition,
+	void drawText(PDPageContentStream contentStream, Position cursorPosition,
 			Alignment alignment) throws IOException;
 }

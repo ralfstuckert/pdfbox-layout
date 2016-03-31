@@ -11,7 +11,7 @@ import rst.pdfbox.layout.elements.Document;
 import rst.pdfbox.layout.elements.Drawable;
 import rst.pdfbox.layout.elements.VerticalSpacer;
 import rst.pdfbox.layout.text.Alignment;
-import rst.pdfbox.layout.text.Coords;
+import rst.pdfbox.layout.text.Position;
 import rst.pdfbox.layout.text.WidthRespecting;
 
 /**
@@ -39,14 +39,14 @@ public class VerticalLayout implements Layout {
 	 * @param renderContext
 	 * @param drawable
 	 * @param layoutHint
-	 * @param coords
+	 * @param position
 	 * @throws IOException
 	 */
 	protected void renderAbsolute(final RenderContext renderContext,
-			Drawable drawable, final LayoutHint layoutHint, final Coords coords)
+			Drawable drawable, final LayoutHint layoutHint, final Position position)
 			throws IOException {
 		PDPageContentStream contentStream = renderContext.getContentStream();
-		drawable.draw(contentStream, coords);
+		drawable.draw(contentStream, position);
 	}
 
 	/**
