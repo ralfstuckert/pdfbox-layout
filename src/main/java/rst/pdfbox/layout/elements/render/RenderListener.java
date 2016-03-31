@@ -7,7 +7,15 @@ package rst.pdfbox.layout.elements.render;
  */
 public interface RenderListener {
 
+	/**
+	 * Called before any rendering is performed to the page.
+	 * @param renderContext
+	 */
 	void beforePage(final RenderContext renderContext);
 
+	/**
+	 * Called after any rendering is performed to the page.
+	 * @param renderContext
+	 */
 	void afterPage(final RenderContext renderContext);
 }

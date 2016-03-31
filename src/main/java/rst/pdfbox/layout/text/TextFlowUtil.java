@@ -86,7 +86,7 @@ public class TextFlowUtil {
 
 	public static Iterable<CharSequence> fromPlainText(
 			final Iterable<CharSequence> text) {
-		return splitByControlCharacter(ControlCharacter.NEWLINE, text);
+		return splitByControlCharacter(ControlCharacter.NEWLINE, text, true);
 	}
 
 	public static Iterable<CharSequence> fromMarkup(final CharSequence markup) {
@@ -96,19 +96,19 @@ public class TextFlowUtil {
 	public static Iterable<CharSequence> fromMarkup(
 			final Iterable<CharSequence> markup) {
 		Iterable<CharSequence> text = markup;
-		text = splitByControlCharacter(ControlCharacter.BOLD, text);
-		text = splitByControlCharacter(ControlCharacter.ITALIC, text);
-		text = splitByControlCharacter(ControlCharacter.NEWLINE, text);
+		text = splitByControlCharacter(ControlCharacter.BOLD, text, false);
+		text = splitByControlCharacter(ControlCharacter.ITALIC, text, false);
+		text = splitByControlCharacter(ControlCharacter.NEWLINE, text, true);
 		return text;
 	}
 
 	protected static Iterable<CharSequence> lineBreak(
 			final Iterable<CharSequence> text) {
-		return splitByControlCharacter(ControlCharacter.NEWLINE, text);
+		return splitByControlCharacter(ControlCharacter.NEWLINE, text, true);
 	}
 
 	protected static Iterable<CharSequence> splitByControlCharacter(
-			ControlCharacter ctrl, final Iterable<CharSequence> markup) {
+			ControlCharacter ctrl, final Iterable<CharSequence> markup, final boolean unescapeBackslash) {
 		List<CharSequence> result = new ArrayList<CharSequence>();
 		for (CharSequence current : markup) {
 			if (current instanceof String) {
@@ -120,6 +120,9 @@ public class TextFlowUtil {
 					}
 					if (!parts[i].isEmpty()) {
 						String unescaped = ctrl.unescape(parts[i]);
+						if (unescapeBackslash) {
+							unescaped = ControlCharacter.unescapeBackslash(unescaped);
+						}
 						result.add(unescaped);
 					}
 				}

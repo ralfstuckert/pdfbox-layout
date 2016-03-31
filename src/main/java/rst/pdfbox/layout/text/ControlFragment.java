@@ -5,6 +5,10 @@ import java.io.IOException;
 
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 
+/**
+ * A control fragment has no drawable representation but is meant to control the text rendering.
+ *
+ */
 public class ControlFragment implements TextFragment {
 
 	protected final static FontDescriptor DEFAULT_FONT_DESCRIPTOR = new FontDescriptor(

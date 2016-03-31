@@ -10,22 +10,33 @@ import org.apache.pdfbox.pdmodel.font.PDFont;
 
 
 /**
- * Font and size.
+ * Container for a Font and size.
  */
 public class FontDescriptor {
 
 	private final PDFont font;
 	private final float size;
 
+	/**
+	 * Creates the descriptor the the given font and size.
+	 * @param font
+	 * @param size
+	 */
 	public FontDescriptor(final PDFont font, final float size) {
 		this.font = font;
 		this.size = size;
 	}
 
+	/**
+	 * @return the font.
+	 */
 	public PDFont getFont() {
 		return font;
 	}
 
+	/**
+	 * @return the size.
+	 */
 	public float getSize() {
 		return size;
 	}

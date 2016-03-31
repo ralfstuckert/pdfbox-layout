@@ -14,49 +14,85 @@ import rst.pdfbox.layout.text.Alignment;
 import rst.pdfbox.layout.text.Coords;
 import rst.pdfbox.layout.text.WidthRespecting;
 
+/**
+ * Layout implementation that stacks drawables vertically onto the page. If the
+ * remaining height on the page is not sufficient for the drawable, it will be
+ * {@link Dividable divided}. Any given {@link VerticalLayoutHint} will be taken
+ * into account to calculate the position, width, alignment etc.
+ */
 public class VerticalLayout implements Layout {
 
 	@Override
 	public void render(final RenderContext renderContext, Drawable drawable,
 			final LayoutHint layoutHint) throws IOException {
 		if (drawable.getAbsolutePosition() != null) {
-			drawAbsolute(renderContext, drawable, layoutHint,
+			renderAbsolute(renderContext, drawable, layoutHint,
 					drawable.getAbsolutePosition());
 		} else {
-			drawReleative(renderContext, drawable, layoutHint);
+			renderReleative(renderContext, drawable, layoutHint);
 		}
 	}
 
-	protected void drawAbsolute(final RenderContext renderContext,
+	/**
+	 * Draws at the given position, ignoring all layouting rules.
+	 * 
+	 * @param renderContext
+	 * @param drawable
+	 * @param layoutHint
+	 * @param coords
+	 * @throws IOException
+	 */
+	protected void renderAbsolute(final RenderContext renderContext,
 			Drawable drawable, final LayoutHint layoutHint, final Coords coords)
 			throws IOException {
 		PDPageContentStream contentStream = renderContext.getContentStream();
 		drawable.draw(contentStream, coords);
 	}
 
-	protected void drawReleative(final RenderContext renderContext,
+	/**
+	 * Renders the drawable at the {@link RenderContext#getCurrentPosition()
+	 * current position}. This method is responsible taking any top or bottom
+	 * margin described by the (Vertical-)LayoutHint into account. The actual
+	 * rendering of the drawable is performed by
+	 * {@link #layoutAndDrawReleative(RenderContext, Drawable, LayoutHint)}.
+	 * 
+	 * @param renderContext
+	 * @param drawable
+	 * @param layoutHint
+	 * @throws IOException
+	 */
+	protected void renderReleative(final RenderContext renderContext,
 			Drawable drawable, final LayoutHint layoutHint) throws IOException {
 		VerticalLayoutHint verticalLayoutHint = null;
 		if (layoutHint instanceof VerticalLayoutHint) {
 			verticalLayoutHint = (VerticalLayoutHint) layoutHint;
 			if (verticalLayoutHint.getMarginTop() > 0) {
-				drawReleativePart(renderContext, new VerticalSpacer(
+				layoutAndDrawReleative(renderContext, new VerticalSpacer(
 						verticalLayoutHint.getMarginTop()), verticalLayoutHint);
 			}
 		}
 
-		drawReleativePart(renderContext, drawable, verticalLayoutHint);
+		layoutAndDrawReleative(renderContext, drawable, verticalLayoutHint);
 
 		if (verticalLayoutHint != null) {
 			if (verticalLayoutHint.getMarginBottom() > 0) {
-				drawReleativePart(renderContext, new VerticalSpacer(
+				layoutAndDrawReleative(renderContext, new VerticalSpacer(
 						verticalLayoutHint.getMarginBottom()),
 						verticalLayoutHint);
 			}
 		}
 	}
 
-	protected void drawReleativePart(final RenderContext renderContext,
+	/**
+	 * Adjusts the width of the drawable (if it is {@link WidthRespecting}), and
+	 * divides it onto multiple pages if necessary. Actual drawing is delegated to 
+	 * {@link #drawReletivePartAndMovePosition(RenderContext, Drawable, LayoutHint)}.
+	 * @param renderContext
+	 * @param drawable
+	 * @param layoutHint
+	 * @throws IOException
+	 */
+	protected void layoutAndDrawReleative(final RenderContext renderContext,
 			Drawable drawable, final LayoutHint layoutHint) throws IOException {
 
 		float targetWidth = renderContext.getWidth();
@@ -66,7 +102,7 @@ public class VerticalLayout implements Layout {
 			targetWidth -= verticalLayoutHint.getMarginLeft();
 			targetWidth -= verticalLayoutHint.getMarginRight();
 		}
-		
+
 		float oldMaxWidth = -1;
 		if (drawable instanceof WidthRespecting) {
 			WidthRespecting flowing = (WidthRespecting) drawable;
@@ -104,6 +140,17 @@ public class VerticalLayout implements Layout {
 		}
 	}
 
+	/**
+	 * Actually draws the (drawble) part at the
+	 * {@link RenderContext#getCurrentPosition()} and moves to the new position.
+	 * Any left or right margin is taken into account to calculate the position
+	 * and alignment.
+	 * 
+	 * @param renderContext
+	 * @param drawable
+	 * @param layoutHint
+	 * @throws IOException
+	 */
 	protected void drawReletivePartAndMovePosition(
 			final RenderContext renderContext, Drawable drawable,
 			final LayoutHint layoutHint) throws IOException {
@@ -111,14 +158,14 @@ public class VerticalLayout implements Layout {
 		Document document = renderContext.getDocument();
 		float offsetX = 0;
 		if (layoutHint instanceof VerticalLayoutHint) {
-			VerticalLayoutHint verticalLayoutHint = (VerticalLayoutHint)layoutHint;
-			Alignment alignment = verticalLayoutHint
-					.getAlignment();
+			VerticalLayoutHint verticalLayoutHint = (VerticalLayoutHint) layoutHint;
+			Alignment alignment = verticalLayoutHint.getAlignment();
 			float horizontalExtraSpace = renderContext.getWidth()
 					- drawable.getWidth();
 			switch (alignment) {
 			case Right:
-				offsetX = horizontalExtraSpace - verticalLayoutHint.getMarginRight();
+				offsetX = horizontalExtraSpace
+						- verticalLayoutHint.getMarginRight();
 				break;
 			case Center:
 				offsetX = horizontalExtraSpace / 2f;

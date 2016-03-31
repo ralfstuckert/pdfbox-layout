@@ -4,8 +4,18 @@ import java.io.IOException;
 
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 
+/**
+ * Represents a drawable text.
+ */
 public interface DrawableText extends Area {
 
-	void drawText(PDPageContentStream contentStream, Coords beginOfText,
+	/**
+	 * Draws the text of the (PdfBox-) cursor position.
+	 * @param contentStream
+	 * @param cursorPosition
+	 * @param alignment
+	 * @throws IOException
+	 */
+	void drawText(PDPageContentStream contentStream, Coords cursorPosition,
 			Alignment alignment) throws IOException;
 }

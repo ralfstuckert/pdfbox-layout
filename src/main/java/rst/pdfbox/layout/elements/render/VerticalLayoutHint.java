@@ -2,11 +2,19 @@ package rst.pdfbox.layout.elements.render;
 
 import rst.pdfbox.layout.text.Alignment;
 
+/**
+ * Layout hint for the {@link VerticalLayout}. You may specify margins to define
+ * some extra space around the drawable. If there is still some extra space available
+ * vertically, the alignment decides where to position the drawable.
+ */
 public class VerticalLayoutHint implements LayoutHint {
-	
-	public final static VerticalLayoutHint LEFT = new VerticalLayoutHint(Alignment.Left);
-	public final static VerticalLayoutHint CENTER = new VerticalLayoutHint(Alignment.Center);
-	public final static VerticalLayoutHint RIGHT = new VerticalLayoutHint(Alignment.Right);
+
+	public final static VerticalLayoutHint LEFT = new VerticalLayoutHint(
+			Alignment.Left);
+	public final static VerticalLayoutHint CENTER = new VerticalLayoutHint(
+			Alignment.Center);
+	public final static VerticalLayoutHint RIGHT = new VerticalLayoutHint(
+			Alignment.Right);
 
 	private final Alignment alignment;
 	private final float marginLeft;
@@ -19,21 +27,22 @@ public class VerticalLayoutHint implements LayoutHint {
 	}
 
 	public VerticalLayoutHint(Alignment alignment) {
-		this(alignment, 0,0,0,0);
+		this(alignment, 0, 0, 0, 0);
 	}
-		public VerticalLayoutHint(Alignment alignment,float marginLeft, float marginRight,
-				float marginTop, float marginBottom) {
+
+	public VerticalLayoutHint(Alignment alignment, float marginLeft,
+			float marginRight, float marginTop, float marginBottom) {
 		this.alignment = alignment;
 		this.marginLeft = marginLeft;
 		this.marginRight = marginRight;
 		this.marginTop = marginTop;
 		this.marginBottom = marginBottom;
 	}
-	
+
 	public Alignment getAlignment() {
 		return alignment;
 	}
-	
+
 	public float getMarginLeft() {
 		return marginLeft;
 	}

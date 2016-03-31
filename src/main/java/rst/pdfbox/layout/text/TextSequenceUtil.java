@@ -6,8 +6,8 @@ import java.util.List;
 
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 
-import rst.pdfbox.layout.elements.Paragraph;
 import rst.pdfbox.layout.elements.Dividable.Divided;
+import rst.pdfbox.layout.elements.Paragraph;
 
 public class TextSequenceUtil {
 
