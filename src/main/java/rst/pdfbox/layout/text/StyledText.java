@@ -25,12 +25,12 @@ public class StyledText implements TextFragment {
 	 * 
 	 * @param text
 	 *            the text to draw. Must not contain line feeds ('\n').
-	 * @param font
-	 *            the font to use.
 	 * @param size
 	 *            the size of the font.
+	 * @param font
+	 *            the font to use.
 	 */
-	public StyledText(final String text, final PDFont font, final float size) {
+	public StyledText(final String text, final float size, final PDFont font) {
 		this(text, new FontDescriptor(font, size));
 	}
 

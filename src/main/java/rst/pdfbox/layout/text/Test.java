@@ -25,9 +25,9 @@ public class Test {
 						"Hallo *bold _italic boldend* italicend_af\n hdsafkhkhds \\*dsjhfs",
 						11, BaseFont.Times);
 		TextLine line = new TextLine();
-		line.add(new StyledText("Blubber", PDType1Font.COURIER, 11));
-		line.add(new StyledText(" ist ", PDType1Font.HELVETICA_BOLD_OBLIQUE, 20));
-		line.add(new StyledText("too", PDType1Font.HELVETICA, 7));
+		line.add(new StyledText("Blubber", 11, PDType1Font.COURIER));
+		line.add(new StyledText(" ist ", 20, PDType1Font.HELVETICA_BOLD_OBLIQUE));
+		line.add(new StyledText("too", 7, PDType1Font.HELVETICA));
 		text.add(line);
 
 		paragraph.add(text);

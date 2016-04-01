@@ -137,7 +137,7 @@ public class TextFlowUtil {
 				PDFont font = getFont(bold, italic, plainFont, boldFont,
 						italicFont, boldItalicFont);
 				StyledText styledText = new StyledText(fragment.toString(),
-						font, fontSize);
+						fontSize, font);
 				result.add(styledText);
 			}
 		}
