@@ -38,7 +38,7 @@ import org.apache.pdfbox.pdmodel.font.PDFont;
  */
 public class TextFlow implements TextSequence, WidthRespecting {
 
-    public static final float DEFAULT_LINE_SPACING = 1.3f;
+    public static final float DEFAULT_LINE_SPACING = 1.2f;
 
     private final List<TextFragment> text = new ArrayList<TextFragment>();
     private float lineSpacing = DEFAULT_LINE_SPACING;
