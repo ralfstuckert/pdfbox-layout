@@ -8,14 +8,15 @@ package rst.pdfbox.layout.text;
  */
 public interface WidthRespecting {
 
-	/**
-	 * @return the max width to respect.
-	 */
-	float getMaxWidth();
+    /**
+     * @return the max width to respect.
+     */
+    float getMaxWidth();
 
-	/**
-	 * Sets the max width to respect.
-	 * @param maxWidth
-	 */
-	void setMaxWidth(float maxWidth);
+    /**
+     * Sets the max width to respect.
+     * 
+     * @param maxWidth
+     */
+    void setMaxWidth(float maxWidth);
 }

@@ -12,48 +12,51 @@ import rst.pdfbox.layout.text.WidthRespecting;
 
 /**
  * A paragraph is used as a container for {@link TextFlow text} that is drawn as
- * one element. A paragraph has a {@link #setAlignment(Alignment) (text-) alignment}, 
- * and {@link WidthRespecting respects a given width} by applying word-wrap.
+ * one element. A paragraph has a {@link #setAlignment(Alignment) (text-)
+ * alignment}, and {@link WidthRespecting respects a given width} by applying
+ * word-wrap.
  */
 public class Paragraph extends TextFlow implements Drawable, Element,
-		WidthRespecting, Dividable {
+	WidthRespecting, Dividable {
 
-	private Position absolutePosition;
-	private Alignment alignment = Alignment.Left;
+    private Position absolutePosition;
+    private Alignment alignment = Alignment.Left;
 
-	@Override
-	public Position getAbsolutePosition() {
-		return absolutePosition;
-	}
+    @Override
+    public Position getAbsolutePosition() {
+	return absolutePosition;
+    }
 
-	public void setAbsolutePosition(Position absolutePosition) {
-		this.absolutePosition = absolutePosition;
-	}
+    public void setAbsolutePosition(Position absolutePosition) {
+	this.absolutePosition = absolutePosition;
+    }
 
-	/**
-	 * @return the text alignment to apply. Default is left.
-	 */
-	public Alignment getAlignment() {
-		return alignment;
-	}
+    /**
+     * @return the text alignment to apply. Default is left.
+     */
+    public Alignment getAlignment() {
+	return alignment;
+    }
 
-	/**
-	 * Sets the alignment to apply.
-	 * @param alignment
-	 */
-	public void setAlignment(Alignment alignment) {
-		this.alignment = alignment;
-	}
+    /**
+     * Sets the alignment to apply.
+     * 
+     * @param alignment
+     */
+    public void setAlignment(Alignment alignment) {
+	this.alignment = alignment;
+    }
 
-	@Override
-	public void draw(PDPageContentStream contentStream, Position origin)
-			throws IOException {
-		drawText(contentStream, origin, getAlignment());
-	}
+    @Override
+    public void draw(PDPageContentStream contentStream, Position origin)
+	    throws IOException {
+	drawText(contentStream, origin, getAlignment());
+    }
 
-	@Override
-	public Divided divide(float remainingHeight, final float pageHeight) throws IOException {
-		return TextSequenceUtil.divide(this, getMaxWidth(), remainingHeight);
-	}
+    @Override
+    public Divided divide(float remainingHeight, final float pageHeight)
+	    throws IOException {
+	return TextSequenceUtil.divide(this, getMaxWidth(), remainingHeight);
+    }
 
 }

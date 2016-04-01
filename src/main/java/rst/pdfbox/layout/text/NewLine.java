@@ -6,31 +6,30 @@ package rst.pdfbox.layout.text;
  */
 public class NewLine extends ControlFragment {
 
-	/**
-	 * Creates a new line with the
-	 * {@link ControlFragment#DEFAULT_FONT_DESCRIPTOR}.
-	 */
-	public NewLine() {
-		this(DEFAULT_FONT_DESCRIPTOR);
-	}
+    /**
+     * Creates a new line with the
+     * {@link ControlFragment#DEFAULT_FONT_DESCRIPTOR}.
+     */
+    public NewLine() {
+	this(DEFAULT_FONT_DESCRIPTOR);
+    }
 
-	/**
-	 * Creates a new line with the
-	 * {@link ControlFragment#DEFAULT_FONT_DESCRIPTOR}'s font and the given
-	 * height..
-	 */
-	public NewLine(final float fontSize) {
-		this(new FontDescriptor(DEFAULT_FONT_DESCRIPTOR.getFont(), fontSize));
-	}
+    /**
+     * Creates a new line with the
+     * {@link ControlFragment#DEFAULT_FONT_DESCRIPTOR}'s font and the given
+     * height..
+     */
+    public NewLine(final float fontSize) {
+	this(new FontDescriptor(DEFAULT_FONT_DESCRIPTOR.getFont(), fontSize));
+    }
 
-	/**
-	 * Creates a new line with the given font descriptor.
-	 * 
-	 * @param fontDescriptor
-	 */
-	public NewLine(final FontDescriptor fontDescriptor) {
-		super("\n", fontDescriptor);
-	}
-	
+    /**
+     * Creates a new line with the given font descriptor.
+     * 
+     * @param fontDescriptor
+     */
+    public NewLine(final FontDescriptor fontDescriptor) {
+	super("\n", fontDescriptor);
+    }
 
 }

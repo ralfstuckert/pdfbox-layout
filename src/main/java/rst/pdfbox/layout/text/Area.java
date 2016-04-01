@@ -7,15 +7,15 @@ import java.io.IOException;
  */
 public interface Area {
 
-	/**
-	 * @return the width of the area.
-	 * @throws IOException
-	 */
-	float getWidth() throws IOException;
+    /**
+     * @return the width of the area.
+     * @throws IOException
+     */
+    float getWidth() throws IOException;
 
-	/**
-	 * @return the height of the area.
-	 * @throws IOException
-	 */
-	float getHeight() throws IOException;
+    /**
+     * @return the height of the area.
+     * @throws IOException
+     */
+    float getHeight() throws IOException;
 }

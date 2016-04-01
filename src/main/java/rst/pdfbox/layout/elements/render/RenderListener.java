@@ -9,15 +9,17 @@ import java.io.IOException;
  */
 public interface RenderListener {
 
-	/**
-	 * Called before any rendering is performed to the page.
-	 * @param renderContext
-	 */
-	void beforePage(final RenderContext renderContext) throws IOException;
+    /**
+     * Called before any rendering is performed to the page.
+     * 
+     * @param renderContext
+     */
+    void beforePage(final RenderContext renderContext) throws IOException;
 
-	/**
-	 * Called after any rendering is performed to the page.
-	 * @param renderContext
-	 */
-	void afterPage(final RenderContext renderContext) throws IOException;
+    /**
+     * Called after any rendering is performed to the page.
+     * 
+     * @param renderContext
+     */
+    void afterPage(final RenderContext renderContext) throws IOException;
 }
