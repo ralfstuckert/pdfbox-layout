@@ -216,7 +216,7 @@ public class TextSequenceUtil {
 	 * @return the left offset.
 	 * @throws IOException
 	 */
-	public static float getOffset(final TextLine textLine,
+	public static float getOffset(final TextSequence textLine,
 			final float targetWidth, final Alignment alignment)
 			throws IOException {
 		switch (alignment) {

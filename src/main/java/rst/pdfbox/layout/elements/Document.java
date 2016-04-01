@@ -190,14 +190,14 @@ public class Document implements RenderListener {
 	}
 
 	@Override
-	public void beforePage(final RenderContext renderContext) {
+	public void beforePage(final RenderContext renderContext)  throws IOException{
 		for (RenderListener listener : renderListener) {
 			listener.beforePage(renderContext);
 		}
 	}
 
 	@Override
-	public void afterPage(final RenderContext renderContext) {
+	public void afterPage(final RenderContext renderContext)  throws IOException{
 		for (RenderListener listener : renderListener) {
 			listener.afterPage(renderContext);
 		}
