@@ -194,17 +194,16 @@ public class TextSequenceUtil {
 		List<TextLine> lines = wordWrapToLines(text, maxWidth);
 		float targetWidth = getMaxWidth(lines);
 		Position position = cursorPosition;
+		float lastLineHeight = 0;
 		for (int i = 0; i < lines.size(); i++) {
 			TextLine textLine = lines.get(i);
+			float currentLineHeight = textLine.getHeight();
+			float lead = lastLineHeight + (currentLineHeight * (lineSpacing-1));
+			lastLineHeight = currentLineHeight;
+			position = position.add(0, -lead);
 			float offset = getOffset(textLine, targetWidth, alignment);
 			position = new Position(cursorPosition.getX() + offset, position.getY());
 			textLine.drawText(contentStream, position, alignment);
-
-			if (i < lines.size() - 1) {
-				float nextLineHeight = lines.get(i + 1)
-						.getLineHeightWithSpacing(lineSpacing);
-				position = position.add(0, -nextLineHeight);
-			}
 		}
 	}
 
@@ -275,10 +274,7 @@ public class TextSequenceUtil {
 		float sum = 0;
 		for (int i = 0; i < lines.size(); i++) {
 			TextLine line = lines.get(i);
-			float lineHeight = line.getHeight();
-			if (i > 0) {
-				lineHeight = line.getLineHeightWithSpacing(lineSpacing);
-			}
+			float lineHeight = line.getHeight() * lineSpacing;
 			sum += lineHeight;
 		}
 		return sum;

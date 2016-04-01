@@ -17,7 +17,8 @@ import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.util.Matrix;
 
 /**
- * A text of line containing only {@link StyledText}s. It may be terminated by a {@link #getNewLine() new line}.
+ * A text of line containing only {@link StyledText}s. It may be terminated by a
+ * {@link #getNewLine() new line}.
  */
 public class TextLine implements TextSequence {
 
@@ -26,6 +27,7 @@ public class TextLine implements TextSequence {
 
 	/**
 	 * Adds a styled text.
+	 * 
 	 * @param fragment
 	 */
 	public void add(final StyledText fragment) {
@@ -34,6 +36,7 @@ public class TextLine implements TextSequence {
 
 	/**
 	 * Adds all styled texts of the given text line.
+	 * 
 	 * @param textLine
 	 */
 	public void add(final TextLine textLine) {
@@ -42,7 +45,7 @@ public class TextLine implements TextSequence {
 		}
 	}
 
-	/** 
+	/**
 	 * @return the terminating new line, may be <code>null</code>.
 	 */
 	public NewLine getNewLine() {
@@ -51,6 +54,7 @@ public class TextLine implements TextSequence {
 
 	/**
 	 * Sets the new line.
+	 * 
 	 * @param newLine
 	 */
 	public void setNewLine(NewLine newLine) {
@@ -70,7 +74,8 @@ public class TextLine implements TextSequence {
 	}
 
 	/**
-	 * @return <code>true</code> if the line contains neither styled text nor a new line.
+	 * @return <code>true</code> if the line contains neither styled text nor a
+	 *         new line.
 	 */
 	public boolean isEmpty() {
 		return styledTextList.isEmpty() && newLine == null;
@@ -109,33 +114,14 @@ public class TextLine implements TextSequence {
 		return max;
 	}
 
-	/**
-	 * @Deprecated
-	 */
-	public float getLineHeightWithSpacing(float lineSpacing) throws IOException {
-		float width = getWidth();
-		float max = 0;
-		float weightedHeight = 0;
-		for (TextFragment fragment : this) {
-			max = Math.max(max, fragment.getHeight());
-			if (width > 0) {
-				weightedHeight += (fragment.getWidth() / width)
-						* fragment.getHeight();
-			}
-		}
-		if (weightedHeight > 0) {
-			return Math.max(max, weightedHeight * lineSpacing);
-		}
-		return max * lineSpacing;
-	}
-
 	@Override
 	public void drawText(PDPageContentStream contentStream,
 			Position originUpperLeft, Alignment alignment) throws IOException {
 		contentStream.saveGraphicsState();
 		contentStream.beginText();
-		contentStream.setTextMatrix(new Matrix(1, 0, 0, 1, originUpperLeft
-				.getX(), originUpperLeft.getY() - getAscent()));
+		float x = originUpperLeft.getX();
+		float y = originUpperLeft.getY() - getAscent();
+		contentStream.setTextMatrix(new Matrix(1, 0, 0, 1, x, y));
 		FontDescriptor lastFontDesc = null;
 		Color lastColor = null;
 		for (StyledText styledText : styledTextList) {
@@ -154,19 +140,17 @@ public class TextLine implements TextSequence {
 		contentStream.restoreGraphicsState();
 	}
 
-	
 	@Override
 	public String toString() {
-		return "TextLine [styledText=" + styledTextList + ", newLine=" + newLine
-				+ "]";
+		return "TextLine [styledText=" + styledTextList + ", newLine="
+				+ newLine + "]";
 	}
-
 
 	private static class TextLineIterator implements Iterator<TextFragment> {
 
 		private Iterator<StyledText> styledText;
 		private NewLine newLine;
-		
+
 		public TextLineIterator(Iterator<StyledText> styledText, NewLine newLine) {
 			super();
 			this.styledText = styledText;
@@ -194,8 +178,7 @@ public class TextLine implements TextSequence {
 		public void remove() {
 			throw new UnsupportedOperationException();
 		}
-		
+
 	}
-	
 
 }
