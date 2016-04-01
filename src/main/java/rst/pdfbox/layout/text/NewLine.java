@@ -29,7 +29,8 @@ public class NewLine extends ControlFragment {
 	 * @param fontDescriptor
 	 */
 	public NewLine(final FontDescriptor fontDescriptor) {
-		super("NEWLINE", "\n", fontDescriptor);
+		super("\n", fontDescriptor);
 	}
+	
 
 }
