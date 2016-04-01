@@ -1,4 +1,9 @@
+
+
+- fist line with line spacing?
+- color as markup
 - ImageElement
+- ColumnLayout
 - line spacing in TextFragment?
 - line lead
 - tests
