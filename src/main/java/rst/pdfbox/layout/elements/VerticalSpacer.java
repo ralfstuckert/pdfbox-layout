@@ -43,8 +43,8 @@ public class VerticalSpacer implements Drawable, Element, Dividable {
 	}
 
 	@Override
-	public Divided divide(float maxHeight) throws IOException {
-		return new Divided(new VerticalSpacer(maxHeight), new VerticalSpacer(
-				getHeight() - maxHeight));
+	public Divided divide(float remainingHeight, final float pageHeight) throws IOException {
+		return new Divided(new VerticalSpacer(remainingHeight), new VerticalSpacer(
+				getHeight() - remainingHeight));
 	}
 }

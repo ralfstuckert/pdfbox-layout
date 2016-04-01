@@ -52,8 +52,8 @@ public class Paragraph extends TextFlow implements Drawable, Element,
 	}
 
 	@Override
-	public Divided divide(float maxHeight) throws IOException {
-		return TextSequenceUtil.divide(this, getMaxWidth(), maxHeight);
+	public Divided divide(float remainingHeight, final float pageHeight) throws IOException {
+		return TextSequenceUtil.divide(this, getMaxWidth(), remainingHeight);
 	}
 
 }

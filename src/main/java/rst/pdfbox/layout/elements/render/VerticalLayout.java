@@ -121,7 +121,7 @@ public class VerticalLayout implements Layout {
 				dividable = new Cutter(drawablePart);
 			}
 			Divided divided = dividable.divide(renderContext
-					.getRemainingHeight());
+					.getRemainingHeight(), renderContext.getHeight());
 			drawReletivePartAndMovePosition(renderContext, divided.getFirst(),
 					layoutHint);
 

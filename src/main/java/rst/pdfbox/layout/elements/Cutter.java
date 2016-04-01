@@ -27,10 +27,10 @@ public class Cutter implements Dividable, Drawable {
 	}
 
 	@Override
-	public Divided divide(float maxHeight) {
-		return new Divided(new Cutter(undividable, viewPortY, maxHeight),
-				new Cutter(undividable, viewPortY - maxHeight, viewPortHeight
-						- maxHeight));
+	public Divided divide(float remainingHeight, final float pageHeight) {
+		return new Divided(new Cutter(undividable, viewPortY, remainingHeight),
+				new Cutter(undividable, viewPortY - remainingHeight, viewPortHeight
+						- remainingHeight));
 	}
 
 	@Override
