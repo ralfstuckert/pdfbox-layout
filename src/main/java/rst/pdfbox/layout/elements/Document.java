@@ -132,6 +132,20 @@ public class Document implements RenderListener {
     }
 
     /**
+     * @return the media box width minus margins.
+     */
+    public float getPageWidth() {
+	return getMediaBox().getWidth() - getMarginLeft() - getMarginRight();
+    }
+    
+    /**
+     * @return the media box height minus margins.
+     */
+    public float getPageHeight() {
+	return getMediaBox().getHeight() - getMarginTop() - getMarginBottom();
+    }
+    
+    /**
      * Renders all elements and returns the resulting {@link PDDocument}.
      * 
      * @return the resulting {@link PDDocument}
