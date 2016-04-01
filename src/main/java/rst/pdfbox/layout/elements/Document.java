@@ -3,9 +3,9 @@ package rst.pdfbox.layout.elements;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.LinkedHashMap;
+import java.util.AbstractMap.SimpleEntry;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -30,7 +30,7 @@ public class Document implements RenderListener {
 	private final float marginBottom;
 	private final PDRectangle mediaBox;
 
-	private final Map<Element, LayoutHint> elements = new LinkedHashMap<>();
+	private final List<Entry<Element, LayoutHint>> elements = new ArrayList<>();
 	private final List<RenderListener> renderListener = new CopyOnWriteArrayList<RenderListener>();
 
 	private Layout layout = new VerticalLayout();
@@ -80,9 +80,13 @@ public class Document implements RenderListener {
 	 * @param layoutHint
 	 */
 	public void add(final Element element, final LayoutHint layoutHint) {
-		elements.put(element, layoutHint);
+		elements.add(createEntry(element, layoutHint));
 	}
 
+	private Entry<Element,LayoutHint> createEntry(final Element element, final LayoutHint layoutHint) {
+		return new SimpleEntry<Element,LayoutHint>(element, layoutHint);
+	}
+	
 	/**
 	 * Removes the given element.
 	 * @param element
@@ -131,7 +135,7 @@ public class Document implements RenderListener {
 	public PDDocument render() throws IOException {
 		PDDocument document = new PDDocument();
 		RenderContext renderContext = new RenderContext(this, document);
-		for (Entry<Element, LayoutHint> entry : elements.entrySet()) {
+		for (Entry<Element, LayoutHint> entry : elements) {
 			Element element = entry.getKey();
 			LayoutHint layoutHint = entry.getValue();
 
