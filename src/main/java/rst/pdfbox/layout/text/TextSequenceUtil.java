@@ -59,13 +59,13 @@ public class TextSequenceUtil {
 	List<TextLine> lines = getLines(wrapped);
 
 	Paragraph first = new Paragraph();
-	Paragraph last = new Paragraph();
+	Paragraph tail = new Paragraph();
 	if (text instanceof TextFlow) {
 	    TextFlow flow = (TextFlow) text;
 	    first.setMaxWidth(flow.getMaxWidth());
 	    first.setLineSpacing(flow.getLineSpacing());
-	    last.setMaxWidth(flow.getMaxWidth());
-	    last.setLineSpacing(flow.getLineSpacing());
+	    tail.setMaxWidth(flow.getMaxWidth());
+	    tail.setLineSpacing(flow.getLineSpacing());
 	}
 
 	int index = 0;
@@ -75,15 +75,19 @@ public class TextSequenceUtil {
 	    ++index;
 	} while (index < lines.size() && first.getHeight() < maxHeight);
 
-	if (first.getHeight() < maxHeight) {
-	    first.removeLast();
+	if (first.getHeight() > maxHeight) {
+	    // remove last line
 	    --index;
+	    TextLine line = lines.get(index);
+	    for (@SuppressWarnings("unused") TextFragment textFragment : line) {
+		first.removeLast();
+	    }
 	}
 
 	for (int i = index; i < lines.size(); ++i) {
-	    last.add(lines.get(i));
+	    tail.add(lines.get(i));
 	}
-	return new Divided(first, last);
+	return new Divided(first, tail);
     }
 
     /**
