@@ -18,6 +18,13 @@ public class ControlFragment implements TextFragment {
 	private String text;
 	private FontDescriptor fontDescriptor;
 
+	protected ControlFragment(final String text,
+			final FontDescriptor fontDescriptor) {
+		this.name = getClass().getSimpleName();
+		this.text = text;
+		this.fontDescriptor = fontDescriptor;
+	}
+
 	protected ControlFragment(final String name, final String text,
 			final FontDescriptor fontDescriptor) {
 		this.name = name;
