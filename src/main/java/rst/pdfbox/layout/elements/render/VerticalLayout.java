@@ -1,6 +1,5 @@
 package rst.pdfbox.layout.elements.render;
 
-import java.awt.geom.PathIterator;
 import java.io.IOException;
 
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
@@ -14,6 +13,7 @@ import rst.pdfbox.layout.elements.VerticalSpacer;
 import rst.pdfbox.layout.text.Alignment;
 import rst.pdfbox.layout.text.Position;
 import rst.pdfbox.layout.text.WidthRespecting;
+import rst.pdfbox.layout.util.CompatibilityHelper;
 
 /**
  * Layout implementation that stacks drawables vertically onto the page. If the
@@ -185,8 +185,7 @@ public class VerticalLayout implements Layout {
 	contentStream.addRect(document.getMarginLeft(),
 		document.getMarginBottom(), renderContext.getWidth(),
 		renderContext.getHeight());
-	@SuppressWarnings("deprecation")
-	contentStream.clipPath(PathIterator.WIND_NON_ZERO);
+	CompatibilityHelper.clip(contentStream);
 
 	drawable.draw(contentStream,
 		renderContext.getCurrentPosition().add(offsetX, 0));
@@ -195,6 +194,5 @@ public class VerticalLayout implements Layout {
 
 	renderContext.movePositionBy(0, -drawable.getHeight());
     }
-    
     
 }

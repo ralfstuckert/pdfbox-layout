@@ -9,6 +9,7 @@ import org.apache.pdfbox.pdmodel.PDPageContentStream;
 
 import rst.pdfbox.layout.elements.Document;
 import rst.pdfbox.layout.text.Position;
+import rst.pdfbox.layout.util.CompatibilityHelper;
 
 /**
  * The render context is a container providing all state of the current
@@ -133,8 +134,7 @@ public class RenderContext implements Closeable {
 	}
 	this.page = new PDPage(document.getMediaBox());
 	this.pdDocument.addPage(page);
-	this.contentStream = new PDPageContentStream(pdDocument, page, true,
-		true);
+	this.contentStream = CompatibilityHelper.createAppendablePDPageContentStream(pdDocument, page);
 	currentPosition = getUpperLeft();
 
 	document.beforePage(this);
