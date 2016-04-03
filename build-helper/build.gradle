@@ -3,7 +3,7 @@ apply plugin: 'java'
 defaultTasks 'help'
 
 ext {
-    pdfboxVersion = '1.8.8'
+    pdfboxVersion = '2.0.0'
     basedir = '..'
     examplesDir = "$basedir/examples"
 }
@@ -18,8 +18,8 @@ repositories {
 
 dependencies {
    compile("org.apache.pdfbox:pdfbox:${pdfboxVersion}")
-   compile files("target/classes")
-   compile files("examples")   
+   compile files("$basedir/target/classes")
+   compile files("$basedir/examples")   
 }
 
 task wrapper(type: Wrapper) {
@@ -28,8 +28,8 @@ task wrapper(type: Wrapper) {
 
 task adaptToPdfboxVersion(description: 'adapts the imports and the pdfbox-dependency in the pom to the given version') << {
    adaptPom();
-//   adaptSourceFolder("$basedir"/src/main/java")
-//   adaptSourceFolder("$basedir"/examples")
+   adaptSourceFolder("$basedir/src/main/java")
+   adaptSourceFolder("$basedir/examples")
 }
 
 def adaptSourceFolder(def sourceFolder) {
@@ -47,7 +47,6 @@ def adaptPom() {
   def pomFile = new File("$basedir/pom.xml")
   def pom = (new XmlParser()).parse(pomFile)
   def oldVersion = pom.version.text();
-  logger.quiet(oldVersion)
   def pdfboxDependency = pom.dependencies.dependency.find{it.artifactId.text() == 'pdfbox'}
   pdfboxDependency.version[0].value = pdfboxVersion
   def writer = new OutputStreamWriter(new FileOutputStream(pomFile), "UTF-8")
@@ -57,7 +56,6 @@ def adaptPom() {
 }
 
 def adaptSourceFile(def sourceFile) {
-	    logger.quiet("calling ant replace on $sourceFile")
 	def oldToNew = [ 'org.apache.pdfbox.pdmodel.edit.PDPageContentStream':'org.apache.pdfbox.pdmodel.PDPageContentStream']
 	oldToNew.each { oldName, newName ->
 	    def from = oldName
@@ -66,7 +64,6 @@ def adaptSourceFile(def sourceFile) {
             from = newName
             to = oldName	    
 	    }
-	    logger.quiet("replaing $from by $to")
         ant.replace(file: sourceFile, token: from, value: to)
 	}
 }
@@ -87,6 +84,8 @@ task createExamples(description: 'Creates the example pdfs', dependsOn: 'compile
       }
    }
     
+   def classFiles = fileTree("$examplesDir").include('**/*.class')
+   classFiles.each { file -> file.delete() }
 }
 
 
