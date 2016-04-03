@@ -53,7 +53,7 @@ def adaptPom() {
   pdfboxDependency.version[0].value = pdfboxVersion
   
   // adapt artifactId
-  def artifactId = pdfboxVersion.startsWith('2') ? 'pdfbox-2-layout' : 'pdfbox-layout'
+  def artifactId = pdfboxVersion.startsWith('2') ? 'pdfbox2-layout' : 'pdfbox-layout'
   pom.artifactId[0].value = artifactId
   
   def writer = new OutputStreamWriter(new FileOutputStream(pomFile), "UTF-8")
