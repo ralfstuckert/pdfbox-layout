@@ -2,7 +2,7 @@ package rst.pdfbox.layout.elements.render;
 
 import java.io.IOException;
 
-import org.apache.pdfbox.pdmodel.edit.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
 
 import rst.pdfbox.layout.elements.Cutter;
 import rst.pdfbox.layout.elements.Dividable;

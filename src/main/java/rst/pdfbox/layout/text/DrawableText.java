@@ -2,7 +2,7 @@ package rst.pdfbox.layout.text;
 
 import java.io.IOException;
 
-import org.apache.pdfbox.pdmodel.edit.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
 
 /**
  * Represents a drawable text.

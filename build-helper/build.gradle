@@ -3,7 +3,7 @@ apply plugin: 'java'
 defaultTasks 'help'
 
 ext {
-    pdfboxVersion = '1.8.8'
+    pdfboxVersion = '2.0.0'
     basedir = '..'
     examplesDir = "$basedir/examples"
 }
