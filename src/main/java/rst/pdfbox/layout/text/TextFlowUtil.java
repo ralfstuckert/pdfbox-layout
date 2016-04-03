@@ -188,7 +188,7 @@ public class TextFlowUtil {
      * Creates a char sequence where new-line, asterisk and underscore are
      * replaced by their corresponding {@link ControlCharacter}.
      * 
-     * @param text
+     * @param markup
      * @return the create char sequence.
      */
     public static Iterable<CharSequence> fromMarkup(final CharSequence markup) {
@@ -199,7 +199,7 @@ public class TextFlowUtil {
      * Creates a char sequence where new-line, asterisk and underscore are
      * replaced by their corresponding {@link ControlCharacter}.
      * 
-     * @param text
+     * @param markup
      * @return the create char sequence.
      */
     public static Iterable<CharSequence> fromMarkup(

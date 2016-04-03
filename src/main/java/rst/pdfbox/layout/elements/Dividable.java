@@ -27,7 +27,7 @@ public interface Dividable {
 	    throws IOException;
 
     /**
-     * A container for the result of a {@link Dividable#divide(float)}
+     * A container for the result of a {@link Dividable#divide(float, float)
      * operation.
      */
     public static class Divided {
