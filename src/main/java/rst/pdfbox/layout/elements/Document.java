@@ -1,6 +1,7 @@
 package rst.pdfbox.layout.elements;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.AbstractMap.SimpleEntry;
@@ -179,8 +180,8 @@ public class Document implements RenderListener {
      * @throws IOException
      */
     public void save(final File file) throws IOException {
-	try (PDDocument document = render()) {
-	    document.save(file);
+	try (OutputStream out = new FileOutputStream( file )) {
+	    save(out);
 	}
     }
 
@@ -193,7 +194,13 @@ public class Document implements RenderListener {
      */
     public void save(final OutputStream output) throws IOException {
 	try (PDDocument document = render()) {
-	    document.save(output);
+	    try {
+		document.save(output);
+	    } catch (IOException ioe) {
+		throw ioe;
+	    } catch (Exception e) {
+		throw new IOException(e);
+	    }
 	}
     }
 
