@@ -46,9 +46,16 @@ def adaptSourceFolder(def sourceFolder) {
 def adaptPom() {
   def pomFile = new File("$basedir/pom.xml")
   def pom = (new XmlParser()).parse(pomFile)
+  
+  // adapt dependency
   def oldVersion = pom.version.text();
   def pdfboxDependency = pom.dependencies.dependency.find{it.artifactId.text() == 'pdfbox'}
   pdfboxDependency.version[0].value = pdfboxVersion
+  
+  // adapt artifactId
+  def artifactId = pdfboxVersion.startsWith('2') ? 'pdfbox-2-layout' : 'pdfbox-layout'
+  pom.artifactId[0].value = artifactId
+  
   def writer = new OutputStreamWriter(new FileOutputStream(pomFile), "UTF-8")
   def xmlPrinter = new XmlNodePrinter(new PrintWriter(writer))
   xmlPrinter.setPreserveWhitespace(true)

@@ -1,7 +1,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.github.ralfstuckert</groupId>
-  <artifactId>pdfbox-layout</artifactId>
+  <artifactId>pdfbox-2-layout</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <name>Apache PDFBox</name>
   <description>
