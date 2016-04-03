@@ -20,7 +20,7 @@ public class LowLevelText {
     public static void main(String[] args) throws Exception {
 
 	final PDDocument test = new PDDocument();
-	final OutputStream outputStream = new FileOutputStream("basictext.pdf");
+	final OutputStream outputStream = new FileOutputStream("lowleveltext.pdf");
 	final PDPage page = new PDPage(Constants.A4);
 	float pageWidth = page.getMediaBox().getWidth();
 	float pageHeight = page.getMediaBox().getHeight();
