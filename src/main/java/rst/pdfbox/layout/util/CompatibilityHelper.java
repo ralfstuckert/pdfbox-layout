@@ -5,7 +5,8 @@ import java.io.IOException;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
-import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.edit.PDPageContentStream;
+import org.apache.pdfbox.util.Matrix;
 
 /**
  * Provide compatible methods for API changes from pdfbox 1x to 2x.
@@ -16,6 +17,19 @@ public class CompatibilityHelper {
     public static void clip(final PDPageContentStream contentStream)
 	    throws IOException {
 	contentStream.clipPath(PathIterator.WIND_NON_ZERO);
+    }
+
+    @SuppressWarnings("deprecation")
+    public static void showText(final PDPageContentStream contentStream, final String text)
+	    throws IOException {
+	contentStream.drawString(text);
+    }
+    
+    @SuppressWarnings("deprecation")
+    public static void setTextTranslation(
+	    final PDPageContentStream contentStream, final float x,
+	    final float y) throws IOException {
+	contentStream.setTextTranslation(x, y);
     }
 
     @SuppressWarnings("deprecation")

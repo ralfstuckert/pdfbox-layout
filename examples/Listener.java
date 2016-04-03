@@ -2,7 +2,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 
 import rst.pdfbox.layout.elements.Document;
@@ -11,6 +10,7 @@ import rst.pdfbox.layout.elements.render.RenderContext;
 import rst.pdfbox.layout.elements.render.RenderListener;
 import rst.pdfbox.layout.text.Alignment;
 import rst.pdfbox.layout.text.BaseFont;
+import rst.pdfbox.layout.text.Constants;
 import rst.pdfbox.layout.text.Position;
 import rst.pdfbox.layout.text.TextFlow;
 import rst.pdfbox.layout.text.TextFlowUtil;
@@ -39,7 +39,7 @@ public class Listener {
 
 
 
-	Document document = new Document(PDRectangle.A4, 20, 40, 20, 40);
+	Document document = new Document(Constants.A4, 20, 40, 20, 40);
 	document.addRenderListener(new RenderListener() {
 
 	    @Override

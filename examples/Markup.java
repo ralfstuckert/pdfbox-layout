@@ -1,13 +1,12 @@
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 
-import org.apache.pdfbox.pdmodel.common.PDRectangle;
-
 import rst.pdfbox.layout.elements.Document;
 import rst.pdfbox.layout.elements.Paragraph;
 import rst.pdfbox.layout.elements.render.VerticalLayoutHint;
 import rst.pdfbox.layout.text.Alignment;
 import rst.pdfbox.layout.text.BaseFont;
+import rst.pdfbox.layout.text.Constants;
 
 public class Markup {
 
@@ -22,7 +21,7 @@ public class Markup {
 		+ " At vero eos et accusam* et justo duo dolores et ea rebum. Stet clita kasd "
 		+ "gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.\n\n";
 
-	Document document = new Document(PDRectangle.A4, 20, 40, 20, 40);
+	Document document = new Document(Constants.A4, 20, 40, 20, 40);
 	Paragraph paragraph = new Paragraph();
 	paragraph.addMarkup(text1, 11, BaseFont.Times);
 	document.add(paragraph);

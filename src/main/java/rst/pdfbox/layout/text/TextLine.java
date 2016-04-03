@@ -13,8 +13,10 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.edit.PDPageContentStream;
 import org.apache.pdfbox.util.Matrix;
+
+import rst.pdfbox.layout.util.CompatibilityHelper;
 
 /**
  * A text of line containing only {@link StyledText}s. It may be terminated by a
@@ -121,7 +123,7 @@ public class TextLine implements TextSequence {
 	contentStream.beginText();
 	float x = originUpperLeft.getX();
 	float y = originUpperLeft.getY() - getAscent();
-	contentStream.setTextMatrix(new Matrix(1, 0, 0, 1, x, y));
+	CompatibilityHelper.setTextTranslation(contentStream, x, y);
 	FontDescriptor lastFontDesc = null;
 	Color lastColor = null;
 	for (StyledText styledText : styledTextList) {
@@ -134,7 +136,7 @@ public class TextLine implements TextSequence {
 		lastColor = styledText.getColor();
 		contentStream.setNonStrokingColor(lastColor);
 	    }
-	    contentStream.showText(styledText.getText());
+	    CompatibilityHelper.showText(contentStream, styledText.getText());
 	}
 	contentStream.endText();
 	contentStream.restoreGraphicsState();

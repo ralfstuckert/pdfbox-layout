@@ -1,11 +1,10 @@
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 
-import org.apache.pdfbox.pdmodel.common.PDRectangle;
-
 import rst.pdfbox.layout.elements.Document;
 import rst.pdfbox.layout.elements.Paragraph;
 import rst.pdfbox.layout.text.BaseFont;
+import rst.pdfbox.layout.text.Constants;
 
 public class MultiplePages {
 
@@ -28,7 +27,7 @@ public class MultiplePages {
 		+ "eos et _accusam et *justo* duo dolores_ et ea rebum. Stet clita kasd "
 		+ "gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.\n";
 
-	Document document = new Document(PDRectangle.A4, 20, 40, 20, 40);
+	Document document = new Document(Constants.A4, 20, 40, 20, 40);
 	Paragraph paragraph1 = new Paragraph();
 	paragraph1.addMarkup(text1, 11, BaseFont.Times);
 	document.add(paragraph1);

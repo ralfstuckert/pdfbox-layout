@@ -3,25 +3,25 @@ import java.io.OutputStream;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
-import org.apache.pdfbox.pdmodel.PDPageContentStream;
-import org.apache.pdfbox.pdmodel.common.PDRectangle;
+import org.apache.pdfbox.pdmodel.edit.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 
 import rst.pdfbox.layout.text.Alignment;
 import rst.pdfbox.layout.text.BaseFont;
+import rst.pdfbox.layout.text.Constants;
 import rst.pdfbox.layout.text.Position;
 import rst.pdfbox.layout.text.StyledText;
 import rst.pdfbox.layout.text.TextFlow;
 import rst.pdfbox.layout.text.TextFlowUtil;
 import rst.pdfbox.layout.text.TextSequenceUtil;
 
-public class BasicText {
+public class LowLevelText {
 
     public static void main(String[] args) throws Exception {
 
 	final PDDocument test = new PDDocument();
 	final OutputStream outputStream = new FileOutputStream("basictext.pdf");
-	final PDPage page = new PDPage(PDRectangle.A4);
+	final PDPage page = new PDPage(Constants.A4);
 	float pageWidth = page.getMediaBox().getWidth();
 	float pageHeight = page.getMediaBox().getHeight();
 

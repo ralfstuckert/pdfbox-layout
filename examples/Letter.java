@@ -1,7 +1,6 @@
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 
-import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 
 import rst.pdfbox.layout.elements.Document;
@@ -10,6 +9,7 @@ import rst.pdfbox.layout.elements.VerticalSpacer;
 import rst.pdfbox.layout.elements.render.VerticalLayoutHint;
 import rst.pdfbox.layout.text.Alignment;
 import rst.pdfbox.layout.text.BaseFont;
+import rst.pdfbox.layout.text.Constants;
 import rst.pdfbox.layout.text.Position;
 
 public class Letter {
@@ -17,7 +17,7 @@ public class Letter {
     public static void main(String[] args) throws Exception {
 	float hMargin = 40;
 	float vMargin = 50;
-	Document document = new Document(PDRectangle.A4, hMargin, hMargin,
+	Document document = new Document(Constants.A4, hMargin, hMargin,
 		vMargin, vMargin);
 
 	Paragraph paragraph = new Paragraph();
@@ -28,7 +28,7 @@ public class Letter {
 	document.add(new VerticalSpacer(100));
 
 	paragraph = new Paragraph();
-	String address = "Ralf Stuckert\nAm Mühlengraben 24\n67346 Blubberhausen";
+	String address = "Ralf Stuckert\nAm Hollergraben 24\n67346 Blubberhausen";
 	paragraph.addText(address, 11, PDType1Font.HELVETICA);
 	document.add(paragraph);
 
