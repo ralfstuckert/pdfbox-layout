@@ -20,12 +20,13 @@ public class Letter {
 	Document document = new Document(Constants.A4, hMargin, hMargin,
 		vMargin, vMargin);
 
+	document.add(new VerticalSpacer(100));
+
 	Paragraph paragraph = new Paragraph();
 	paragraph.addText("Blubberhausen, 01.04.2016", 11,
 		PDType1Font.HELVETICA);
-	document.add(paragraph, VerticalLayoutHint.RIGHT);
-
-	document.add(new VerticalSpacer(100));
+	document.add(paragraph, new VerticalLayoutHint(Alignment.Right, 0, 0,
+		0, 0, true));
 
 	paragraph = new Paragraph();
 	String address = "Ralf Stuckert\nAm Hollergraben 24\n67346 Blubberhausen";

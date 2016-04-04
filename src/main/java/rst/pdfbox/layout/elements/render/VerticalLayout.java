@@ -100,11 +100,13 @@ public class VerticalLayout implements Layout {
 	    Drawable drawable, final LayoutHint layoutHint) throws IOException {
 
 	float targetWidth = renderContext.getWidth();
+	boolean movePosition = true;
 	VerticalLayoutHint verticalLayoutHint = null;
 	if (layoutHint instanceof VerticalLayoutHint) {
 	    verticalLayoutHint = (VerticalLayoutHint) layoutHint;
 	    targetWidth -= verticalLayoutHint.getMarginLeft();
 	    targetWidth -= verticalLayoutHint.getMarginRight();
+	    movePosition = !verticalLayoutHint.isResetY();
 	}
 
 	float oldMaxWidth = -1;
@@ -128,7 +130,7 @@ public class VerticalLayout implements Layout {
 		    renderContext.getRemainingHeight(),
 		    renderContext.getHeight());
 	    drawReletivePartAndMovePosition(renderContext, divided.getFirst(),
-		    layoutHint);
+		    layoutHint, true);
 
 	    // new page
 	    renderContext.newPage();
@@ -136,7 +138,8 @@ public class VerticalLayout implements Layout {
 	    drawablePart = divided.getTail();
 	}
 
-	drawReletivePartAndMovePosition(renderContext, drawablePart, layoutHint);
+	drawReletivePartAndMovePosition(renderContext, drawablePart,
+		layoutHint, movePosition);
 
 	if (drawable instanceof WidthRespecting) {
 	    if (oldMaxWidth < 0) {
@@ -147,18 +150,26 @@ public class VerticalLayout implements Layout {
 
     /**
      * Actually draws the (drawble) part at the
-     * {@link RenderContext#getCurrentPosition()} and moves to the new position.
-     * Any left or right margin is taken into account to calculate the position
-     * and alignment.
+     * {@link RenderContext#getCurrentPosition()} and - depending on flag
+     * <code>movePosition</code> - moves to the new Y position. Any left or
+     * right margin is taken into account to calculate the position and
+     * alignment.
      * 
      * @param renderContext
+     *            the RenderContext.
      * @param drawable
+     *            the drawable to draw.
      * @param layoutHint
+     *            the layout hint used to layout.
+     * @param movePosition
+     *            indicates if the position should be moved (vertically) after
+     *            drawing.
      * @throws IOException
      */
     protected void drawReletivePartAndMovePosition(
 	    final RenderContext renderContext, Drawable drawable,
-	    final LayoutHint layoutHint) throws IOException {
+	    final LayoutHint layoutHint, final boolean movePosition)
+	    throws IOException {
 	PDPageContentStream contentStream = renderContext.getContentStream();
 	Document document = renderContext.getDocument();
 	float offsetX = 0;
@@ -192,7 +203,9 @@ public class VerticalLayout implements Layout {
 
 	contentStream.restoreGraphicsState();
 
-	renderContext.movePositionBy(0, -drawable.getHeight());
+	if (movePosition) {
+	    renderContext.movePositionBy(0, -drawable.getHeight());
+	}
     }
-    
+
 }
