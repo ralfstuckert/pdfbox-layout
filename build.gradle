@@ -1,0 +1,25 @@
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.3'
+}
+
+allprojects {
+  task hello << { task -> println "I'm $task.project.name" }
+}
+
+subprojects {
+
+  group = 'com.github.ralfstuckert.pdfbox-layout'
+  version = '1.0'
+
+  repositories {
+      mavenCentral()
+  }
+
+
+}
+
+
+
+
+
