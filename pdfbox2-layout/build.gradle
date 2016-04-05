@@ -14,7 +14,7 @@ clean{
 }  
 
 
-task prepareSources(description: 'copies and adapts the imports to the given version', dependsOn: ["clean", "copySources", "copyExamples"] ) << {
+task prepareSources(description: 'copies and adapts the imports to the given version', dependsOn: ["clean", "copySources", "copyCompatibility", "copyExamples"] ) << {
 }
 
 task copySources(type: Copy) {
@@ -23,6 +23,11 @@ task copySources(type: Copy) {
     filter { line ->
        line.replaceAll('org.apache.pdfbox.pdmodel.edit.PDPageContentStream', 'org.apache.pdfbox.pdmodel.PDPageContentStream')
     }
+}
+
+task copyCompatibility(type: Copy, dependsOn: "copySources") {
+    from 'compatibility'
+    into 'src/main/java'
 }
 
 task copyExamples(type: Copy) {
