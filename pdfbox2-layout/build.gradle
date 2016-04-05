@@ -1,7 +1,7 @@
 import org.apache.tools.ant.filters.ReplaceTokens
 
   dependencies {
-   compile("org.apache.pdfbox:pdfbox:1.8.8")
+   compile("org.apache.pdfbox:pdfbox:2.0.0")
   }
   
   gradle.projectsEvaluated {
@@ -16,7 +16,7 @@ task copySources(type: Copy) {
     from '../src'
     into 'src'
     filter { line ->
-       line.replaceAll('org.apache.pdfbox.pdmodel.PDPageContentStream', "org.apache.pdfbox.pdmodel.edit.PDPageContentStream")
+       line.replaceAll('org.apache.pdfbox.pdmodel.edit.PDPageContentStream', 'org.apache.pdfbox.pdmodel.PDPageContentStream')
     }
 }
 
@@ -24,45 +24,7 @@ task copyExamples(type: Copy) {
     from '../examples'
     into 'examples'
     filter { line ->
-       line.replaceAll('org.apache.pdfbox.pdmodel.PDPageContentStream', "org.apache.pdfbox.pdmodel.edit.PDPageContentStream")
+       line.replaceAll('org.apache.pdfbox.pdmodel.edit.PDPageContentStream', 'org.apache.pdfbox.pdmodel.PDPageContentStream')
     }
-}
-
-task adaptToPdfboxVersion(description: 'adapts the imports and the pdfbox-dependency in the pom to the given version') << {
-   adaptSourceFolder("src/main/java")
-   adaptSourceFolder("examples")
-}
-
-def adaptSourceFolder(def sourceFolder) {
-	def oldToNew = [ 'org.apache.pdfbox.pdmodel.edit.PDPageContentStream':'org.apache.pdfbox.pdmodel.PDPageContentStream']
-	oldToNew.each { oldName, newName ->
-	    def from = oldName
-	    def to = newName
-	    def pdfboxVersion = "1"
-	    if (pdfboxVersion.startsWith('1')) {
-            from = newName
-            to = oldName	    
-	    }
-//	    logger.quiet("adapting $sourceFile")
-//	    logger.quiet("replacing $from with $to")
-        ant.replace(dir:sourceFolder, includes:"**/*.java" , token: 'a', value: 'aaaaa', summary: true, failOnNoReplacements:true)
-	}
-}
-
-
-def adaptSourceFile(def sourceFile) {
-	def oldToNew = [ 'org.apache.pdfbox.pdmodel.edit.PDPageContentStream':'org.apache.pdfbox.pdmodel.PDPageContentStream']
-	oldToNew.each { oldName, newName ->
-	    def from = oldName
-	    def to = newName
-	    def pdfboxVersion = "1"
-	    if (pdfboxVersion.startsWith('1')) {
-            from = newName
-            to = oldName	    
-	    }
-//	    logger.quiet("adapting $sourceFile")
-//	    logger.quiet("replacing $from with $to")
-        ant.replace(file: sourceFile, token: from, value: to, summary: true, failOnNoReplacements:true)
-	}
 }
 

@@ -1,0 +1,5 @@
+#org.springsource.ide.eclipse.gradle.core.preferences.GradleProjectPreferences
+#Tue Apr 05 08:42:15 CEST 2016
+build.family.org.gradle.tooling.model.eclipse.HierarchicalEclipseProject=;pdfbox2-layout;
+org.springsource.ide.eclipse.gradle.linkedresources=
+org.springsource.ide.eclipse.gradle.rootprojectloc=
