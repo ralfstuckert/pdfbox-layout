@@ -33,11 +33,6 @@ allprojects {
     failOnError = false
   }
 
-  clean{
-    delete "src"
-    delete "examples"
-  }  
-
   task examplesJar(type: Jar, dependsOn: "createExamples" ) {
     classifier = 'examples'
     from fileTree("examples")
@@ -54,7 +49,6 @@ allprojects {
   task createExamples(description: 'Creates the example pdfs', dependsOn: 'compileExamples' ) << {
     def oldPdfs = fileTree("examples").include('**/*.pdf')
     oldPdfs.each { file -> file.delete() }
-   
     def examples = fileTree("examples").include('**/*.class')
     examples.each { example ->
   	  def mainClassName = getClassName(example)
@@ -62,7 +56,7 @@ allprojects {
          javaexec {
             main = mainClassName
             classpath = sourceSets.main.compileClasspath
-            workingDir = "examples"
+            workingDir = "$projectDir/examples"
          }
       }
     }

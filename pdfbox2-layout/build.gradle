@@ -1,12 +1,17 @@
 import org.apache.tools.ant.filters.ReplaceTokens
 
-  dependencies {
-   compile("org.apache.pdfbox:pdfbox:2.0.0")
-  }
+dependencies {
+  compile("org.apache.pdfbox:pdfbox:2.0.0")
+}
   
-  gradle.projectsEvaluated {
-    compileJava.dependsOn(prepareSources)
-  }
+gradle.projectsEvaluated {
+  compileJava.dependsOn(prepareSources)
+}
+
+clean{
+  delete "src"
+  delete "examples"
+}  
 
 
 task prepareSources(description: 'copies and adapts the imports to the given version', dependsOn: ["clean", "copySources", "copyExamples"] ) << {
