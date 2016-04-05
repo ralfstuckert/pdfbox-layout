@@ -13,8 +13,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.pdfbox.pdmodel.PDPageContentStream;
-import org.apache.pdfbox.util.Matrix;
+import org.apache.pdfbox.pdmodel.edit.PDPageContentStream;
 
 import rst.pdfbox.layout.util.CompatibilityHelper;
 
