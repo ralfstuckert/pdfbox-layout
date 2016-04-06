@@ -29,7 +29,7 @@ public class TextLine implements TextSequence {
     /**
      * Adds a styled text.
      * 
-     * @param fragment
+     * @param fragment the fagment to add.
      */
     public void add(final StyledText fragment) {
 	styledTextList.add(fragment);
@@ -38,7 +38,7 @@ public class TextLine implements TextSequence {
     /**
      * Adds all styled texts of the given text line.
      * 
-     * @param textLine
+     * @param textLine the text line to add.
      */
     public void add(final TextLine textLine) {
 	for (StyledText fragment : textLine.getStyledTexts()) {
@@ -56,7 +56,7 @@ public class TextLine implements TextSequence {
     /**
      * Sets the new line.
      * 
-     * @param newLine
+     * @param newLine the new line.
      */
     public void setNewLine(NewLine newLine) {
 	this.newLine = newLine;
@@ -102,7 +102,7 @@ public class TextLine implements TextSequence {
 
     /**
      * @return the (max) ascent of this line.
-     * @throws IOException
+     * @throws IOException by pdfbox.
      */
     protected float getAscent() throws IOException {
 	float max = 0;
@@ -117,11 +117,11 @@ public class TextLine implements TextSequence {
 
     @Override
     public void drawText(PDPageContentStream contentStream,
-	    Position originUpperLeft, Alignment alignment) throws IOException {
+	    Position upperLeft, Alignment alignment) throws IOException {
 	contentStream.saveGraphicsState();
 	contentStream.beginText();
-	float x = originUpperLeft.getX();
-	float y = originUpperLeft.getY() - getAscent();
+	float x = upperLeft.getX();
+	float y = upperLeft.getY() - getAscent();
 	CompatibilityHelper.setTextTranslation(contentStream, x, y);
 	FontDescriptor lastFontDesc = null;
 	Color lastColor = null;

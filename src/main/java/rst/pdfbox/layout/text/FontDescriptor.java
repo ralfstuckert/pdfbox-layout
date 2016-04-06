@@ -19,8 +19,8 @@ public class FontDescriptor {
     /**
      * Creates the descriptor the the given font and size.
      * 
-     * @param font
-     * @param size
+     * @param font the font.
+     * @param size the size.
      */
     public FontDescriptor(final PDFont font, final float size) {
 	this.font = font;

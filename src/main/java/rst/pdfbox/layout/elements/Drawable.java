@@ -14,13 +14,13 @@ public interface Drawable {
 
     /**
      * @return the width of the drawable.
-     * @throws IOException
+     * @throws IOException by pdfbox
      */
     float getWidth() throws IOException;
 
     /**
      * @return the height of the drawable.
-     * @throws IOException
+     * @throws IOException by pdfbox
      */
     float getHeight() throws IOException;
 
@@ -29,18 +29,18 @@ public interface Drawable {
      * position ignoring any {@link Layout}.
      * 
      * @return the absolute position.
-     * @throws IOException
+     * @throws IOException by pdfbox
      */
-    Position getAbsolutePosition();
+    Position getAbsolutePosition() throws IOException;
 
     /**
      * Draws the object at the given position.
      * 
-     * @param contentStream
-     * @param origin
-     * @throws IOException
+     * @param contentStream the stream to draw to.
+     * @param upperLeft the upper left position to start drawing. 
+     * @throws IOException by pdfbox
      */
-    void draw(PDPageContentStream contentStream, Position origin)
+    void draw(PDPageContentStream contentStream, Position upperLeft)
 	    throws IOException;
 
 }

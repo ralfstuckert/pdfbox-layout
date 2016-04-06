@@ -27,9 +27,9 @@ public class RenderContext implements Closeable {
     /**
      * Creates a render context.
      * 
-     * @param document
-     * @param pdDocument
-     * @throws IOException
+     * @param document the document to render.
+     * @param pdDocument the underlying pdfbox document.
+     * @throws IOException by pdfbox.
      */
     public RenderContext(Document document, PDDocument pdDocument)
 	    throws IOException {
@@ -58,8 +58,8 @@ public class RenderContext implements Closeable {
      * Moves the {@link #getCurrentPosition() current position} relatively by
      * the given offset.
      * 
-     * @param x
-     * @param y
+     * @param x to move horizontally.
+     * @param y to move vertically.
      */
     public void movePositionBy(final float x, final float y) {
 	currentPosition = currentPosition.add(x, y);
@@ -126,7 +126,7 @@ public class RenderContext implements Closeable {
     /**
      * Triggers a new page.
      * 
-     * @throws IOException
+     * @throws IOException by pdfbox
      */
     public void newPage() throws IOException {
 	if (closePage()) {
@@ -144,7 +144,7 @@ public class RenderContext implements Closeable {
      * Closes the current page.
      * 
      * @return <code>true</code> if the current page has not been closed before.
-     * @throws IOException
+     * @throws IOException by pdfbox
      */
     public boolean closePage() throws IOException {
 	if (contentStream != null) {

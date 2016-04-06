@@ -85,7 +85,7 @@ public class StyledText implements TextFragment {
     /**
      * Sets the color to use for drawing the text.
      * 
-     * @param color
+     * @param color the text color.
      */
     public void setColor(Color color) {
 	this.color = color;

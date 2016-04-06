@@ -17,7 +17,7 @@ public class VerticalSpacer implements Drawable, Element, Dividable {
     /**
      * Creates a vertical space with the given height.
      * 
-     * @param height
+     * @param height the height of the space.
      */
     public VerticalSpacer(float height) {
 	this.height = height;
@@ -39,7 +39,7 @@ public class VerticalSpacer implements Drawable, Element, Dividable {
     }
 
     @Override
-    public void draw(PDPageContentStream contentStream, Position origin)
+    public void draw(PDPageContentStream contentStream, Position upperLeft)
 	    throws IOException {
 	// nothing to draw
     }

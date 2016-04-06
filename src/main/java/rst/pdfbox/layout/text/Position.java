@@ -12,8 +12,8 @@ public class Position {
     /**
      * Creates a position at the given coordinates.
      * 
-     * @param x
-     * @param y
+     * @param x the x coordinate.
+     * @param y the y coordinate.
      */
     public Position(float x, float y) {
 	this.x = x;

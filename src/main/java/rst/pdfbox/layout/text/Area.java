@@ -9,13 +9,13 @@ public interface Area {
 
     /**
      * @return the width of the area.
-     * @throws IOException
+     * @throws IOException by pdfbox
      */
     float getWidth() throws IOException;
 
     /**
      * @return the height of the area.
-     * @throws IOException
+     * @throws IOException by pdfbox
      */
     float getHeight() throws IOException;
 }

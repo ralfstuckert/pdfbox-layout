@@ -21,13 +21,13 @@ public interface Dividable {
      *            how to divide best, e.g. maybe the element fits completely on
      *            the next page.
      * @return the Divided containing the first part and the tail.
-     * @throws IOException
+     * @throws IOException by pdfbox.
      */
     Divided divide(final float remainingHeight, final float nextPageHeight)
 	    throws IOException;
 
     /**
-     * A container for the result of a {@link Dividable#divide(float, float)
+     * A container for the result of a {@link Dividable#divide(float, float)}
      * operation.
      */
     public static class Divided {

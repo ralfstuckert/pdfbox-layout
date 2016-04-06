@@ -49,9 +49,9 @@ public class Cutter implements Dividable, Drawable {
     }
 
     @Override
-    public void draw(PDPageContentStream contentStream, Position origin)
+    public void draw(PDPageContentStream contentStream, Position upperLeft)
 	    throws IOException {
-	Position viewPortOrigin = origin.add(0, -viewPortY);
+	Position viewPortOrigin = upperLeft.add(0, -viewPortY);
 	undividable.draw(contentStream, viewPortOrigin);
     }
 

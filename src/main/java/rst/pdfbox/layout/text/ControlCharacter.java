@@ -30,7 +30,7 @@ public class ControlCharacter implements CharSequence {
     /**
      * Unescapes the escape character backslash.
      * 
-     * @param text
+     * @param text the text to escape.
      * @return the unescaped text.
      */
     public static String unescapeBackslash(final String text) {

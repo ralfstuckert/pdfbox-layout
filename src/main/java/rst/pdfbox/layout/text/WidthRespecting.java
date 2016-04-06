@@ -16,7 +16,7 @@ public interface WidthRespecting {
     /**
      * Sets the max width to respect.
      * 
-     * @param maxWidth
+     * @param maxWidth the maximum width.
      */
     void setMaxWidth(float maxWidth);
 }

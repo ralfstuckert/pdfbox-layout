@@ -144,9 +144,6 @@ public class TextFlowUtil {
 	return result;
     }
 
-    /**
-     * @return the appropriate font to use.
-     */
     protected static PDFont getFont(boolean bold, boolean italic,
 	    final PDFont plainFont, final PDFont boldFont,
 	    final PDFont italicFont, final PDFont boldItalicFont) {
@@ -166,6 +163,7 @@ public class TextFlowUtil {
      * {@link ControlCharacter}.
      * 
      * @param text
+     *            the original text.
      * @return the create char sequence.
      */
     public static Iterable<CharSequence> fromPlainText(final CharSequence text) {
@@ -177,6 +175,7 @@ public class TextFlowUtil {
      * {@link ControlCharacter}.
      * 
      * @param text
+     *            the original text.
      * @return the create char sequence.
      */
     public static Iterable<CharSequence> fromPlainText(
@@ -189,6 +188,7 @@ public class TextFlowUtil {
      * replaced by their corresponding {@link ControlCharacter}.
      * 
      * @param markup
+     *            the markup.
      * @return the create char sequence.
      */
     public static Iterable<CharSequence> fromMarkup(final CharSequence markup) {
@@ -200,6 +200,7 @@ public class TextFlowUtil {
      * replaced by their corresponding {@link ControlCharacter}.
      * 
      * @param markup
+     *            the markup.
      * @return the create char sequence.
      */
     public static Iterable<CharSequence> fromMarkup(

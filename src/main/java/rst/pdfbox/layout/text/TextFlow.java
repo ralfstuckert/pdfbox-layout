@@ -102,7 +102,7 @@ public class TextFlow implements TextSequence, WidthRespecting {
     /**
      * Adds a text sequence to this flow.
      * 
-     * @param sequence
+     * @param sequence the sequence to add.
      */
     public void add(final TextSequence sequence) {
 	for (TextFragment fragment : sequence) {
@@ -113,7 +113,7 @@ public class TextFlow implements TextSequence, WidthRespecting {
     /**
      * Adds a text fragment to this flow.
      * 
-     * @param fragment
+     * @param fragment the fragment to add.
      */
     public void add(final TextFragment fragment) {
 	text.add(fragment);
@@ -164,7 +164,7 @@ public class TextFlow implements TextSequence, WidthRespecting {
     /**
      * Sets the factor multiplied with the height to calculate the line spacing.
      * 
-     * @param lineSpacing
+     * @param lineSpacing the line spacing factor.
      */
     public void setLineSpacing(float lineSpacing) {
 	this.lineSpacing = lineSpacing;
@@ -182,9 +182,9 @@ public class TextFlow implements TextSequence, WidthRespecting {
     }
 
     @Override
-    public void drawText(PDPageContentStream contentStream, Position origin,
+    public void drawText(PDPageContentStream contentStream, Position upperLeft,
 	    Alignment alignment) throws IOException {
-	TextSequenceUtil.drawText(this, contentStream, origin, alignment,
+	TextSequenceUtil.drawText(this, contentStream, upperLeft, alignment,
 		getMaxWidth(), getLineSpacing());
     }
 

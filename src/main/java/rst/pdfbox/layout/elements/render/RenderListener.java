@@ -12,14 +12,16 @@ public interface RenderListener {
     /**
      * Called before any rendering is performed to the page.
      * 
-     * @param renderContext
+     * @param renderContext the context providing all rendering state.
+     * @throws IOException by pdfbox.
      */
     void beforePage(final RenderContext renderContext) throws IOException;
 
     /**
      * Called after any rendering is performed to the page.
      * 
-     * @param renderContext
+     * @param renderContext the context providing all rendering state.
+     * @throws IOException by pdfbox.
      */
     void afterPage(final RenderContext renderContext) throws IOException;
 }

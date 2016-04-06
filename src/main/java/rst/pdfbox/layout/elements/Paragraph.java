@@ -41,16 +41,16 @@ public class Paragraph extends TextFlow implements Drawable, Element,
     /**
      * Sets the alignment to apply.
      * 
-     * @param alignment
+     * @param alignment the text alignment.
      */
     public void setAlignment(Alignment alignment) {
 	this.alignment = alignment;
     }
 
     @Override
-    public void draw(PDPageContentStream contentStream, Position origin)
+    public void draw(PDPageContentStream contentStream, Position upperLeft)
 	    throws IOException {
-	drawText(contentStream, origin, getAlignment());
+	drawText(contentStream, upperLeft, getAlignment());
     }
 
     @Override

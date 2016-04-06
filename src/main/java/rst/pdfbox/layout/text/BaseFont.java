@@ -6,8 +6,8 @@ import org.apache.pdfbox.pdmodel.font.PDType1Font;
 /**
  * In order to easy handling with fonts, this enum bundles the
  * plain/italic/bold/bold-italic variants of the three standard font types
- * {@link PDType1Font.TIMES_ROMAN Times},{@link PDType1Font.COURIER Courier} and
- * {@link PDType1Font.HELVETICA Helveticy}.
+ * {@link PDType1Font#TIMES_ROMAN Times},{@link PDType1Font#COURIER Courier} and
+ * {@link PDType1Font#HELVETICA Helveticy}.
  * 
  * @author Ralf
  *

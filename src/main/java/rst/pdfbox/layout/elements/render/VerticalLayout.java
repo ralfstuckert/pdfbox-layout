@@ -38,10 +38,15 @@ public class VerticalLayout implements Layout {
      * Draws at the given position, ignoring all layouting rules.
      * 
      * @param renderContext
+     *            the context providing all rendering state.
      * @param drawable
+     *            the drawable to draw.
      * @param layoutHint
+     *            the layout hint used to layout.
      * @param position
+     *            the left upper position to start drawing at.
      * @throws IOException
+     *             by pdfbox
      */
     protected void renderAbsolute(final RenderContext renderContext,
 	    Drawable drawable, final LayoutHint layoutHint,
@@ -58,9 +63,13 @@ public class VerticalLayout implements Layout {
      * {@link #layoutAndDrawReleative(RenderContext, Drawable, LayoutHint)}.
      * 
      * @param renderContext
+     *            the context providing all rendering state.
      * @param drawable
+     *            the drawable to draw.
      * @param layoutHint
+     *            the layout hint used to layout.
      * @throws IOException
+     *             by pdfbox
      */
     protected void renderReleative(final RenderContext renderContext,
 	    Drawable drawable, final LayoutHint layoutHint) throws IOException {
@@ -88,13 +97,17 @@ public class VerticalLayout implements Layout {
      * Adjusts the width of the drawable (if it is {@link WidthRespecting}), and
      * divides it onto multiple pages if necessary. Actual drawing is delegated
      * to
-     * {@link #drawReletivePartAndMovePosition(RenderContext, Drawable, LayoutHint)}
+     * {@link #drawReletivePartAndMovePosition(RenderContext, Drawable, LayoutHint, boolean)}
      * .
      * 
      * @param renderContext
+     *            the context providing all rendering state.
      * @param drawable
+     *            the drawable to draw.
      * @param layoutHint
+     *            the layout hint used to layout.
      * @throws IOException
+     *             by pdfbox
      */
     protected void layoutAndDrawReleative(final RenderContext renderContext,
 	    Drawable drawable, final LayoutHint layoutHint) throws IOException {
@@ -156,7 +169,7 @@ public class VerticalLayout implements Layout {
      * alignment.
      * 
      * @param renderContext
-     *            the RenderContext.
+     *            the context providing all rendering state.
      * @param drawable
      *            the drawable to draw.
      * @param layoutHint
@@ -165,6 +178,7 @@ public class VerticalLayout implements Layout {
      *            indicates if the position should be moved (vertically) after
      *            drawing.
      * @throws IOException
+     *             by pdfbox
      */
     protected void drawReletivePartAndMovePosition(
 	    final RenderContext renderContext, Drawable drawable,
