@@ -3,12 +3,12 @@ task wrapper(type: Wrapper) {
     gradleVersion = '2.3'
 }
 
-allprojects {
+subprojects {
 
   apply plugin: "java"
   
   group = 'com.github.ralfstuckert.pdfbox-layout'
-  version = '0.1.1'
+  version = '0.2.0'
 
   repositories {
       mavenCentral()
@@ -77,10 +77,6 @@ allprojects {
 
 }
 
-
-dependencies {
-  compile("org.apache.pdfbox:pdfbox:1.8.8")
-}
 
 def getClassName(classFile) {
 	def name = classFile.getName();
