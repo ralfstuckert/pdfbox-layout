@@ -15,4 +15,16 @@
 		<nature>org.springsource.ide.eclipse.gradle.core.nature</nature>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>java</name>
+			<type>2</type>
+			<location>C:/Users/Ralf/git/pdfbox-layout/src/main/java</location>
+		</link>
+		<link>
+			<name>resources</name>
+			<type>2</type>
+			<location>C:/Users/Ralf/git/pdfbox-layout/src/main/resources</location>
+		</link>
+	</linkedResources>
 </projectDescription>
