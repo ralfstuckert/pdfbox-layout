@@ -20,9 +20,7 @@ task prepareSources(description: 'copies and adapts the imports to the given ver
 task copySources(type: Copy) {
     from '../src'
     into 'src'
-    filter { line ->
-       line.replaceAll('org.apache.pdfbox.pdmodel.edit.PDPageContentStream', 'org.apache.pdfbox.pdmodel.PDPageContentStream')
-    }
+    filter { line -> adaptToPdfBox2(line) }
 }
 
 task copyCompatibility(type: Copy, dependsOn: "copySources") {
@@ -33,8 +31,12 @@ task copyCompatibility(type: Copy, dependsOn: "copySources") {
 task copyExamples(type: Copy) {
     from '../examples'
     into 'examples'
-    filter { line ->
-       line.replaceAll('org.apache.pdfbox.pdmodel.edit.PDPageContentStream', 'org.apache.pdfbox.pdmodel.PDPageContentStream')
-    }
+    filter { line -> adaptToPdfBox2(line) }
+}
+
+def adaptToPdfBox2(String line) {
+   line = line.replaceAll('org.apache.pdfbox.pdmodel.edit.PDPageContentStream', 'org.apache.pdfbox.pdmodel.PDPageContentStream')
+   line = line.replaceAll('org.apache.pdfbox.pdmodel.graphics.xobject.PDXObject', 'org.apache.pdfbox.pdmodel.graphics.PDXObject')
+   return line
 }
 
