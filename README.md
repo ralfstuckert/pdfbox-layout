@@ -10,6 +10,15 @@ A tiny layout library on top of pdfbox. Main features are
 
 See the examples for more information on the usage. 
 
+## Supports pdfbox 1.8.x and 2.x
+The library comes in two flavors: one for Apache pdfbox 1.8.x, and the other for pdfbox 2.x
+
+artifactId | pdfbox version
+---------- | -------------
+pdfbox1-layout | pdfbox 1.8.x
+pdfbox2-layout | pdfbox 2.x
+
+
 #### Get it:
 
 As of 0.2.0 pdfbox-layout is available from [jitpack.io](https://jitpack.io/#ralfstuckert/pdfbox-layout). 
