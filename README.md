@@ -22,7 +22,7 @@ pdfbox**2**-layout | pdfbox **2**.x
 #### Get it:
 
 As of 0.2.0 pdfbox-layout is available from [jitpack.io](https://jitpack.io/#ralfstuckert/pdfbox-layout). 
-The latest release is <span id="latest_release">...</span>.
+The latest release is <span class="latest_release">...</span>.
 
 Maven:
 
@@ -36,7 +36,7 @@ Maven:
     &lt;<span class="pl-ent">dependency</span>&gt;
         &lt;<span class="pl-ent">groupId</span>&gt;com.github.ralfstuckert.pdfbox-layout&lt;/<span class="pl-ent">groupId</span>&gt;
         &lt;<span class="pl-ent">artifactId</span>&gt;pdfbox2-layout&lt;/<span class="pl-ent">artifactId</span>&gt;
-        &lt;<span class="pl-ent">version</span>&gt;<span id="latest_release">...</span>&lt;/<span class="pl-ent">version</span>&gt;
+        &lt;<span class="pl-ent">version</span>&gt;<span class="latest_release">...</span>&lt;/<span class="pl-ent">version</span>&gt;
     &lt;/<span class="pl-ent">dependency</span>&gt;</pre></div>
 
 Gradle:
@@ -46,7 +46,7 @@ Gradle:
         maven { url <span class="pl-s"><span class="pl-pds">"</span>https://jitpack.io<span class="pl-pds">"</span></span> }
    }
    <span class="pl-en">dependencies</span> {
-         compile <span class="pl-s"><span class="pl-pds">'</span>com.github.ralfstuckert.pdfbox-layout:pdfbox2-layout:<span id="latest_release">...</span><span class="pl-pds">'</span></span>
+         compile <span class="pl-s"><span class="pl-pds">'</span>com.github.ralfstuckert.pdfbox-layout:pdfbox2-layout:<span class="latest_release">...</span><span class="pl-pds">'</span></span>
    }</pre></div>
 </article>
   </div>
@@ -69,7 +69,7 @@ Gradle:
       
       function populateRelease(arr) {
           var release = arr[0].tag_name;
-          document.getElementById("latest_release").innerHTML = release;
+          document.getElementsByClassName ("latest_release").innerHTML = release;
       }
 </script>
 
