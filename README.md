@@ -15,8 +15,8 @@ The library comes in two flavors: one for Apache pdfbox 1.8.x, and the other for
 
 artifactId | pdfbox version
 ---------- | -------------
-pdfbox1-layout | pdfbox 1.8.x
-pdfbox2-layout | pdfbox 2.x
+pdfbox**1**-layout | pdfbox **1**.8.x
+pdfbox**2**-layout | pdfbox **2**.x
 
 
 #### Get it:
