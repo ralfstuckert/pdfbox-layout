@@ -1,9 +1,6 @@
 
 
-- reset Y in VerticalLayoutHint
-- color as markup
-- ImageElement
-- ColumnLayout
 - line spacing in TextFragment?
 - line lead
 - tests
+- color as markup

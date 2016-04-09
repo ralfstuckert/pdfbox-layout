@@ -30,7 +30,7 @@ public class Columns {
 		+ "gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.\n";
 
 	Document document = new Document(Constants.A4, 20, 40, 20, 40);
-	document.add(new ColumnLayout(3, 0));
+	document.add(new ColumnLayout(2, 10));
 
 	Paragraph paragraph1 = new Paragraph();
 	paragraph1.addMarkup(text1, 11, BaseFont.Times);
@@ -38,7 +38,7 @@ public class Columns {
 
 	Paragraph paragraph2 = new Paragraph();
 	paragraph2.addMarkup(text2, 12, BaseFont.Helvetica);
-	document.add(paragraph2, ColumnLayoutHint.RIGHT);
+	document.add(paragraph2);
 
 	Paragraph paragraph3 = new Paragraph();
 	paragraph3.addMarkup(text1, 8, BaseFont.Courier);

@@ -16,11 +16,16 @@ import rst.pdfbox.layout.text.WidthRespecting;
 import rst.pdfbox.layout.util.CompatibilityHelper;
 
 /**
+ * The column layout divides the page vertically into columns. You can specify
+ * the number of columns and the inter-column spacing. The layouting inside a
+ * column is similar to the {@link VerticalLayout}. See there for more details
+ * on the possiblities.
  */
 public class ColumnLayout implements Layout {
 
     private final int columnCount;
     private float columnSpacing;
+    private int columnIndex = 0;
 
     public ColumnLayout(int columnCount) {
 	this(columnCount, 0);
@@ -38,11 +43,12 @@ public class ColumnLayout implements Layout {
 
     public void nextColumn(final RenderContext renderContext)
 	    throws IOException {
-	float nextColumnX = renderContext.getCurrentPosition().getX()
-		+ getColumnWidth(renderContext) + columnSpacing;
-	if (nextColumnX >= renderContext.getLowerRight().getX()) {
+	if (++columnIndex >= columnCount) {
 	    renderContext.newPage();
+	    columnIndex = 0;
 	} else {
+	    float nextColumnX = (getColumnWidth(renderContext) + columnSpacing)
+		    * columnIndex;
 	    renderContext.resetPositionToUpperLeft();
 	    renderContext.movePositionBy(nextColumnX, 0);
 	}
@@ -98,9 +104,9 @@ public class ColumnLayout implements Layout {
      */
     protected void renderReleative(final RenderContext renderContext,
 	    Drawable drawable, final LayoutHint layoutHint) throws IOException {
-	ColumnLayoutHint columnLayoutHint = null;
-	if (layoutHint instanceof ColumnLayoutHint) {
-	    columnLayoutHint = (ColumnLayoutHint) layoutHint;
+	VerticalLayoutHint columnLayoutHint = null;
+	if (layoutHint instanceof VerticalLayoutHint) {
+	    columnLayoutHint = (VerticalLayoutHint) layoutHint;
 	    if (columnLayoutHint.getMarginTop() > 0) {
 		layoutAndDrawReleative(renderContext, new VerticalSpacer(
 			columnLayoutHint.getMarginTop()), columnLayoutHint);
@@ -112,8 +118,7 @@ public class ColumnLayout implements Layout {
 	if (columnLayoutHint != null) {
 	    if (columnLayoutHint.getMarginBottom() > 0) {
 		layoutAndDrawReleative(renderContext, new VerticalSpacer(
-			columnLayoutHint.getMarginBottom()),
-			columnLayoutHint);
+			columnLayoutHint.getMarginBottom()), columnLayoutHint);
 	    }
 	}
     }
@@ -139,9 +144,9 @@ public class ColumnLayout implements Layout {
 
 	float targetWidth = getColumnWidth(renderContext);
 	boolean movePosition = true;
-	ColumnLayoutHint columnLayoutHint = null;
-	if (layoutHint instanceof ColumnLayoutHint) {
-	    columnLayoutHint = (ColumnLayoutHint) layoutHint;
+	VerticalLayoutHint columnLayoutHint = null;
+	if (layoutHint instanceof VerticalLayoutHint) {
+	    columnLayoutHint = (VerticalLayoutHint) layoutHint;
 	    targetWidth -= columnLayoutHint.getMarginLeft();
 	    targetWidth -= columnLayoutHint.getMarginRight();
 	    movePosition = !columnLayoutHint.isResetY();
@@ -171,7 +176,7 @@ public class ColumnLayout implements Layout {
 		    layoutHint, true);
 
 	    nextColumn(renderContext);
-	    
+
 	    drawablePart = divided.getTail();
 	}
 
@@ -212,11 +217,10 @@ public class ColumnLayout implements Layout {
 	Document document = renderContext.getDocument();
 	float targetWidth = getColumnWidth(renderContext);
 	float offsetX = 0;
-	if (layoutHint instanceof ColumnLayoutHint) {
-	    ColumnLayoutHint columnLayoutHint = (ColumnLayoutHint) layoutHint;
+	if (layoutHint instanceof VerticalLayoutHint) {
+	    VerticalLayoutHint columnLayoutHint = (VerticalLayoutHint) layoutHint;
 	    Alignment alignment = columnLayoutHint.getAlignment();
-	    float horizontalExtraSpace = targetWidth
-		    - drawable.getWidth();
+	    float horizontalExtraSpace = targetWidth - drawable.getWidth();
 	    switch (alignment) {
 	    case Right:
 		offsetX = horizontalExtraSpace
@@ -232,9 +236,8 @@ public class ColumnLayout implements Layout {
 	}
 
 	contentStream.saveGraphicsState();
-	contentStream.addRect(0,
-		document.getMarginBottom(), document.getMediaBox().getWidth(),
-		renderContext.getHeight());
+	contentStream.addRect(0, document.getMarginBottom(), document
+		.getMediaBox().getWidth(), renderContext.getHeight());
 	CompatibilityHelper.clip(contentStream);
 
 	drawable.draw(renderContext.getPdDocument(), contentStream,
