@@ -2,6 +2,7 @@ package rst.pdfbox.layout.elements;
 
 import java.io.IOException;
 
+import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.edit.PDPageContentStream;
 
 import rst.pdfbox.layout.text.Alignment;
@@ -48,7 +49,7 @@ public class Paragraph extends TextFlow implements Drawable, Element,
     }
 
     @Override
-    public void draw(PDPageContentStream contentStream, Position upperLeft)
+    public void draw(PDDocument pdDocument, PDPageContentStream contentStream, Position upperLeft)
 	    throws IOException {
 	drawText(contentStream, upperLeft, getAlignment());
     }

@@ -29,9 +29,14 @@ task copyCompatibility(type: Copy, dependsOn: "copySources") {
 }
 
 task copyExamples(type: Copy) {
-    from '../examples'
+     from('../examples') {
+         include '**/*.java'
+         filter { line -> adaptToPdfBox2(line) }
+     }
+     from('../examples') {
+         exclude '**/*.java'
+     }
     into 'examples'
-    filter { line -> adaptToPdfBox2(line) }
 }
 
 def adaptToPdfBox2(String line) {

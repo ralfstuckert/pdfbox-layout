@@ -2,6 +2,7 @@ package rst.pdfbox.layout.elements;
 
 import java.io.IOException;
 
+import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.edit.PDPageContentStream;
 
 import rst.pdfbox.layout.elements.render.Layout;
@@ -36,11 +37,12 @@ public interface Drawable {
     /**
      * Draws the object at the given position.
      * 
+     * @param pdDocument the underlying pdfbox document.
      * @param contentStream the stream to draw to.
      * @param upperLeft the upper left position to start drawing. 
      * @throws IOException by pdfbox
      */
-    void draw(PDPageContentStream contentStream, Position upperLeft)
+    void draw(PDDocument pdDocument, PDPageContentStream contentStream, Position upperLeft)
 	    throws IOException;
 
 }

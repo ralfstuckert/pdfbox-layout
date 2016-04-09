@@ -4,6 +4,11 @@ dependencies {
   compile("org.apache.pdfbox:pdfbox:1.8.8")
 }
 
+gradle.projectsEvaluated {
+  compileJava.dependsOn(prepareSources)
+  examplesJar.dependsOn(copyExamplePdfs)
+}
+
 sourceSets {
   main {
     java {
@@ -26,5 +31,21 @@ sourceSets {
 clean{
   delete "examples"
 }  
+
+task prepareSources(description: 'copies and adapts the imports to the given version', dependsOn: ["clean", "copyExamples"] ) << {
+}
+
+task copyExamples(type: Copy) {
+    from '../examples'
+    into 'examples'
+}
+
+task copyExamplePdfs(type: Copy) {
+    from 'examples'
+    into '../examples'
+    include '*.pdf'
+}
+
+
 
 

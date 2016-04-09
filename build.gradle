@@ -49,10 +49,10 @@ subprojects {
   task createExamples(description: 'Creates the example pdfs', dependsOn: 'compileExamples' ) << {
     def oldPdfs = fileTree("examples").include('**/*.pdf')
     oldPdfs.each { file -> file.delete() }
-    def examples = fileTree("examples").include('**/*.class')
+    def examples = fileTree("examples").exclude('**/*.java')
     examples.each { example ->
   	  def mainClassName = getClassName(example)
-  	  if (!mainClassName.contains('$') ) {
+  	  if (mainClassName) {
          javaexec {
             main = mainClassName
             classpath = sourceSets.main.compileClasspath
@@ -80,6 +80,9 @@ subprojects {
 
 def getClassName(classFile) {
 	def name = classFile.getName();
+	if (name.contains('$') || !name.endsWith('.class')) {
+	  return null
+	}
 	name = name.substring(0, name.lastIndexOf("."))
 	return name
 }

@@ -5,6 +5,7 @@ import org.apache.pdfbox.pdmodel.font.PDType1Font;
 
 import rst.pdfbox.layout.elements.Document;
 import rst.pdfbox.layout.elements.Paragraph;
+import rst.pdfbox.layout.elements.ImageElement;
 import rst.pdfbox.layout.elements.VerticalSpacer;
 import rst.pdfbox.layout.elements.render.VerticalLayoutHint;
 import rst.pdfbox.layout.text.Alignment;
@@ -20,6 +21,12 @@ public class Letter {
 	Document document = new Document(Constants.A4, hMargin, hMargin,
 		vMargin, vMargin);
 
+	ImageElement image = new ImageElement("arrow.png");
+	image.setWidth(image.getWidth()/7);
+	image.setHeight(image.getHeight()/7);
+	document.add(image, new VerticalLayoutHint(Alignment.Right, 0, 0,
+		0, 0, true));
+	
 	document.add(new VerticalSpacer(100));
 
 	Paragraph paragraph = new Paragraph();
