@@ -84,8 +84,8 @@ public class ImageElement implements Element, Drawable, Dividable,
      * {@link WidthRespecting respect any given width}. Usually this makes only
      * sense if you also set the width to {@link #SCALE_TO_RESPECT_WIDTH}.
      * 
-     * @param width
-     *            the width to use.
+     * @param height
+     *            the height to use.
      */
     public void setHeight(float height) {
 	this.height = height;

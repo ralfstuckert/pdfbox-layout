@@ -27,9 +27,12 @@ public class RenderContext implements Closeable {
     /**
      * Creates a render context.
      * 
-     * @param document the document to render.
-     * @param pdDocument the underlying pdfbox document.
-     * @throws IOException by pdfbox.
+     * @param document
+     *            the document to render.
+     * @param pdDocument
+     *            the underlying pdfbox document.
+     * @throws IOException
+     *             by pdfbox.
      */
     public RenderContext(Document document, PDDocument pdDocument)
 	    throws IOException {
@@ -48,6 +51,15 @@ public class RenderContext implements Closeable {
     }
 
     /**
+     * @return the lower right position in the document respecting the
+     *         {@link Document document} margins.
+     */
+    public Position getLowerRight() {
+	return new Position(page.getMediaBox().getWidth()
+		- document.getMarginRight(), document.getMarginBottom());
+    }
+
+    /**
      * @return the current rendering position.
      */
     public Position getCurrentPosition() {
@@ -58,11 +70,20 @@ public class RenderContext implements Closeable {
      * Moves the {@link #getCurrentPosition() current position} relatively by
      * the given offset.
      * 
-     * @param x to move horizontally.
-     * @param y to move vertically.
+     * @param x
+     *            to move horizontally.
+     * @param y
+     *            to move vertically.
      */
     public void movePositionBy(final float x, final float y) {
 	currentPosition = currentPosition.add(x, y);
+    }
+
+    /**
+     * Resets the position to {@link #getUpperLeft()}.
+     */
+    public void resetPositionToUpperLeft() {
+	currentPosition = getUpperLeft();
     }
 
     /**
@@ -126,7 +147,8 @@ public class RenderContext implements Closeable {
     /**
      * Triggers a new page.
      * 
-     * @throws IOException by pdfbox
+     * @throws IOException
+     *             by pdfbox
      */
     public void newPage() throws IOException {
 	if (closePage()) {
@@ -134,9 +156,9 @@ public class RenderContext implements Closeable {
 	}
 	this.page = new PDPage(document.getMediaBox());
 	this.pdDocument.addPage(page);
-	this.contentStream = CompatibilityHelper.createAppendablePDPageContentStream(pdDocument, page);
-	currentPosition = getUpperLeft();
-
+	this.contentStream = CompatibilityHelper
+		.createAppendablePDPageContentStream(pdDocument, page);
+	resetPositionToUpperLeft();
 	document.beforePage(this);
     }
 
@@ -144,7 +166,8 @@ public class RenderContext implements Closeable {
      * Closes the current page.
      * 
      * @return <code>true</code> if the current page has not been closed before.
-     * @throws IOException by pdfbox
+     * @throws IOException
+     *             by pdfbox
      */
     public boolean closePage() throws IOException {
 	if (contentStream != null) {

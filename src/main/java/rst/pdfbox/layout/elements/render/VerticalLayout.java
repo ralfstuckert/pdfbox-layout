@@ -201,7 +201,7 @@ public class VerticalLayout implements Layout {
 		offsetX = horizontalExtraSpace / 2f;
 		break;
 	    default:
-		offsetX = verticalLayoutHint.getMarginLeft();
+		offsetX = 0;
 		break;
 	    }
 	}
