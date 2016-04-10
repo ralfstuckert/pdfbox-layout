@@ -23,6 +23,29 @@ import rst.pdfbox.layout.util.CompatibilityHelper;
  */
 public class VerticalLayout implements Layout {
 
+    /**
+     * Flips to the next page.
+     * 
+     * @param renderContext
+     *            the render context.
+     * @throws IOException
+     *             by pdfbox.
+     */
+    protected void nextPage(final RenderContext renderContext)
+	    throws IOException {
+	renderContext.newPage();
+    }
+
+    /**
+     * @param renderContext
+     *            the render context.
+     * @return the target width to draw to.
+     */
+    protected float getTargetWidth(final RenderContext renderContext) {
+	float targetWidth = renderContext.getWidth();
+	return targetWidth;
+    }
+
     @Override
     public void render(final RenderContext renderContext, Drawable drawable,
 	    final LayoutHint layoutHint) throws IOException {
@@ -112,7 +135,7 @@ public class VerticalLayout implements Layout {
     protected void layoutAndDrawReleative(final RenderContext renderContext,
 	    Drawable drawable, final LayoutHint layoutHint) throws IOException {
 
-	float targetWidth = renderContext.getWidth();
+	float targetWidth = getTargetWidth(renderContext);
 	boolean movePosition = true;
 	VerticalLayoutHint verticalLayoutHint = null;
 	if (layoutHint instanceof VerticalLayoutHint) {
@@ -146,7 +169,7 @@ public class VerticalLayout implements Layout {
 		    layoutHint, true);
 
 	    // new page
-	    renderContext.newPage();
+	    nextPage(renderContext);
 
 	    drawablePart = divided.getTail();
 	}
@@ -190,7 +213,7 @@ public class VerticalLayout implements Layout {
 	if (layoutHint instanceof VerticalLayoutHint) {
 	    VerticalLayoutHint verticalLayoutHint = (VerticalLayoutHint) layoutHint;
 	    Alignment alignment = verticalLayoutHint.getAlignment();
-	    float horizontalExtraSpace = renderContext.getWidth()
+	    float horizontalExtraSpace = getTargetWidth(renderContext)
 		    - drawable.getWidth();
 	    switch (alignment) {
 	    case Right:
@@ -207,9 +230,8 @@ public class VerticalLayout implements Layout {
 	}
 
 	contentStream.saveGraphicsState();
-	contentStream.addRect(document.getMarginLeft(),
-		document.getMarginBottom(), renderContext.getWidth(),
-		renderContext.getHeight());
+	contentStream.addRect(0, document.getMarginBottom(), document
+		.getMediaBox().getWidth(), renderContext.getHeight());
 	CompatibilityHelper.clip(contentStream);
 
 	drawable.draw(renderContext.getPdDocument(), contentStream,
