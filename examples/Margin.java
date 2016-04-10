@@ -34,7 +34,7 @@ public class Margin {
 		+ "eos et accusam et justo duo dolores et ea rebum. Stet clita kasd "
 		+ "gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.";
 
-	Document document = new Document(Constants.A4, 20, 40, 20, 40);
+	Document document = new Document(Constants.A4, 40, 60, 40, 60);
 	Paragraph paragraph = new Paragraph();
 	paragraph.addText(text1, 11, PDType1Font.HELVETICA);
 	document.add(paragraph, new VerticalLayoutHint(Alignment.Left, 0, 100,

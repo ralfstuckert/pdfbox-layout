@@ -12,7 +12,7 @@ import rst.pdfbox.layout.text.Constants;
 public class Aligned {
 
     public static void main(String[] args) throws Exception {
-	Document document = new Document(Constants.A4, 20, 40, 20, 40);
+	Document document = new Document(Constants.A4, 40, 60, 40, 60);
 	Paragraph paragraph = new Paragraph();
 	paragraph.addText("This is some left aligned text", 11,
 		PDType1Font.HELVETICA);

@@ -21,7 +21,7 @@ public class Markup {
 		+ " At vero eos et accusam* et justo duo dolores et ea rebum. Stet clita kasd "
 		+ "gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.\n\n";
 
-	Document document = new Document(Constants.A4, 20, 40, 20, 40);
+	Document document = new Document(Constants.A4, 40, 60, 40, 60);
 	Paragraph paragraph = new Paragraph();
 	paragraph.addMarkup(text1, 11, BaseFont.Times);
 	document.add(paragraph);

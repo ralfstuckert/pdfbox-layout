@@ -27,7 +27,7 @@ public class MultiplePages {
 		+ "eos et _accusam et *justo* duo dolores_ et ea rebum. Stet clita kasd "
 		+ "gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.\n";
 
-	Document document = new Document(Constants.A4, 20, 40, 20, 40);
+	Document document = new Document(Constants.A4, 40, 60, 40, 60);
 
 	Paragraph paragraph1 = new Paragraph();
 	paragraph1.addMarkup(text1, 11, BaseFont.Times);

@@ -39,7 +39,7 @@ public class Listener {
 
 
 
-	Document document = new Document(Constants.A4, 20, 40, 20, 40);
+	Document document = new Document(Constants.A4, 40, 60, 40, 60);
 	document.addRenderListener(new RenderListener() {
 
 	    @Override
