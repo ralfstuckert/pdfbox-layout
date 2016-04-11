@@ -23,7 +23,7 @@ public class Columns {
 		+ " At vero eos et accusam* et justo duo dolores et ea rebum. Stet clita kasd "
 		+ "gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.\n\n";
 
-	String text2 = "At *vero eos et accusam* et justo duo dolores et ea rebum."
+	String text2 = "At *vero eos et accusam* et justo duo dolores et ea rebum. "
 		+ "Stet clita kasd gubergren, no sea takimata\n\n"
 		+ "sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, "
 		+ "_consetetur sadipscing elitr_, sed diam nonumy eirmod tempor invidunt "
