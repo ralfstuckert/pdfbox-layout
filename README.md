@@ -8,7 +8,7 @@ A tiny layout library on top of pdfbox. Main features are
 * paragraphs 
 * pagination
 
-See the examples for more information on the usage. 
+See the examples for more information on the usage, or browse the [javadoc](https://jitpack.io/com/github/ralfstuckert/pdfbox-layout/pdfbox2-layout/0.2.0/javadoc/).
 
 ## Supports pdfbox 1.8.x and 2.x
 The library comes in two flavors: one for Apache pdfbox 1.8.x, and the other for pdfbox 2.x
