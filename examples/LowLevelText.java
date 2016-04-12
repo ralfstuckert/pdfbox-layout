@@ -20,7 +20,6 @@ public class LowLevelText {
     public static void main(String[] args) throws Exception {
 
 	final PDDocument test = new PDDocument();
-	final OutputStream outputStream = new FileOutputStream("lowleveltext.pdf");
 	final PDPage page = new PDPage(Constants.A4);
 	float pageWidth = page.getMediaBox().getWidth();
 	float pageHeight = page.getMediaBox().getHeight();
@@ -34,14 +33,14 @@ public class LowLevelText {
 			"Hello *bold _italic bold-end* italic-end_. Eirmod\ntempor invidunt ut \\*labore",
 			11, BaseFont.Times);
 
-	text.add(new StyledText("Spongebob", 11, PDType1Font.COURIER));
-	text.add(new StyledText(" is ", 20, PDType1Font.HELVETICA_BOLD_OBLIQUE));
-	text.add(new StyledText("cool", 7, PDType1Font.HELVETICA));
+	text.addText("Spongebob", 11, PDType1Font.COURIER);
+	text.addText(" is ", 20, PDType1Font.HELVETICA_BOLD_OBLIQUE);
+	text.addText("cool", 7, PDType1Font.HELVETICA);
 
 	text.setMaxWidth(100);
-	float xOffset= TextSequenceUtil.getOffset(text, pageWidth,
+	float xOffset = TextSequenceUtil.getOffset(text, pageWidth,
 		Alignment.Right);
-	text.drawText(contentStream, new Position(xOffset, pageHeight-50),
+	text.drawText(contentStream, new Position(xOffset, pageHeight - 50),
 		Alignment.Right);
 
 	String textBlock = "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, "
@@ -54,17 +53,17 @@ public class LowLevelText {
 		+ " At vero eos et accusam* et justo duo dolores et ea rebum. Stet clita kasd "
 		+ "gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.\n\n";
 
-	text = TextFlowUtil
-		.createTextFlowFromMarkup(
-			textBlock,
-			8, BaseFont.Courier);
+	text = new TextFlow();
+	text.addMarkup(textBlock, 8, BaseFont.Courier);
 	text.setMaxWidth(200);
-	xOffset= TextSequenceUtil.getOffset(text, pageWidth,
-		Alignment.Center);
-	text.drawText(contentStream, new Position(xOffset, pageHeight-100),
+	xOffset = TextSequenceUtil.getOffset(text, pageWidth, Alignment.Center);
+	text.drawText(contentStream, new Position(xOffset, pageHeight - 100),
 		Alignment.Center);
 
 	contentStream.close();
+
+	final OutputStream outputStream = new FileOutputStream(
+		"lowleveltext.pdf");
 	test.save(outputStream);
 	test.close();
 
