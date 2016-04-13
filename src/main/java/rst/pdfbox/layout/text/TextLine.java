@@ -10,8 +10,10 @@ import java.awt.Color;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.pdfbox.pdmodel.edit.PDPageContentStream;
 
@@ -23,22 +25,43 @@ import rst.pdfbox.layout.util.CompatibilityHelper;
  */
 public class TextLine implements TextSequence {
 
+    private static final String ASCENT = "ascent";
+    private static final String HEIGHT = "height";
+    private static final String WIDTH = "width";
+
     private final List<StyledText> styledTextList = new ArrayList<StyledText>();
     private NewLine newLine;
+    private Map<String, Object> cache = new HashMap<String, Object>();
+
+    private void clearCache() {
+	cache.clear();
+    }
+
+    private void setCachedValue(final String key, Object value) {
+	cache.put(key, value);
+    }
+
+    @SuppressWarnings("unchecked")
+    private <T> T getCachedValue(final String key, Class<T> type) {
+	return (T) cache.get(key);
+    }
 
     /**
      * Adds a styled text.
      * 
-     * @param fragment the fagment to add.
+     * @param fragment
+     *            the fagment to add.
      */
     public void add(final StyledText fragment) {
 	styledTextList.add(fragment);
+	clearCache();
     }
 
     /**
      * Adds all styled texts of the given text line.
      * 
-     * @param textLine the text line to add.
+     * @param textLine
+     *            the text line to add.
      */
     public void add(final TextLine textLine) {
 	for (StyledText fragment : textLine.getStyledTexts()) {
@@ -56,10 +79,12 @@ public class TextLine implements TextSequence {
     /**
      * Sets the new line.
      * 
-     * @param newLine the new line.
+     * @param newLine
+     *            the new line.
      */
     public void setNewLine(NewLine newLine) {
 	this.newLine = newLine;
+	clearCache();
     }
 
     /**
@@ -84,40 +109,53 @@ public class TextLine implements TextSequence {
 
     @Override
     public float getWidth() throws IOException {
-	float sum = 0;
-	for (TextFragment fragment : this) {
-	    sum += fragment.getWidth();
+	Float width = getCachedValue(WIDTH, Float.class);
+	if (width == null) {
+	    width = 0f;
+	    for (TextFragment fragment : this) {
+		width += fragment.getWidth();
+	    }
+	    setCachedValue(WIDTH, width);
 	}
-	return sum;
+	return width;
     }
 
     @Override
     public float getHeight() throws IOException {
-	float max = 0;
-	for (TextFragment fragment : this) {
-	    max = Math.max(max, fragment.getHeight());
+	Float height = getCachedValue(HEIGHT, Float.class);
+	if (height == null) {
+	    height = 0f;
+	    for (TextFragment fragment : this) {
+		height = Math.max(height, fragment.getHeight());
+	    }
+	    setCachedValue(HEIGHT, height);
 	}
-	return max;
+	return height;
     }
 
     /**
      * @return the (max) ascent of this line.
-     * @throws IOException by pdfbox.
+     * @throws IOException
+     *             by pdfbox.
      */
     protected float getAscent() throws IOException {
-	float max = 0;
-	for (TextFragment fragment : this) {
-	    float ascent = fragment.getFontDescriptor().getSize()
-		    * fragment.getFontDescriptor().getFont()
-			    .getFontDescriptor().getAscent() / 1000;
-	    max = Math.max(max, ascent);
+	Float ascent = getCachedValue(ASCENT, Float.class);
+	if (ascent == null) {
+	    ascent = 0f;
+	    for (TextFragment fragment : this) {
+		float currentAscent = fragment.getFontDescriptor().getSize()
+			* fragment.getFontDescriptor().getFont()
+				.getFontDescriptor().getAscent() / 1000;
+		ascent = Math.max(ascent, currentAscent);
+	    }
+	    setCachedValue(ASCENT, ascent);
 	}
-	return max;
+	return ascent;
     }
 
     @Override
-    public void drawText(PDPageContentStream contentStream,
-	    Position upperLeft, Alignment alignment) throws IOException {
+    public void drawText(PDPageContentStream contentStream, Position upperLeft,
+	    Alignment alignment) throws IOException {
 	contentStream.saveGraphicsState();
 	contentStream.beginText();
 	float x = upperLeft.getX();

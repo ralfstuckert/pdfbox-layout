@@ -18,6 +18,7 @@ public class StyledText implements TextFragment {
 
     private final String text;
     private final FontDescriptor fontDescriptor;
+    private Float width = null;
     private Color color = Color.black;
 
     /**
@@ -67,9 +68,12 @@ public class StyledText implements TextFragment {
 
     @Override
     public float getWidth() throws IOException {
-	return getFontDescriptor().getSize()
-		* getFontDescriptor().getFont().getStringWidth(getText())
-		/ 1000;
+	if (width == null) {
+	    width = getFontDescriptor().getSize()
+			* getFontDescriptor().getFont().getStringWidth(getText())
+			/ 1000;
+	}
+	return width;
     }
 
     @Override

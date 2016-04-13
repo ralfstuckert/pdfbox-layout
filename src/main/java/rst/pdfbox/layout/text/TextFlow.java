@@ -2,8 +2,10 @@ package rst.pdfbox.layout.text;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.pdfbox.pdmodel.edit.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.font.PDFont;
@@ -39,10 +41,26 @@ import org.apache.pdfbox.pdmodel.font.PDFont;
 public class TextFlow implements TextSequence, WidthRespecting {
 
     public static final float DEFAULT_LINE_SPACING = 1.2f;
+    private static final String HEIGHT = "height";
+    private static final String WIDTH = "width";
 
     private final List<TextFragment> text = new ArrayList<TextFragment>();
     private float lineSpacing = DEFAULT_LINE_SPACING;
     private float maxWidth = -1;
+    private Map<String, Object> cache = new HashMap<String, Object>();
+
+    private void clearCache() {
+	cache.clear();
+    }
+
+    private void setCachedValue(final String key, Object value) {
+	cache.put(key, value);
+    }
+
+    @SuppressWarnings("unchecked")
+    private <T> T getCachedValue(final String key, Class<T> type) {
+	return (T) cache.get(key);
+    }
 
     /**
      * Adds some text associated with the font to draw. The text may contain
@@ -102,7 +120,8 @@ public class TextFlow implements TextSequence, WidthRespecting {
     /**
      * Adds a text sequence to this flow.
      * 
-     * @param sequence the sequence to add.
+     * @param sequence
+     *            the sequence to add.
      */
     public void add(final TextSequence sequence) {
 	for (TextFragment fragment : sequence) {
@@ -113,10 +132,12 @@ public class TextFlow implements TextSequence, WidthRespecting {
     /**
      * Adds a text fragment to this flow.
      * 
-     * @param fragment the fragment to add.
+     * @param fragment
+     *            the fragment to add.
      */
     public void add(final TextFragment fragment) {
 	text.add(fragment);
+	clearCache();
     }
 
     /**
@@ -126,6 +147,7 @@ public class TextFlow implements TextSequence, WidthRespecting {
      */
     public TextFragment removeLast() {
 	if (text.size() > 0) {
+	    clearCache();
 	    return text.remove(text.size() - 1);
 	}
 	return null;
@@ -151,6 +173,7 @@ public class TextFlow implements TextSequence, WidthRespecting {
     @Override
     public void setMaxWidth(float maxWidth) {
 	this.maxWidth = maxWidth;
+	clearCache();
     }
 
     /**
@@ -164,21 +187,33 @@ public class TextFlow implements TextSequence, WidthRespecting {
     /**
      * Sets the factor multiplied with the height to calculate the line spacing.
      * 
-     * @param lineSpacing the line spacing factor.
+     * @param lineSpacing
+     *            the line spacing factor.
      */
     public void setLineSpacing(float lineSpacing) {
 	this.lineSpacing = lineSpacing;
+	clearCache();
     }
 
     @Override
     public float getWidth() throws IOException {
-	return TextSequenceUtil.getWidth(this, getMaxWidth());
+	Float width = getCachedValue(WIDTH, Float.class);
+	if (width == null) {
+	    width = TextSequenceUtil.getWidth(this, getMaxWidth());
+	    setCachedValue(WIDTH, width);
+	}
+	return width;
     }
 
     @Override
     public float getHeight() throws IOException {
-	return TextSequenceUtil
-		.getHeight(this, getMaxWidth(), getLineSpacing());
+	Float height = getCachedValue(HEIGHT, Float.class);
+	if (height == null) {
+	    height = TextSequenceUtil.getHeight(this, getMaxWidth(),
+		    getLineSpacing());
+	    setCachedValue(HEIGHT, height);
+	}
+	return height;
     }
 
     @Override
