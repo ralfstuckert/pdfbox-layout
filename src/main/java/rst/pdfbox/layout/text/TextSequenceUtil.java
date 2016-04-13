@@ -118,10 +118,12 @@ public class TextSequenceUtil {
 		TextFlow words = splitWords(fragment);
 		for (TextFragment word : words) {
 
+		    if (lineLength == 0) {
+			word = removeLeadingBlanks(word);
+		    }
+
 		    FontDescriptor fontDescriptor = word.getFontDescriptor();
-		    float length = fontDescriptor.getSize()
-			    * fontDescriptor.getFont().getStringWidth(
-				    word.getText()) / 1000;
+		    float length = word.getWidth();
 
 		    float extraSpace = 0;
 		    if (lineLength > 0 && word.getText().length() > 0) {
@@ -136,26 +138,35 @@ public class TextSequenceUtil {
 			result.add(new WrappingNewLine(fontDescriptor));
 			lineLength = 0;
 		    }
+
 		    if (lineLength == 0) {
-			String newText = word.getText();
-			while (newText.startsWith(" ")) {
-			    // skip leading blanks at begin of line
-			    newText = newText.substring(1);
-			}
-			if (newText != word.getText()) {
-			    // text has changed, blanks have been skipped
-			    word = new StyledText(newText,
-				    word.getFontDescriptor());
-			}
+			word = removeLeadingBlanks(word);
+			length = word.getWidth();
 		    }
 
 		    result.add(word);
-		    lineLength += length + extraSpace;
+
+		    if (length > 0) {
+			lineLength += length + extraSpace;
+		    }
 		}
 	    }
 	}
 
 	return result;
+    }
+
+    private static TextFragment removeLeadingBlanks(final TextFragment word) {
+	String newText = word.getText();
+	while (newText.startsWith(" ")) {
+	    // skip leading blanks at begin of line
+	    newText = newText.substring(1);
+	}
+	if (newText != word.getText()) {
+	    // text has changed, blanks have been skipped
+	    return new StyledText(newText, word.getFontDescriptor());
+	}
+	return word;
     }
 
     /**
