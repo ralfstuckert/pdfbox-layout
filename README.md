@@ -8,7 +8,7 @@ A tiny layout library on top of pdfbox. Main features are
 * paragraphs 
 * pagination
 
-See the [Wiki](https://github.com/ralfstuckert/pdfbox-layout/wiki) for more information on the usage, or browse the [javadoc](https://jitpack.io/com/github/ralfstuckert/pdfbox-layout/pdfbox2-layout/0.2.0/javadoc/).
+See the [Wiki](https://github.com/ralfstuckert/pdfbox-layout/wiki) for more information on the usage, or browse the [javadoc](https://jitpack.io/com/github/ralfstuckert/pdfbox-layout/pdfbox2-layout/0.3.0/javadoc/).
 
 ## Supports pdfbox 1.8.x and 2.x
 The library comes in two flavors: one for Apache pdfbox 1.8.x, and the other for pdfbox 2.x
@@ -36,7 +36,7 @@ Maven:
     <dependency>
         <groupId>com.github.ralfstuckert.pdfbox-layout</groupId>
         <artifactId>pdfbox2-layout</artifactId>
-        <version>0.2.0</version>
+        <version>0.3.0</version>
     </dependency>
 ```
 
@@ -48,6 +48,6 @@ Gradle:
         maven { url "https://jitpack.io" }
    }
    dependencies {
-         compile 'com.github.ralfstuckert.pdfbox-layout:pdfbox2-layout:0.2.0'
+         compile 'com.github.ralfstuckert.pdfbox-layout:pdfbox2-layout:0.3.0'
    }
 ```
