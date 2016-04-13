@@ -33,6 +33,8 @@ public class TextSequenceUtil {
 		line.setNewLine((NewLine) fragment);
 		result.add(line);
 		line = new TextLine();
+	    } else if (fragment instanceof ReplacedWhitespace) {
+		// ignore replaced whitespace
 	    } else {
 		line.add((StyledText) fragment);
 	    }
@@ -119,7 +121,11 @@ public class TextSequenceUtil {
 		for (TextFragment word : words) {
 
 		    if (lineLength == 0) {
-			word = removeLeadingBlanks(word);
+			TextFragment[] replaceLeadingBlanks = replaceLeadingBlanks(word);
+			word = replaceLeadingBlanks[0];
+			if (replaceLeadingBlanks.length > 1) {
+			    result.add(replaceLeadingBlanks[1]);
+			}
 		    }
 
 		    FontDescriptor fontDescriptor = word.getFontDescriptor();
@@ -140,8 +146,11 @@ public class TextSequenceUtil {
 		    }
 
 		    if (lineLength == 0) {
-			word = removeLeadingBlanks(word);
-			length = word.getWidth();
+			TextFragment[] replaceLeadingBlanks = replaceLeadingBlanks(word);
+			word = replaceLeadingBlanks[0];
+			if (replaceLeadingBlanks.length > 1) {
+			    result.add(replaceLeadingBlanks[1]);
+			}
 		    }
 
 		    result.add(word);
@@ -156,17 +165,59 @@ public class TextSequenceUtil {
 	return result;
     }
 
-    private static TextFragment removeLeadingBlanks(final TextFragment word) {
-	String newText = word.getText();
-	while (newText.startsWith(" ")) {
-	    // skip leading blanks at begin of line
-	    newText = newText.substring(1);
+    /**
+     * Replaces leading whitespace by {@link ReplacedWhitespace}.
+     * 
+     * @param word
+     *            the fragment to replace
+     * @return
+     */
+    private static TextFragment[] replaceLeadingBlanks(final TextFragment word) {
+	String text = word.getText();
+	int splitIndex = 0;
+	while (splitIndex < text.length()
+		&& Character.isWhitespace(text.charAt(splitIndex))) {
+	    ++splitIndex;
 	}
-	if (newText != word.getText()) {
-	    // text has changed, blanks have been skipped
-	    return new StyledText(newText, word.getFontDescriptor());
+
+	if (splitIndex == 0) {
+	    return new TextFragment[] { word };
+	} else {
+	    ReplacedWhitespace whitespace = new ReplacedWhitespace(
+		    text.substring(0, splitIndex), word.getFontDescriptor());
+	    StyledText newWord = new StyledText(text.substring(splitIndex),
+		    word.getFontDescriptor());
+	    newWord.setColor(word.getColor());
+	    return new TextFragment[] { newWord, whitespace };
 	}
-	return word;
+    }
+
+    /**
+     * De-wraps the given text, means any new lines introduced by wrapping will
+     * be removed. Also all whitespace removed by wrapping are re-introduced.
+     * 
+     * @param text
+     *            the text to de-wrap.
+     * @return the de-wrapped text.
+     * @throws IOException
+     *             by PDFBox
+     */
+    public static TextFlow deWrap(final TextSequence text) throws IOException {
+	TextFlow result = new TextFlow();
+	for (TextFragment fragment : text) {
+	    if (fragment instanceof WrappingNewLine) {
+		// skip
+	    } else if (fragment instanceof ReplacedWhitespace) {
+		result.add(((ReplacedWhitespace) fragment).toReplacedFragment());
+	    } else {
+		result.add(fragment);
+	    }
+	}
+
+	if (text instanceof TextFlow) {
+	    result.setLineSpacing(((TextFlow) text).getLineSpacing());
+	}
+	return result;
     }
 
     /**
