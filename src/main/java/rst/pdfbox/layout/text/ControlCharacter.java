@@ -9,54 +9,16 @@ import java.util.regex.Pattern;
  */
 public class ControlCharacter implements CharSequence {
 
-    /**
-     * An asterisk ('*') indicates switching of bold font mode in markup. It can
-     * be escaped with a backslash ('\').
-     */
-    public static final ControlCharacter BOLD = new ControlCharacter("BOLD",
-	    "(?<!\\\\)(\\\\\\\\)*\\*", "*");
-    /**
-     * An underscore ('_') indicates switching of italic font mode in markup. It
-     * can be escaped with a backslash ('\').
-     */
-    public static final ControlCharacter ITALIC = new ControlCharacter(
-	    "ITALIC", "(?<!\\\\)(\\\\\\\\)*_", "_");
-    /**
-     * LF ('\n') and CRLF ('\r\n') indicates a new line.
-     */
-    public static final ControlCharacter NEWLINE = new ControlCharacter(
-	    "NEWLINE", "(\r\n|\n)", null);
-
-    /**
-     * Unescapes the escape character backslash.
-     * 
-     * @param text the text to escape.
-     * @return the unescaped text.
-     */
-    public static String unescapeBackslash(final String text) {
-	return text.replaceAll(Pattern.quote("\\\\"), "\\\\");
-    }
-
     private String description;
-    private Pattern pattern;
     private String charaterToEscape;
 
-    private ControlCharacter(final String description, final String regex,
+    protected ControlCharacter(final String description, 
 	    final String charaterToEscape) {
 	this.description = description;
-	this.pattern = Pattern.compile(regex);
 	this.charaterToEscape = charaterToEscape;
     }
-
     /**
-     * @return the pattern to match the control character (sequence).
-     */
-    public Pattern getPattern() {
-	return pattern;
-    }
-
-    /**
-     * @return the character to escape, e.g. '*' for {@link #BOLD}.
+     * @return the character to escape, e.g. '*' for bold.
      */
     public String getCharacterToEscape() {
 	return charaterToEscape;

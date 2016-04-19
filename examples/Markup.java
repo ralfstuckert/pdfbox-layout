@@ -31,6 +31,9 @@ public class Markup {
 		.addMarkup(
 			"Markup supports *bold*, _italic_, and *even _mixed* markup_.\n",
 			11, BaseFont.Times);
+	    paragraph.addMarkup(
+	            "And now also {color:#ff0000}c{color:#00ff00}o{color:#0000ff}l{color:#00cccc}o{color:#cc00cc}r{color:#000000}.\n\n",
+	            11, BaseFont.Times);
 	paragraph.addMarkup(
 		"Escape \\* with \\\\\\* and \\_ with \\\\\\_ in markup.\n",
 		11, BaseFont.Times);

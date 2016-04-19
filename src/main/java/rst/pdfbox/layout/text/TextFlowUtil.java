@@ -1,10 +1,18 @@
 package rst.pdfbox.layout.text;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.regex.Matcher;
 
 import org.apache.pdfbox.pdmodel.font.PDFont;
+
+import rst.pdfbox.layout.text.ControlCharacters.BoldControlCharacter;
+import rst.pdfbox.layout.text.ControlCharacters.ColorControlCharacter;
+import rst.pdfbox.layout.text.ControlCharacters.ControlCharacterFactory;
+import rst.pdfbox.layout.text.ControlCharacters.ItalicControlCharacter;
+import rst.pdfbox.layout.text.ControlCharacters.NewLineControlCharacter;
 
 public class TextFlowUtil {
 
@@ -122,22 +130,27 @@ public class TextFlowUtil {
 	final TextFlow result = new TextFlow();
 	boolean bold = false;
 	boolean italic = false;
+	Color color = Color.black;
 	for (final CharSequence fragment : parts) {
 	    if (fragment instanceof ControlCharacter) {
-		if (fragment == ControlCharacter.NEWLINE) {
+		if (fragment instanceof NewLineControlCharacter) {
 		    result.add(new NewLine(fontSize));
 		}
-		if (fragment == ControlCharacter.BOLD) {
+		if (fragment instanceof BoldControlCharacter) {
 		    bold = !bold;
 		}
-		if (fragment == ControlCharacter.ITALIC) {
+		if (fragment instanceof ItalicControlCharacter) {
 		    italic = !italic;
+		}
+		if (fragment instanceof ColorControlCharacter) {
+		    color = ((ColorControlCharacter)fragment).getColor();
 		}
 	    } else {
 		PDFont font = getFont(bold, italic, plainFont, boldFont,
 			italicFont, boldItalicFont);
 		StyledText styledText = new StyledText(fragment.toString(),
 			fontSize, font);
+		styledText.setColor(color);
 		result.add(styledText);
 	    }
 	}
@@ -180,7 +193,8 @@ public class TextFlowUtil {
      */
     public static Iterable<CharSequence> fromPlainText(
 	    final Iterable<CharSequence> text) {
-	return splitByControlCharacter(ControlCharacter.NEWLINE, text, true);
+	return splitByControlCharacter(ControlCharacters.NEWLINE_FACTORY, text,
+		true);
     }
 
     /**
@@ -206,9 +220,14 @@ public class TextFlowUtil {
     public static Iterable<CharSequence> fromMarkup(
 	    final Iterable<CharSequence> markup) {
 	Iterable<CharSequence> text = markup;
-	text = splitByControlCharacter(ControlCharacter.BOLD, text, false);
-	text = splitByControlCharacter(ControlCharacter.ITALIC, text, false);
-	text = splitByControlCharacter(ControlCharacter.NEWLINE, text, true);
+	text = splitByControlCharacter(ControlCharacters.BOLD_FACTORY, text,
+		false);
+	text = splitByControlCharacter(ControlCharacters.ITALIC_FACTORY, text,
+		false);
+	text = splitByControlCharacter(ControlCharacters.COLOR_FACTORY, text,
+		false);
+	text = splitByControlCharacter(ControlCharacters.NEWLINE_FACTORY, text,
+		true);
 	return text;
     }
 
@@ -216,7 +235,7 @@ public class TextFlowUtil {
      * Splits the sequence by the given control character and replaces its
      * markup representation by the {@link ControlCharacter}.
      * 
-     * @param ctrl
+     * @param controlCharacterFactory
      *            the control character to split by.
      * @param markup
      *            the markup to split.
@@ -225,25 +244,43 @@ public class TextFlowUtil {
      * @return the splitted and replaced sequence.
      */
     protected static Iterable<CharSequence> splitByControlCharacter(
-	    ControlCharacter ctrl, final Iterable<CharSequence> markup,
-	    final boolean unescapeBackslash) {
+	    ControlCharacterFactory<? extends ControlCharacter> controlCharacterFactory,
+	    final Iterable<CharSequence> markup, final boolean unescapeBackslash) {
 	List<CharSequence> result = new ArrayList<CharSequence>();
 	for (CharSequence current : markup) {
 	    if (current instanceof String) {
 		String string = (String) current;
-		String[] parts = ctrl.getPattern().split(string, -1);
-		for (int i = 0; i < parts.length; i++) {
-		    if (i > 0) {
-			result.add(ctrl);
-		    }
-		    if (!parts[i].isEmpty()) {
-			String unescaped = ctrl.unescape(parts[i]);
+		Matcher matcher = controlCharacterFactory.getPattern().matcher(
+			string);
+		int begin = 0;
+		while (matcher.find()) {
+		    String part = string.substring(begin, matcher.start());
+		    begin = matcher.end();
+
+		    if (!part.isEmpty()) {
+			String unescaped = controlCharacterFactory
+				.unescape(part);
 			if (unescapeBackslash) {
-			    unescaped = ControlCharacter
+			    unescaped = ControlCharacters
 				    .unescapeBackslash(unescaped);
 			}
 			result.add(unescaped);
 		    }
+
+		    String controlString = string.substring(matcher.start(),
+			    matcher.end());
+		    result.add(controlCharacterFactory
+			    .createControlCharacter(controlString));
+		}
+
+		if (begin < string.length() ) {
+		    String part = string.substring(begin);
+		    String unescaped = controlCharacterFactory.unescape(part);
+		    if (unescapeBackslash) {
+			unescaped = ControlCharacters
+				.unescapeBackslash(unescaped);
+		    }
+		    result.add(unescaped);
 		}
 	    } else {
 		result.add(current);
