@@ -258,7 +258,9 @@ public class TextSequenceUtil {
 		if (!firstWord) {
 		    newWord = " " + newWord;
 		}
-		result.add(new StyledText(newWord, text.getFontDescriptor()));
+		StyledText styledText = new StyledText(newWord, text.getFontDescriptor());
+		styledText.setColor(text.getColor());
+		result.add(styledText);
 		firstWord = false;
 	    }
 	}
