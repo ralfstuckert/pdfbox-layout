@@ -115,6 +115,14 @@ public class ImageElement implements Element, Drawable, Dividable,
 	return absolutePosition;
     }
 
+    /**
+     * Sets the absolute position to render at.
+     * @param absolutePosition the absolute position.
+     */
+    public void setAbsolutePosition(Position absolutePosition) {
+	this.absolutePosition = absolutePosition;
+    }
+
     @Override
     public void draw(PDDocument pdDocument, PDPageContentStream contentStream,
 	    Position upperLeft) throws IOException {

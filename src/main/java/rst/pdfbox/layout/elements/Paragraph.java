@@ -28,6 +28,10 @@ public class Paragraph extends TextFlow implements Drawable, Element,
 	return absolutePosition;
     }
 
+    /**
+     * Sets the absolute position to render at.
+     * @param absolutePosition the absolute position.
+     */
     public void setAbsolutePosition(Position absolutePosition) {
 	this.absolutePosition = absolutePosition;
     }
