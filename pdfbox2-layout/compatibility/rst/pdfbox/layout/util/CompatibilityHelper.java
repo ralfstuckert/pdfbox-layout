@@ -9,7 +9,6 @@ import java.util.WeakHashMap;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
-import org.apache.pdfbox.pdmodel.PDPageContentStream.AppendMode;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.apache.pdfbox.pdmodel.graphics.image.LosslessFactory;
 import org.apache.pdfbox.util.Matrix;
@@ -42,7 +41,9 @@ public class CompatibilityHelper {
 
     public static PDPageContentStream createAppendablePDPageContentStream(
 	    final PDDocument pdDocument, final PDPage page) throws IOException {
-	return new PDPageContentStream(pdDocument, page, AppendMode.APPEND, true);
+	// stay compatible with 2.0.0-RC3
+	return new PDPageContentStream(pdDocument, page, true, true);
+//	return new PDPageContentStream(pdDocument, page, AppendMode.APPEND, true);
     }
 
     public static void drawImage(final BufferedImage image,
