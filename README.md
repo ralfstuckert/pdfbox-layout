@@ -36,7 +36,7 @@ Maven:
     <dependency>
         <groupId>com.github.ralfstuckert.pdfbox-layout</groupId>
         <artifactId>pdfbox2-layout</artifactId>
-        <version>0.4.1</version>
+        <version>0.4.2</version>
     </dependency>
 ```
 
@@ -48,6 +48,6 @@ Gradle:
         maven { url "https://jitpack.io" }
    }
    dependencies {
-         compile 'com.github.ralfstuckert.pdfbox-layout:pdfbox2-layout:0.4.1'
+         compile 'com.github.ralfstuckert.pdfbox-layout:pdfbox2-layout:0.4.2'
    }
 ```
