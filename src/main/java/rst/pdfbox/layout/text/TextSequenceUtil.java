@@ -131,15 +131,8 @@ public class TextSequenceUtil {
 		    FontDescriptor fontDescriptor = word.getFontDescriptor();
 		    float length = word.getWidth();
 
-		    float extraSpace = 0;
-		    if (lineLength > 0 && word.getText().length() > 0) {
-			// not the first word in line, so separate by blank
-			extraSpace = fontDescriptor.getSize()
-				* fontDescriptor.getFont().getSpaceWidth()
-				/ 1000;
-		    }
 		    if (maxWidth > 0 && lineLength > 0
-			    && lineLength + length + extraSpace > maxWidth) {
+			    && lineLength + length > maxWidth) {
 			// word exceeds max width, so create new line
 			result.add(new WrappingNewLine(fontDescriptor));
 			lineLength = 0;
@@ -148,6 +141,7 @@ public class TextSequenceUtil {
 		    if (lineLength == 0) {
 			TextFragment[] replaceLeadingBlanks = replaceLeadingBlanks(word);
 			word = replaceLeadingBlanks[0];
+			length = word.getWidth();
 			if (replaceLeadingBlanks.length > 1) {
 			    result.add(replaceLeadingBlanks[1]);
 			}
@@ -156,7 +150,7 @@ public class TextSequenceUtil {
 		    result.add(word);
 
 		    if (length > 0) {
-			lineLength += length + extraSpace;
+			lineLength += length;
 		    }
 		}
 	    }
