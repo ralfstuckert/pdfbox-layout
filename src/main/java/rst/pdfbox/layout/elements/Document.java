@@ -34,8 +34,6 @@ public class Document implements RenderListener {
     private final List<Entry<Element, LayoutHint>> elements = new ArrayList<>();
     private final List<RenderListener> renderListener = new CopyOnWriteArrayList<RenderListener>();
 
-    private Layout layout = new VerticalLayout();
-
     /**
      * Creates a Document based on the given media box. By default, a
      * {@link VerticalLayout} is used.
@@ -158,15 +156,13 @@ public class Document implements RenderListener {
 	for (Entry<Element, LayoutHint> entry : elements) {
 	    Element element = entry.getKey();
 	    LayoutHint layoutHint = entry.getValue();
+	    boolean success = renderContext.render(renderContext, element, layoutHint);
+	    if (!success) {
+		throw new IllegalArgumentException(
+			String.format(
+				"neither layout %s nor the render context knows what to do with %s",
+				renderContext.getLayout(), element));
 
-	    if (element instanceof Drawable) {
-		layout.render(renderContext, (Drawable) element, layoutHint);
-	    }
-	    if (element == ControlElement.NEWPAGE) {
-		renderContext.newPage();
-	    }
-	    if (element instanceof Layout) {
-		layout = (Layout) element;
 	    }
 	}
 	renderContext.close();

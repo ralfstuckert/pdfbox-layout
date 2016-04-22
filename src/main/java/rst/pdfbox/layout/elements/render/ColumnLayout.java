@@ -2,7 +2,9 @@ package rst.pdfbox.layout.elements.render;
 
 import java.io.IOException;
 
+import rst.pdfbox.layout.elements.ControlElement;
 import rst.pdfbox.layout.elements.Drawable;
+import rst.pdfbox.layout.elements.Element;
 
 /**
  * The column layout divides the page vertically into columns. You can specify
@@ -11,6 +13,12 @@ import rst.pdfbox.layout.elements.Drawable;
  * on the possiblities.
  */
 public class ColumnLayout extends VerticalLayout {
+    
+    /**
+     * Triggers flip to the next column.
+     */
+    public final static ControlElement NEWCOLUMN = new ControlElement("NEWCOLUMN");
+
 
     private final int columnCount;
     private float columnSpacing;
@@ -33,8 +41,11 @@ public class ColumnLayout extends VerticalLayout {
 		/ columnCount;
     }
 
+    /**
+     * Flips to the next column
+     */
     @Override
-    protected void nextPage(final RenderContext renderContext)
+    protected void turnPage(final RenderContext renderContext)
 	    throws IOException {
 	if (++columnIndex >= columnCount) {
 	    renderContext.newPage();
@@ -48,6 +59,20 @@ public class ColumnLayout extends VerticalLayout {
 	}
     }
 
+    @Override
+    public boolean render(RenderContext renderContext, Element element,
+            LayoutHint layoutHint) throws IOException {
+	if (element == ControlElement.NEWPAGE) {
+	    renderContext.newPage();
+	    return true;
+	}
+	if (element == NEWCOLUMN) {
+	    turnPage(renderContext);
+	    return true;
+	}
+        return super.render(renderContext, element, layoutHint);
+    }
+    
     @Override
     public void render(RenderContext renderContext, Drawable drawable,
             LayoutHint layoutHint) throws IOException {

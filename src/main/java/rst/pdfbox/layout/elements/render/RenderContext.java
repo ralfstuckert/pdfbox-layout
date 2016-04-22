@@ -7,7 +7,9 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.edit.PDPageContentStream;
 
+import rst.pdfbox.layout.elements.ControlElement;
 import rst.pdfbox.layout.elements.Document;
+import rst.pdfbox.layout.elements.Element;
 import rst.pdfbox.layout.text.Position;
 import rst.pdfbox.layout.util.CompatibilityHelper;
 
@@ -15,7 +17,7 @@ import rst.pdfbox.layout.util.CompatibilityHelper;
  * The render context is a container providing all state of the current
  * rendering process.
  */
-public class RenderContext implements Closeable {
+public class RenderContext implements Layout, Closeable {
 
     private final Document document;
     private final PDDocument pdDocument;
@@ -23,6 +25,7 @@ public class RenderContext implements Closeable {
     private int pageIndex = 0;
     private PDPageContentStream contentStream;
     private Position currentPosition;
+    private Layout layout = new VerticalLayout();
 
     /**
      * Creates a render context.
@@ -39,6 +42,23 @@ public class RenderContext implements Closeable {
 	this.document = document;
 	this.pdDocument = pdDocument;
 	newPage();
+    }
+
+    /**
+     * @return the current {@link Layout} used for rendering.
+     */
+    public Layout getLayout() {
+	return layout;
+    }
+
+    /**
+     * Sets the current {@link Layout} used for rendering.
+     * 
+     * @param layout
+     *            the new layout.
+     */
+    public void setLayout(Layout layout) {
+	this.layout = layout;
     }
 
     /**
@@ -144,6 +164,25 @@ public class RenderContext implements Closeable {
 	return pageIndex;
     }
 
+    @Override
+    public boolean render(RenderContext renderContext, Element element,
+	    LayoutHint layoutHint) throws IOException {
+	boolean success = getLayout()
+		.render(renderContext, element, layoutHint);
+	if (success) {
+	    return true;
+	}
+	if (element == ControlElement.NEWPAGE) {
+	    newPage();
+	    return true;
+	}
+	if (element instanceof Layout) {
+	    setLayout((Layout) element);
+	    return true;
+	}
+	return false;
+    }
+
     /**
      * Triggers a new page.
      * 
@@ -184,4 +223,5 @@ public class RenderContext implements Closeable {
     public void close() throws IOException {
 	closePage();
     }
+
 }

@@ -44,10 +44,12 @@ public class TextFlow implements TextSequence, WidthRespecting {
     private static final String HEIGHT = "height";
     private static final String WIDTH = "width";
 
+    private Map<String, Object> cache = new HashMap<String, Object>();
+
     private final List<TextFragment> text = new ArrayList<TextFragment>();
     private float lineSpacing = DEFAULT_LINE_SPACING;
     private float maxWidth = -1;
-    private Map<String, Object> cache = new HashMap<String, Object>();
+    private boolean applyLineSpacingToFirstLine = true;
 
     private void clearCache() {
 	cache.clear();
@@ -195,6 +197,32 @@ public class TextFlow implements TextSequence, WidthRespecting {
 	clearCache();
     }
 
+    /**
+     * Indicates if the line spacing should be applied to the first line. Makes
+     * sense if there is text above to achieve an equal spacing. In case you
+     * want to position the text precisely on top, you may set this value to
+     * <code>false</code>. Default is <code>true</code>.
+     * 
+     * @return <code>true</code> if the line spacing should be applied to the
+     *         first line.
+     */
+    public boolean isApplyLineSpacingToFirstLine() {
+	return applyLineSpacingToFirstLine;
+    }
+
+    /**
+     * Sets the indicator whether to apply line spacing to the first line.
+     * 
+     * @param applyLineSpacingToFirstLine
+     *            <code>true</code> if the line spacing should be applied to the
+     *            first line.
+     * @see TextFlow#isApplyLineSpacingToFirstLine()
+     */
+    public void setApplyLineSpacingToFirstLine(
+	    boolean applyLineSpacingToFirstLine) {
+	this.applyLineSpacingToFirstLine = applyLineSpacingToFirstLine;
+    }
+
     @Override
     public float getWidth() throws IOException {
 	Float width = getCachedValue(WIDTH, Float.class);
@@ -210,7 +238,7 @@ public class TextFlow implements TextSequence, WidthRespecting {
 	Float height = getCachedValue(HEIGHT, Float.class);
 	if (height == null) {
 	    height = TextSequenceUtil.getHeight(this, getMaxWidth(),
-		    getLineSpacing());
+		    getLineSpacing(), isApplyLineSpacingToFirstLine());
 	    setCachedValue(HEIGHT, height);
 	}
 	return height;
@@ -220,7 +248,8 @@ public class TextFlow implements TextSequence, WidthRespecting {
     public void drawText(PDPageContentStream contentStream, Position upperLeft,
 	    Alignment alignment) throws IOException {
 	TextSequenceUtil.drawText(this, contentStream, upperLeft, alignment,
-		getMaxWidth(), getLineSpacing());
+		getMaxWidth(), getLineSpacing(),
+		isApplyLineSpacingToFirstLine());
     }
 
     public void drawTextRightAligned(PDPageContentStream contentStream,

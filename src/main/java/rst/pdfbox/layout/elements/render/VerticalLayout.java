@@ -7,8 +7,10 @@ import org.apache.pdfbox.pdmodel.edit.PDPageContentStream;
 import rst.pdfbox.layout.elements.Cutter;
 import rst.pdfbox.layout.elements.Dividable;
 import rst.pdfbox.layout.elements.Dividable.Divided;
+import rst.pdfbox.layout.elements.ControlElement;
 import rst.pdfbox.layout.elements.Document;
 import rst.pdfbox.layout.elements.Drawable;
+import rst.pdfbox.layout.elements.Element;
 import rst.pdfbox.layout.elements.VerticalSpacer;
 import rst.pdfbox.layout.text.Alignment;
 import rst.pdfbox.layout.text.Position;
@@ -24,14 +26,14 @@ import rst.pdfbox.layout.util.CompatibilityHelper;
 public class VerticalLayout implements Layout {
 
     /**
-     * Flips to the next page.
+     * Turns to the next area, usually a page.
      * 
      * @param renderContext
      *            the render context.
      * @throws IOException
      *             by pdfbox.
      */
-    protected void nextPage(final RenderContext renderContext)
+    protected void turnPage(final RenderContext renderContext)
 	    throws IOException {
 	renderContext.newPage();
     }
@@ -47,6 +49,20 @@ public class VerticalLayout implements Layout {
     }
 
     @Override
+    public boolean render(RenderContext renderContext, Element element,
+	    LayoutHint layoutHint) throws IOException {
+	if (element instanceof Drawable) {
+	    render(renderContext, (Drawable) element, layoutHint);
+	    return true;
+	}
+	if (element == ControlElement.NEWPAGE) {
+	    turnPage(renderContext);
+	    return true;
+	}
+	
+	return false;
+    }
+
     public void render(final RenderContext renderContext, Drawable drawable,
 	    final LayoutHint layoutHint) throws IOException {
 	if (drawable.getAbsolutePosition() != null) {
@@ -169,7 +185,7 @@ public class VerticalLayout implements Layout {
 		    layoutHint, true);
 
 	    // new page
-	    nextPage(renderContext);
+	    turnPage(renderContext);
 
 	    drawablePart = divided.getTail();
 	}

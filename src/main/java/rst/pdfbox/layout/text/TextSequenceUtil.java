@@ -252,7 +252,8 @@ public class TextSequenceUtil {
 		if (!firstWord) {
 		    newWord = " " + newWord;
 		}
-		StyledText styledText = new StyledText(newWord, text.getFontDescriptor());
+		StyledText styledText = new StyledText(newWord,
+			text.getFontDescriptor());
 		styledText.setColor(text.getColor());
 		result.add(styledText);
 		firstWord = false;
@@ -277,22 +278,28 @@ public class TextSequenceUtil {
      *            if &gt; 0, the text may be word-wrapped to match the width.
      * @param lineSpacing
      *            the line spacing factor.
+     * @param applyLineSpacingToFirstLine
+     *            indicates if the line spacing should be applied to the first
+     *            line also. Makes sense in most cases to do so.
      * @throws IOException
      *             by pdfbox
      */
     public static void drawText(TextSequence text,
 	    PDPageContentStream contentStream, Position upperLeft,
-	    Alignment alignment, float maxWidth, final float lineSpacing)
-	    throws IOException {
+	    Alignment alignment, float maxWidth, final float lineSpacing,
+	    final boolean applyLineSpacingToFirstLine) throws IOException {
 	List<TextLine> lines = wordWrapToLines(text, maxWidth);
 	float targetWidth = getMaxWidth(lines);
 	Position position = upperLeft;
 	float lastLineHeight = 0;
 	for (int i = 0; i < lines.size(); i++) {
+	    boolean applyLineSpacing = i > 0 || applyLineSpacingToFirstLine;
 	    TextLine textLine = lines.get(i);
 	    float currentLineHeight = textLine.getHeight();
-	    float lead = lastLineHeight
-		    + (currentLineHeight * (lineSpacing - 1));
+	    float lead = lastLineHeight;
+	    if (applyLineSpacing) {
+		lead += (currentLineHeight * (lineSpacing - 1));
+	    }
 	    lastLineHeight = currentLineHeight;
 	    position = position.add(0, -lead);
 	    float offset = getOffset(textLine, targetWidth, alignment);
@@ -376,17 +383,25 @@ public class TextSequenceUtil {
      *            if &gt; 0, the text may be word-wrapped to match the width.
      * @param lineSpacing
      *            the line spacing factor.
+     * @param applyLineSpacingToFirstLine
+     *            indicates if the line spacing should be applied to the first
+     *            line also. Makes sense in most cases to do so.
      * @return the height of the text.
      * @throws IOException
      *             by pdfbox
      */
     public static float getHeight(final TextSequence textSequence,
-	    final float maxWidth, final float lineSpacing) throws IOException {
+	    final float maxWidth, final float lineSpacing,
+	    final boolean applyLineSpacingToFirstLine) throws IOException {
 	List<TextLine> lines = wordWrapToLines(textSequence, maxWidth);
 	float sum = 0;
 	for (int i = 0; i < lines.size(); i++) {
+	    boolean applyLineSpacing = i > 0 || applyLineSpacingToFirstLine;
 	    TextLine line = lines.get(i);
-	    float lineHeight = line.getHeight() * lineSpacing;
+	    float lineHeight = line.getHeight();
+	    if (applyLineSpacing) {
+		lineHeight *= lineSpacing;
+	    }
 	    sum += lineHeight;
 	}
 	return sum;
