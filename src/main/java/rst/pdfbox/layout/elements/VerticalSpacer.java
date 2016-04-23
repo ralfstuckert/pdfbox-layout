@@ -51,4 +51,10 @@ public class VerticalSpacer implements Drawable, Element, Dividable {
 	return new Divided(new VerticalSpacer(remainingHeight),
 		new VerticalSpacer(getHeight() - remainingHeight));
     }
+    
+    @Override
+    public Drawable removeLeadingEmptyVerticalSpace() {
+        return this;
+    }
+
 }

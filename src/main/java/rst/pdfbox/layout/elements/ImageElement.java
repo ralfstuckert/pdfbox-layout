@@ -130,4 +130,8 @@ public class ImageElement implements Element, Drawable, Dividable,
 		upperLeft, getWidth(), getHeight());
     }
 
+    @Override
+    public Drawable removeLeadingEmptyVerticalSpace() {
+        return this;
+    }
 }

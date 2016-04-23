@@ -81,4 +81,14 @@ public class ColumnLayout extends VerticalLayout {
 	}
         super.render(renderContext, drawable, layoutHint);
     }
+    
+    @Override
+    protected boolean isPositionTopOfPage(final RenderContext renderContext) {
+	float topPosition = renderContext.getUpperLeft().getY();
+	if (offsetY != null) { 
+	    topPosition -= offsetY;
+	}
+	return renderContext.getCurrentPosition().getY() == topPosition;
+    }
+
 }

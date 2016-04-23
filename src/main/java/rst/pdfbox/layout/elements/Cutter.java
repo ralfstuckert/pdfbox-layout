@@ -56,4 +56,9 @@ public class Cutter implements Dividable, Drawable {
 	undividable.draw(pdDocument, contentStream, viewPortOrigin);
     }
 
+    @Override
+    public Drawable removeLeadingEmptyVerticalSpace() throws IOException {
+        return new Cutter(undividable.removeLeadingEmptyVerticalSpace());
+    }
+
 }

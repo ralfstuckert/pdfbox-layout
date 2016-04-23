@@ -31,7 +31,7 @@ public class Columns {
 		+ "eos et _accusam et *justo* duo dolores_ et ea rebum. Stet clita kasd "
 		+ "gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.\n";
 
-	Document document = new Document(Constants.A4, 40, 60, 40, 60);
+	Document document = new Document(Constants.A4, 40, 50, 40, 60);
 	
 	Paragraph title = new Paragraph();
 	title.addMarkup("*This Text is organized in Colums*", 20, BaseFont.Times);

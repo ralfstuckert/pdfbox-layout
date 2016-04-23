@@ -4,10 +4,10 @@ import java.io.IOException;
 
 import org.apache.pdfbox.pdmodel.edit.PDPageContentStream;
 
+import rst.pdfbox.layout.elements.ControlElement;
 import rst.pdfbox.layout.elements.Cutter;
 import rst.pdfbox.layout.elements.Dividable;
 import rst.pdfbox.layout.elements.Dividable.Divided;
-import rst.pdfbox.layout.elements.ControlElement;
 import rst.pdfbox.layout.elements.Document;
 import rst.pdfbox.layout.elements.Drawable;
 import rst.pdfbox.layout.elements.Element;
@@ -24,6 +24,30 @@ import rst.pdfbox.layout.util.CompatibilityHelper;
  * into account to calculate the position, width, alignment etc.
  */
 public class VerticalLayout implements Layout {
+
+    protected boolean removeLeadingEmptyVerticalSpace = true;
+
+    /**
+     * See {@link Drawable#removeLeadingEmptyVerticalSpace()}
+     * @return <code>true</code> if empty space (e.g. empty lines) should be
+     *         removed at the begin of a page.
+     */
+    public boolean isRemoveLeadingEmptyVerticalSpace() {
+	return removeLeadingEmptyVerticalSpace;
+    }
+
+    /**
+     * Indicates if empty space (e.g. empty lines) should be removed at the
+     * begin of a page.
+     * See {@link Drawable#removeLeadingEmptyVerticalSpace()}
+     * 
+     * @param removeLeadingEmptyLines
+     *            <code>true</code> if space should be removed.
+     */
+    public void setRemoveLeadingEmptyVerticalSpace(
+	    boolean removeLeadingEmptyLines) {
+	this.removeLeadingEmptyVerticalSpace = removeLeadingEmptyLines;
+    }
 
     /**
      * Turns to the next area, usually a page.
@@ -59,7 +83,7 @@ public class VerticalLayout implements Layout {
 	    turnPage(renderContext);
 	    return true;
 	}
-	
+
 	return false;
     }
 
@@ -170,7 +194,8 @@ public class VerticalLayout implements Layout {
 	    }
 	}
 
-	Drawable drawablePart = drawable;
+	Drawable drawablePart = removeLeadingEmptyVerticalSpace(drawable,
+		renderContext);
 	while (renderContext.getRemainingHeight() < drawablePart.getHeight()) {
 	    Dividable dividable = null;
 	    if (drawablePart instanceof Dividable) {
@@ -188,6 +213,8 @@ public class VerticalLayout implements Layout {
 	    turnPage(renderContext);
 
 	    drawablePart = divided.getTail();
+	    drawablePart = removeLeadingEmptyVerticalSpace(drawablePart,
+		    renderContext);
 	}
 
 	drawReletivePartAndMovePosition(renderContext, drawablePart,
@@ -259,5 +286,39 @@ public class VerticalLayout implements Layout {
 	    renderContext.movePositionBy(0, -drawable.getHeight());
 	}
     }
+
+    /**
+     * Indicates if the current position is the top of page.
+     * 
+     * @param renderContext
+     *            the render context.
+     * @return <code>true</code> if the current position is top of page.
+     */
+    protected boolean isPositionTopOfPage(final RenderContext renderContext) {
+	return renderContext.getCurrentPosition().getY() == renderContext
+		.getUpperLeft().getY();
+    }
+
+    /**
+     * Removes empty space (e.g. empty lines) at the begin of a page.
+     * See {@link Drawable#removeLeadingEmptyVerticalSpace()}
+     * 
+     * @param drawable
+     *            the drawable to process.
+     * @param renderContext
+     *            the render context.
+     * @return the processed drawable
+     * @throws IOException
+     *             by pdfbox
+     */
+    protected Drawable removeLeadingEmptyVerticalSpace(final Drawable drawable,
+	    final RenderContext renderContext) throws IOException {
+	if (isRemoveLeadingEmptyVerticalSpace()
+		&& isPositionTopOfPage(renderContext)) {
+	    return drawable.removeLeadingEmptyVerticalSpace();
+	}
+	return drawable;
+    }
+
 
 }

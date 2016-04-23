@@ -258,6 +258,30 @@ public class TextFlow implements TextSequence, WidthRespecting {
 		Alignment.Right);
     }
 
+    /**
+     * @return a copy of this text flow where all leading {@link NewLine}s are removed.
+     * @throws IOException by pdfbox.
+     */
+    public TextFlow removeLeadingEmptyLines() throws IOException {
+	if (text.size() == 0 || !(text.get(0) instanceof NewLine)) {
+	    return this;
+	}
+	TextFlow result = createInstance();
+	result.setApplyLineSpacingToFirstLine(this.isApplyLineSpacingToFirstLine());
+	result.setLineSpacing(this.getLineSpacing());
+	result.setMaxWidth(this.getMaxWidth());
+	for (TextFragment fragment : this) {
+	    if (!result.isEmpty() || !(fragment instanceof NewLine)) {
+		result.add(fragment);
+	    }
+	}
+	return result;
+    }
+    
+    protected TextFlow createInstance() {
+	return new TextFlow();
+    }
+    
     @Override
     public String toString() {
 	return "TextFlow [text=" + text + "]";

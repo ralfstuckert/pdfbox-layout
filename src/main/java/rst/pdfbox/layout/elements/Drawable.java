@@ -15,13 +15,15 @@ public interface Drawable {
 
     /**
      * @return the width of the drawable.
-     * @throws IOException by pdfbox
+     * @throws IOException
+     *             by pdfbox
      */
     float getWidth() throws IOException;
 
     /**
      * @return the height of the drawable.
-     * @throws IOException by pdfbox
+     * @throws IOException
+     *             by pdfbox
      */
     float getHeight() throws IOException;
 
@@ -30,19 +32,32 @@ public interface Drawable {
      * position ignoring any {@link Layout}.
      * 
      * @return the absolute position.
-     * @throws IOException by pdfbox
+     * @throws IOException
+     *             by pdfbox
      */
     Position getAbsolutePosition() throws IOException;
 
     /**
      * Draws the object at the given position.
      * 
-     * @param pdDocument the underlying pdfbox document.
-     * @param contentStream the stream to draw to.
-     * @param upperLeft the upper left position to start drawing. 
-     * @throws IOException by pdfbox
+     * @param pdDocument
+     *            the underlying pdfbox document.
+     * @param contentStream
+     *            the stream to draw to.
+     * @param upperLeft
+     *            the upper left position to start drawing.
+     * @throws IOException
+     *             by pdfbox
      */
-    void draw(PDDocument pdDocument, PDPageContentStream contentStream, Position upperLeft)
-	    throws IOException;
+    void draw(PDDocument pdDocument, PDPageContentStream contentStream,
+	    Position upperLeft) throws IOException;
 
+    /**
+     * @return a copy of this drawable where any leading empty vertical space is
+     *         removed, if possible. This is useful for avoiding leading empty space
+     *         on a new page.
+     * @throws IOException
+     *             by pdfbox
+     */
+    Drawable removeLeadingEmptyVerticalSpace() throws IOException;
 }
