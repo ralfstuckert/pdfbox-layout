@@ -3,10 +3,20 @@ task wrapper(type: Wrapper) {
     gradleVersion = '2.3'
 }
 
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'org.dm.gradle:gradle-bundle-plugin:0.8.2'
+    }
+}
+
 subprojects {
 
   apply plugin: "java"
-  
+  apply plugin: 'org.dm.bundle'  
+
   group = 'com.github.ralfstuckert.pdfbox-layout'
   version = '0.5.0'
 
@@ -19,6 +29,22 @@ subprojects {
     compile files("examples")   
   }
 
+  bundle {
+    instruction 'Export-Package', 'rst.pdfbox.layout.*;-split-package:=merge-first' 
+    instruction 'Import-Package', "!rst.pdfbox.layout.*,*"
+    instruction 'Bundle-Name', project.name
+    instruction 'Bundle-SymbolicName', "${project.group}.${project.name}"
+  }
+  
+  jar {
+    sourceCompatibility = '1.7'
+    targetCompatibility = '1.7'
+  }
+  
+  javadoc {
+    failOnError = false
+  }
+
   task sourcesJar(type: Jar, dependsOn: classes) {
     classifier = 'sources'
     from sourceSets.main.allSource
@@ -27,10 +53,6 @@ subprojects {
   task javadocJar(type: Jar, dependsOn: javadoc) {
     classifier = 'javadoc'
     from javadoc.destinationDir
-  }
-
-  javadoc {
-    failOnError = false
   }
 
   task examplesJar(type: Jar, dependsOn: "createExamples" ) {
