@@ -45,7 +45,7 @@ public class PositionControl extends ControlElement {
      * 
      * @param relativeX
      *            the value to change position in X direction.
-     * @param relativeX
+     * @param relativeY
      *            the value to change position in Y direction.
      * @return the created element
      */
