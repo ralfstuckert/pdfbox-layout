@@ -10,6 +10,10 @@ import org.apache.pdfbox.pdmodel.edit.PDPageContentStream;
 import rst.pdfbox.layout.elements.ControlElement;
 import rst.pdfbox.layout.elements.Document;
 import rst.pdfbox.layout.elements.Element;
+import rst.pdfbox.layout.elements.PositionControl;
+import rst.pdfbox.layout.elements.PositionControl.MarkPosition;
+import rst.pdfbox.layout.elements.PositionControl.MovePosition;
+import rst.pdfbox.layout.elements.PositionControl.SetPosition;
 import rst.pdfbox.layout.text.Position;
 import rst.pdfbox.layout.util.CompatibilityHelper;
 
@@ -25,6 +29,7 @@ public class RenderContext implements Layout, Closeable {
     private int pageIndex = 0;
     private PDPageContentStream contentStream;
     private Position currentPosition;
+    private Position markedPosition;
     private Layout layout = new VerticalLayout();
 
     /**
@@ -86,7 +91,18 @@ public class RenderContext implements Layout, Closeable {
 	return currentPosition;
     }
 
-    /**
+    /** 
+     * @return the {@link PositionControl#MARKED_POSITION}.
+     */
+    public Position getMarkedPosition() {
+        return markedPosition;
+    }
+
+    protected void setMarkedPosition(Position markedPosition) {
+        this.markedPosition = markedPosition;
+    }
+
+   /**
      * Moves the {@link #getCurrentPosition() current position} relatively by
      * the given offset.
      * 
@@ -176,8 +192,45 @@ public class RenderContext implements Layout, Closeable {
 	    newPage();
 	    return true;
 	}
+	if (element instanceof PositionControl) {
+	    return render((PositionControl)element);
+	}
 	if (element instanceof Layout) {
 	    setLayout((Layout) element);
+	    return true;
+	}
+	return false;
+    }
+    
+    
+    protected boolean render(final PositionControl positionControl) {
+	if (positionControl instanceof MarkPosition) {
+	    setMarkedPosition(getCurrentPosition());
+	    return true;
+	}
+	if (positionControl instanceof SetPosition) {
+	    SetPosition setPosition = (SetPosition)positionControl;
+	    Float x = setPosition.getX();
+	    if (x == PositionControl.MARKED_POSITION) {
+		x = getMarkedPosition().getX();
+	    }
+	    if (x == null) {
+		x = getCurrentPosition().getX();
+	    }
+	    Float y = setPosition.getY();
+	    if (y == PositionControl.MARKED_POSITION) {
+		y = getMarkedPosition().getY();
+	    }
+	    if (y == null) {
+		y = getCurrentPosition().getY();
+	    }
+	    Position newPosition = new Position(x,y);
+	    currentPosition = newPosition;
+	    return true;
+	}
+	if (positionControl instanceof MovePosition) {
+	    MovePosition movePosition = (MovePosition)positionControl;
+	    movePositionBy(movePosition.getX(), movePosition.getY());
 	    return true;
 	}
 	return false;
