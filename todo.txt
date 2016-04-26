@@ -1,6 +1,3 @@
 
-
-- line spacing in TextFragment?
-- line lead
+- split by whitespace, not blank
 - tests
-- color as markup
