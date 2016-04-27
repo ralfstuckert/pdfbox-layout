@@ -180,8 +180,7 @@ public class TextSequenceUtil {
 	    ReplacedWhitespace whitespace = new ReplacedWhitespace(
 		    text.substring(0, splitIndex), word.getFontDescriptor());
 	    StyledText newWord = new StyledText(text.substring(splitIndex),
-		    word.getFontDescriptor());
-	    newWord.setColor(word.getColor());
+		    word.getFontDescriptor(), word.getColor());
 	    return new TextFragment[] { newWord, whitespace };
 	}
     }
@@ -253,8 +252,7 @@ public class TextSequenceUtil {
 		    newWord = " " + newWord;
 		}
 		StyledText styledText = new StyledText(newWord,
-			text.getFontDescriptor());
-		styledText.setColor(text.getColor());
+			text.getFontDescriptor(), text.getColor());
 		result.add(styledText);
 		firstWord = false;
 	    }

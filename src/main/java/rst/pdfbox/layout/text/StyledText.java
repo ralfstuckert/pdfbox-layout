@@ -19,7 +19,7 @@ public class StyledText implements TextFragment {
     private final String text;
     private final FontDescriptor fontDescriptor;
     private Float width = null;
-    private Color color = Color.black;
+    private final Color color;
 
     /**
      * Creates a styled text.
@@ -32,7 +32,24 @@ public class StyledText implements TextFragment {
      *            the font to use.
      */
     public StyledText(final String text, final float size, final PDFont font) {
-	this(text, new FontDescriptor(font, size));
+	this(text, size, font, Color.black);
+    }
+
+    /**
+     * Creates a styled text.
+     * 
+     * @param text
+     *            the text to draw. Must not contain line feeds ('\n').
+     * @param size
+     *            the size of the font.
+     * @param font
+     *            the font to use.
+     * @param color
+     *            the color to use.
+     */
+    public StyledText(final String text, final float size, final PDFont font,
+	    final Color color) {
+	this(text, new FontDescriptor(font, size), color);
     }
 
     /**
@@ -44,12 +61,28 @@ public class StyledText implements TextFragment {
      *            the font to use.
      */
     public StyledText(final String text, final FontDescriptor fontDescriptor) {
+	this(text, fontDescriptor, Color.black);
+    }
+
+    /**
+     * Creates a styled text.
+     * 
+     * @param text
+     *            the text to draw. Must not contain line feeds ('\n').
+     * @param fontDescriptor
+     *            the font to use.
+     * @param color
+     *            the color to use.
+     */
+    public StyledText(final String text, final FontDescriptor fontDescriptor,
+	    final Color color) {
 	if (text.contains("\n")) {
 	    throw new IllegalArgumentException(
 		    "StyledText must not contain line breaks, use TextFragment.LINEBREAK for that");
 	}
 	this.text = text;
 	this.fontDescriptor = fontDescriptor;
+	this.color = color;
     }
 
     /**
@@ -70,8 +103,8 @@ public class StyledText implements TextFragment {
     public float getWidth() throws IOException {
 	if (width == null) {
 	    width = getFontDescriptor().getSize()
-			* getFontDescriptor().getFont().getStringWidth(getText())
-			/ 1000;
+		    * getFontDescriptor().getFont().getStringWidth(getText())
+		    / 1000;
 	}
 	return width;
     }
@@ -84,15 +117,6 @@ public class StyledText implements TextFragment {
     @Override
     public Color getColor() {
 	return color;
-    }
-
-    /**
-     * Sets the color to use for drawing the text.
-     * 
-     * @param color the text color.
-     */
-    public void setColor(Color color) {
-	this.color = color;
     }
 
     public TextSequence asSequence() {
