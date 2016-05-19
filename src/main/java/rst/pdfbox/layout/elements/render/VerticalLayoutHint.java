@@ -123,4 +123,70 @@ public class VerticalLayoutHint implements LayoutHint {
 		+ resetY + "]";
     }
 
+    /**
+     * @return a {@link VerticalLayoutHintBuilder} for creating a
+     *         {@link VerticalLayoutHint} using a fluent API.
+     */
+    public static VerticalLayoutHintBuilder builder() {
+	return new VerticalLayoutHintBuilder();
+    }
+
+    /**
+     * A builder for creating a
+     *         {@link VerticalLayoutHint} using a fluent API.
+     */
+    public static class VerticalLayoutHintBuilder {
+	protected Alignment alignment = Alignment.Left;
+	protected float marginLeft = 0;
+	protected float marginRight = 0;
+	protected float marginTop = 0;
+	protected float marginBottom = 0;
+	protected boolean resetY = false;
+
+	public VerticalLayoutHintBuilder alignment(final Alignment alignment) {
+	    this.alignment = alignment;
+	    return this;
+	}
+
+	public VerticalLayoutHintBuilder marginLeft(final float marginLeft) {
+	    this.marginLeft = marginLeft;
+	    return this;
+	}
+
+	public VerticalLayoutHintBuilder marginRight(final float marginRight) {
+	    this.marginRight = marginRight;
+	    return this;
+	}
+
+	public VerticalLayoutHintBuilder marginTop(final float marginTop) {
+	    this.marginTop = marginTop;
+	    return this;
+	}
+
+	public VerticalLayoutHintBuilder marginBottom(final float marginBottom) {
+	    this.marginBottom = marginBottom;
+	    return this;
+	}
+
+	public VerticalLayoutHintBuilder margins(float marginLeft,
+		float marginRight, float marginTop, float marginBottom) {
+	    this.marginLeft = marginLeft;
+	    this.marginRight = marginRight;
+	    this.marginTop = marginTop;
+	    this.marginBottom = marginBottom;
+	    return this;
+	}
+	
+	public VerticalLayoutHintBuilder resetY(final boolean resetY) {
+	    this.resetY = resetY;
+	    return this;
+	}
+
+	public VerticalLayoutHint build() {
+	    return new VerticalLayoutHint(alignment, marginLeft, marginRight,
+		    marginTop, marginBottom, resetY);
+	}
+
+    }
+
 }

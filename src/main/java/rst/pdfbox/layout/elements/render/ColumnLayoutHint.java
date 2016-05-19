@@ -1,5 +1,6 @@
 package rst.pdfbox.layout.elements.render;
 
+import rst.pdfbox.layout.elements.render.VerticalLayoutHint.VerticalLayoutHintBuilder;
 import rst.pdfbox.layout.text.Alignment;
 
 /**
@@ -75,4 +76,24 @@ public class ColumnLayoutHint extends VerticalLayoutHint {
 		resetY);
     }
 
+    
+    /**
+     * @return a {@link VerticalLayoutHintBuilder} for creating a
+     *         {@link VerticalLayoutHint} using a fluent API.
+     */
+    public static ColumnLayoutHintBuilder builder() {
+	return new ColumnLayoutHintBuilder();
+    }
+
+    /**
+     * A builder for creating a {@link VerticalLayoutHint} using a fluent API.
+     */
+    public static class ColumnLayoutHintBuilder extends VerticalLayoutHintBuilder {
+
+	public ColumnLayoutHint build() {
+	    return new ColumnLayoutHint(alignment, marginLeft, marginRight,
+		    marginTop, marginBottom, resetY);
+	}
+
+    }
 }
