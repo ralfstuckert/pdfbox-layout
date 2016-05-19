@@ -89,6 +89,7 @@ public class IndentCharacters {
 	 *            the color to use.
 	 * @return the new Indent.
 	 * @throws IOException
+	 *             by pdfbox
 	 */
 	public Indent createNewIndent(final float fontSize, final PDFont font,
 		final Color color) throws IOException {

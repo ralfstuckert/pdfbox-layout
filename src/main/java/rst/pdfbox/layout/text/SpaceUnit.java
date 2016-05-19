@@ -14,7 +14,7 @@ public enum SpaceUnit {
      * @param size the size with respect to the unit.
      * @param fontDescriptor the font/size to use.
      * @return the size in pt.
-     * @throws IOException
+     * @throws IOException by pdfbox
      */
     public float toPt(final float size, final FontDescriptor fontDescriptor) throws IOException {
 	if (this == em) {

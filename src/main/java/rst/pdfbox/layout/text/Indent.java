@@ -30,10 +30,12 @@ public class Indent extends ControlFragment {
      * @param indentUnit
      *            the indention unit.
      * @throws IOException
+     *             by pdfbox
      */
-    public Indent(final int level, final float indentWidth, final SpaceUnit indentUnit)
-	    throws IOException {
-	this("", level, indentWidth, indentUnit, DEFAULT_FONT_DESCRIPTOR, Color.black);
+    public Indent(final int level, final float indentWidth,
+	    final SpaceUnit indentUnit) throws IOException {
+	this("", level, indentWidth, indentUnit, DEFAULT_FONT_DESCRIPTOR,
+		Color.black);
     }
 
     /**
@@ -58,9 +60,11 @@ public class Indent extends ControlFragment {
      * @throws IOException
      *             by pdfbox
      */
-    public Indent(final String label, final int level, final float indentWidth, final SpaceUnit indentUnit,
-	    final float fontSize, final PDFont font, final Color color) throws IOException {
-	this(label, level, indentWidth, indentUnit, new FontDescriptor(font, fontSize), color);
+    public Indent(final String label, final int level, final float indentWidth,
+	    final SpaceUnit indentUnit, final float fontSize,
+	    final PDFont font, final Color color) throws IOException {
+	this(label, level, indentWidth, indentUnit, new FontDescriptor(font,
+		fontSize), color);
     }
 
     /**
@@ -81,30 +85,38 @@ public class Indent extends ControlFragment {
      * @throws IOException
      *             by pdfbox
      */
-    public Indent(final String label, final int level, final float indentWidth, final SpaceUnit indentUnit,
-	    final FontDescriptor fontDescriptor, final Color color) throws IOException {
+    public Indent(final String label, final int level, final float indentWidth,
+	    final SpaceUnit indentUnit, final FontDescriptor fontDescriptor,
+	    final Color color) throws IOException {
 	super("INDENT", label, fontDescriptor, color);
-	
-	float indent = calculateIndent(level, indentWidth, indentUnit, fontDescriptor);
+
+	float indent = calculateIndent(level, indentWidth, indentUnit,
+		fontDescriptor);
 	float textWidth = 0;
 	if (label != null && !label.isEmpty()) {
-	    textWidth = fontDescriptor.getSize() * fontDescriptor.getFont().getStringWidth(label) / 1000f;
+	    textWidth = fontDescriptor.getSize()
+		    * fontDescriptor.getFont().getStringWidth(label) / 1000f;
 	}
-	float marginLeft = textWidth < indent ? indent-textWidth : 0;
-	styledText = new StyledText(label, getFontDescriptor(), getColor(), marginLeft, 0);
+	float marginLeft = textWidth < indent ? indent - textWidth : 0;
+	styledText = new StyledText(label, getFontDescriptor(), getColor(),
+		marginLeft, 0);
     }
 
     /**
      * Directly creates an indent of the given width in pt.
-     * @param indentPt the indention in pt.
+     * 
+     * @param indentPt
+     *            the indention in pt.
      */
     public Indent(final float indentPt) {
 	super("", DEFAULT_FONT_DESCRIPTOR);
-	styledText = new StyledText("", getFontDescriptor(), getColor(), indentPt, 0);
+	styledText = new StyledText("", getFontDescriptor(), getColor(),
+		indentPt, 0);
     }
-    
-    private float calculateIndent(final int level, final float indentWidth, final SpaceUnit indentUnit,
-	    final FontDescriptor fontDescriptor) throws IOException {
+
+    private float calculateIndent(final int level, final float indentWidth,
+	    final SpaceUnit indentUnit, final FontDescriptor fontDescriptor)
+	    throws IOException {
 	if (level < 0) {
 	    return 0;
 	}
@@ -127,6 +139,5 @@ public class Indent extends ControlFragment {
     public String toString() {
 	return "ControlFragment [" + getName() + ", " + styledText + "]";
     }
-
 
 }
