@@ -55,7 +55,7 @@ subprojects {
     from javadoc.destinationDir
   }
 
-  task examplesJar(type: Jar, dependsOn: "createExamples" ) {
+  task examplesJar(type: Jar, dependsOn: [jar, 'createExamples'] ) {
     classifier = 'examples'
     from fileTree("examples")
     include '**/*'
