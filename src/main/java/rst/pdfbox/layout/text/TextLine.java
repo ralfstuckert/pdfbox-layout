@@ -173,7 +173,18 @@ public class TextLine implements TextSequence {
 		lastColor = styledText.getColor();
 		contentStream.setNonStrokingColor(lastColor);
 	    }
-	    CompatibilityHelper.showText(contentStream, styledText.getText());
+	    if (styledText.getLeftMargin() > 0) {
+		CompatibilityHelper.moveTextPositionByAmount(contentStream,
+			styledText.getLeftMargin(), 0);
+	    }
+	    if (styledText.getText().length() > 0) {
+		CompatibilityHelper.showText(contentStream,
+			styledText.getText());
+	    }
+	    if (styledText.getRightMargin() > 0) {
+		CompatibilityHelper.moveTextPositionByAmount(contentStream,
+			styledText.getRightMargin(), 0);
+	    }
 	}
 	contentStream.endText();
 	contentStream.restoreGraphicsState();

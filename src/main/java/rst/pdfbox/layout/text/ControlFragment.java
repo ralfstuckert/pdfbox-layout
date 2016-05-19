@@ -18,19 +18,22 @@ public class ControlFragment implements TextFragment {
     private String name;
     private String text;
     private FontDescriptor fontDescriptor;
+    private Color color;
 
     protected ControlFragment(final String text,
 	    final FontDescriptor fontDescriptor) {
-	this.name = getClass().getSimpleName();
-	this.text = text;
-	this.fontDescriptor = fontDescriptor;
+	this(null, text, fontDescriptor, Color.black);
     }
 
     protected ControlFragment(final String name, final String text,
-	    final FontDescriptor fontDescriptor) {
+	    final FontDescriptor fontDescriptor, final Color color) {
 	this.name = name;
+	if (this.name == null) {
+		this.name = getClass().getSimpleName();
+	}
 	this.text = text;
 	this.fontDescriptor = fontDescriptor;
+	this.color = color;
     }
 
     @Override
@@ -47,6 +50,10 @@ public class ControlFragment implements TextFragment {
     public FontDescriptor getFontDescriptor() {
 	return fontDescriptor;
     }
+    
+    protected String getName() {
+	return name;
+    }
 
     @Override
     public String getText() {
@@ -55,7 +62,7 @@ public class ControlFragment implements TextFragment {
 
     @Override
     public Color getColor() {
-	return Color.black;
+	return color;
     }
 
     @Override

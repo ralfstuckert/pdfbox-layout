@@ -20,6 +20,8 @@ public class StyledText implements TextFragment {
     private final FontDescriptor fontDescriptor;
     private Float width = null;
     private final Color color;
+    private final float leftMargin;
+    private final float rightMargin;
 
     /**
      * Creates a styled text.
@@ -76,13 +78,42 @@ public class StyledText implements TextFragment {
      */
     public StyledText(final String text, final FontDescriptor fontDescriptor,
 	    final Color color) {
+	this(text, fontDescriptor, color, 0, 0);
+    }
+
+    /**
+     * Creates a styled text.
+     * 
+     * @param text
+     *            the text to draw. Must not contain line feeds ('\n').
+     * @param fontDescriptor
+     *            the font to use.
+     * @param color
+     *            the color to use.
+     * @param leftMargin
+     *            the margin left to the text.
+     * @param rightMargin
+     *            the margin right to the text.
+     */
+    public StyledText(final String text, final FontDescriptor fontDescriptor,
+	    final Color color, final float leftMargin, final float rightMargin) {
 	if (text.contains("\n")) {
 	    throw new IllegalArgumentException(
 		    "StyledText must not contain line breaks, use TextFragment.LINEBREAK for that");
 	}
+	if (leftMargin < 0) {
+	    throw new IllegalArgumentException(
+		    "leftMargin must be >= 0");
+	}
+	if (rightMargin < 0) {
+	    throw new IllegalArgumentException(
+		    "rightMargin must be >= 0");
+	}
 	this.text = text;
 	this.fontDescriptor = fontDescriptor;
 	this.color = color;
+	this.leftMargin = leftMargin;
+	this.rightMargin = rightMargin;
     }
 
     /**
@@ -105,6 +136,8 @@ public class StyledText implements TextFragment {
 	    width = getFontDescriptor().getSize()
 		    * getFontDescriptor().getFont().getStringWidth(getText())
 		    / 1000;
+	    width += leftMargin;
+	    width += rightMargin;
 	}
 	return width;
     }
@@ -119,6 +152,14 @@ public class StyledText implements TextFragment {
 	return color;
     }
 
+    public float getLeftMargin() {
+	return leftMargin;
+    }
+
+    public float getRightMargin() {
+	return rightMargin;
+    }
+
     public TextSequence asSequence() {
 	TextLine line = new TextLine();
 	line.add(this);
@@ -128,7 +169,9 @@ public class StyledText implements TextFragment {
     @Override
     public String toString() {
 	return "StyledText [text=" + text + ", fontDescriptor="
-		+ fontDescriptor + ", color=" + color + "]";
+		+ fontDescriptor + ", width=" + width + ", color=" + color
+		+ ", leftMargin=" + leftMargin + ", rightMargin=" + rightMargin
+		+ "]";
     }
 
 }

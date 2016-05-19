@@ -1,9 +1,11 @@
 package rst.pdfbox.layout.text;
 
 import java.awt.Color;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Stack;
 import java.util.regex.Matcher;
 
 import org.apache.pdfbox.pdmodel.font.PDFont;
@@ -13,6 +15,7 @@ import rst.pdfbox.layout.text.ControlCharacters.ColorControlCharacter;
 import rst.pdfbox.layout.text.ControlCharacters.ControlCharacterFactory;
 import rst.pdfbox.layout.text.ControlCharacters.ItalicControlCharacter;
 import rst.pdfbox.layout.text.ControlCharacters.NewLineControlCharacter;
+import rst.pdfbox.layout.text.IndentCharacters.IndentCharacter;
 
 public class TextFlowUtil {
 
@@ -27,9 +30,10 @@ public class TextFlowUtil {
      * @param font
      *            the font to use.
      * @return the created text flow.
+     * @throws IOException by pdfbox
      */
     public static TextFlow createTextFlow(final String text,
-	    final float fontSize, final PDFont font) {
+	    final float fontSize, final PDFont font) throws IOException {
 	final Iterable<CharSequence> parts = fromPlainText(text);
 	return createTextFlow(parts, fontSize, font, font, font, font);
     }
@@ -48,9 +52,10 @@ public class TextFlowUtil {
      *            the base font describing the bundle of
      *            plain/blold/italic/bold-italic fonts.
      * @return the created text flow.
+     * @throws IOException by pdfbox
      */
     public static TextFlow createTextFlowFromMarkup(final String markup,
-	    final float fontSize, final BaseFont baseFont) {
+	    final float fontSize, final BaseFont baseFont) throws IOException {
 	return createTextFlowFromMarkup(markup, fontSize,
 		baseFont.getPlainFont(), baseFont.getBoldFont(),
 		baseFont.getItalicFont(), baseFont.getBoldItalicFont());
@@ -96,11 +101,12 @@ public class TextFlowUtil {
      * @param boldItalicFont
      *            the bold-italic font.
      * @return the created text flow.
+     * @throws IOException by pdfbox
      */
     public static TextFlow createTextFlowFromMarkup(final String markup,
 	    final float fontSize, final PDFont plainFont,
 	    final PDFont boldFont, final PDFont italicFont,
-	    final PDFont boldItalicFont) {
+	    final PDFont boldItalicFont) throws IOException {
 	final Iterable<CharSequence> parts = fromMarkup(markup);
 	return createTextFlow(parts, fontSize, plainFont, boldFont, italicFont,
 		boldItalicFont);
@@ -122,16 +128,20 @@ public class TextFlowUtil {
      * @param boldItalicFont
      *            the bold-italic font.
      * @return the created text flow.
+     * @throws IOException by pdfbox
      */
     protected static TextFlow createTextFlow(
 	    final Iterable<CharSequence> parts, final float fontSize,
 	    final PDFont plainFont, final PDFont boldFont,
-	    final PDFont italicFont, final PDFont boldItalicFont) {
+	    final PDFont italicFont, final PDFont boldItalicFont)
+	    throws IOException {
 	final TextFlow result = new TextFlow();
 	boolean bold = false;
 	boolean italic = false;
 	Color color = Color.black;
+	Stack<IndentCharacter> indentStack = new Stack<IndentCharacter>();
 	for (final CharSequence fragment : parts) {
+
 	    if (fragment instanceof ControlCharacter) {
 		if (fragment instanceof NewLineControlCharacter) {
 		    result.add(new NewLine(fontSize));
@@ -143,7 +153,30 @@ public class TextFlowUtil {
 		    italic = !italic;
 		}
 		if (fragment instanceof ColorControlCharacter) {
-		    color = ((ColorControlCharacter)fragment).getColor();
+		    color = ((ColorControlCharacter) fragment).getColor();
+		}
+		if (fragment instanceof IndentCharacter) {
+		    IndentCharacter currentIndent = (IndentCharacter) fragment;
+		    if (currentIndent.getLevel() == 0) {
+			// indention of 0 resets indent
+			indentStack.clear();
+			result.add(Indent.UNINDENT);
+			continue;
+		    } else {
+			IndentCharacter last = null;
+			while (!indentStack.isEmpty()
+				&& indentStack.peek() != null
+				&& currentIndent.getLevel() <= indentStack
+					.peek().getLevel()) {
+			    last = indentStack.pop();
+			}
+			if (last != null && last.equals(currentIndent)) {
+			    currentIndent = last;
+			}
+			indentStack.push(currentIndent);
+			result.add(currentIndent.createNewIndent(fontSize,
+				plainFont, color));
+		    }
 		}
 	    } else {
 		PDFont font = getFont(bold, italic, plainFont, boldFont,
@@ -192,8 +225,10 @@ public class TextFlowUtil {
      */
     public static Iterable<CharSequence> fromPlainText(
 	    final Iterable<CharSequence> text) {
-	return splitByControlCharacter(ControlCharacters.NEWLINE_FACTORY, text,
-		true);
+	Iterable<CharSequence> result = splitByControlCharacter(
+		ControlCharacters.NEWLINE_FACTORY, text);
+	result = unescapeBackslash(result);
+	return result;
     }
 
     /**
@@ -219,14 +254,13 @@ public class TextFlowUtil {
     public static Iterable<CharSequence> fromMarkup(
 	    final Iterable<CharSequence> markup) {
 	Iterable<CharSequence> text = markup;
-	text = splitByControlCharacter(ControlCharacters.BOLD_FACTORY, text,
-		false);
-	text = splitByControlCharacter(ControlCharacters.ITALIC_FACTORY, text,
-		false);
-	text = splitByControlCharacter(ControlCharacters.COLOR_FACTORY, text,
-		false);
-	text = splitByControlCharacter(ControlCharacters.NEWLINE_FACTORY, text,
-		true);
+	text = splitByControlCharacter(ControlCharacters.NEWLINE_FACTORY, text);
+	text = splitByControlCharacter(ControlCharacters.BOLD_FACTORY, text);
+	text = splitByControlCharacter(ControlCharacters.ITALIC_FACTORY, text);
+	text = splitByControlCharacter(ControlCharacters.COLOR_FACTORY, text);
+	text = splitByControlCharacter(IndentCharacters.INDENT_FACTORY, text);
+
+	text = unescapeBackslash(text);
 	return text;
     }
 
@@ -243,44 +277,59 @@ public class TextFlowUtil {
      * @return the splitted and replaced sequence.
      */
     protected static Iterable<CharSequence> splitByControlCharacter(
-	    ControlCharacterFactory<? extends ControlCharacter> controlCharacterFactory,
-	    final Iterable<CharSequence> markup, final boolean unescapeBackslash) {
+	    ControlCharacterFactory controlCharacterFactory,
+	    final Iterable<CharSequence> markup) {
 	List<CharSequence> result = new ArrayList<CharSequence>();
+	boolean beginOfLine = true;
 	for (CharSequence current : markup) {
 	    if (current instanceof String) {
 		String string = (String) current;
-		Matcher matcher = controlCharacterFactory.getPattern().matcher(
-			string);
 		int begin = 0;
-		while (matcher.find()) {
-		    String part = string.substring(begin, matcher.start());
-		    begin = matcher.end();
 
-		    if (!part.isEmpty()) {
-			String unescaped = controlCharacterFactory
-				.unescape(part);
-			if (unescapeBackslash) {
-			    unescaped = ControlCharacters
-				    .unescapeBackslash(unescaped);
+		if (!controlCharacterFactory.patternMatchesBeginOfLine()
+			|| beginOfLine) {
+		    Matcher matcher = controlCharacterFactory.getPattern()
+			    .matcher(string);
+		    while (matcher.find()) {
+			String part = string.substring(begin, matcher.start());
+			begin = matcher.end();
+
+			if (!part.isEmpty()) {
+			    String unescaped = controlCharacterFactory
+				    .unescape(part);
+			    result.add(unescaped);
 			}
-			result.add(unescaped);
-		    }
 
-		    String controlString = string.substring(matcher.start(),
-			    matcher.end());
-		    result.add(controlCharacterFactory
-			    .createControlCharacter(controlString));
+			result.add(controlCharacterFactory
+				.createControlCharacter(string, matcher, result));
+		    }
 		}
 
-		if (begin < string.length() ) {
+		if (begin < string.length()) {
 		    String part = string.substring(begin);
 		    String unescaped = controlCharacterFactory.unescape(part);
-		    if (unescapeBackslash) {
-			unescaped = ControlCharacters
-				.unescapeBackslash(unescaped);
-		    }
 		    result.add(unescaped);
 		}
+
+		beginOfLine = false;
+	    } else {
+		if (current instanceof NewLineControlCharacter) {
+		    beginOfLine = true;
+		}
+		result.add(current);
+	    }
+
+	}
+	return result;
+    }
+
+    private static Iterable<CharSequence> unescapeBackslash(
+	    final Iterable<CharSequence> chars) {
+	List<CharSequence> result = new ArrayList<CharSequence>();
+	for (CharSequence current : chars) {
+	    if (current instanceof String) {
+		result.add(ControlCharacters
+			.unescapeBackslash((String) current));
 	    } else {
 		result.add(current);
 	    }

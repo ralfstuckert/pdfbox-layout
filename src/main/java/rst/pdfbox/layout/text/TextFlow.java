@@ -74,9 +74,10 @@ public class TextFlow implements TextSequence, WidthRespecting {
      *            the size of the font.
      * @param font
      *            the font to use to draw the text.
+     * @throws IOException by PDFBox
      */
     public void addText(final String text, final float fontSize,
-	    final PDFont font) {
+	    final PDFont font) throws IOException {
 	add(TextFlowUtil.createTextFlow(text, fontSize, font));
     }
 
@@ -90,9 +91,10 @@ public class TextFlow implements TextSequence, WidthRespecting {
      * @param baseFont
      *            the base font describing the bundle of
      *            plain/blold/italic/bold-italic fonts.
+     * @throws IOException by PDFBox
      */
     public void addMarkup(final String markup, final float fontSize,
-	    final BaseFont baseFont) {
+	    final BaseFont baseFont) throws IOException {
 	add(TextFlowUtil.createTextFlowFromMarkup(markup, fontSize, baseFont));
     }
 
@@ -111,10 +113,11 @@ public class TextFlow implements TextSequence, WidthRespecting {
      *            the italic font to use.
      * @param boldItalicFont
      *            the bold-italic font to use.
+     * @throws IOException by PDFBox
      */
     public void addMarkup(final String markup, final float fontSize,
 	    final PDFont plainFont, final PDFont boldFont,
-	    final PDFont italicFont, final PDFont boldItalicFont) {
+	    final PDFont italicFont, final PDFont boldItalicFont) throws IOException {
 	add(TextFlowUtil.createTextFlowFromMarkup(markup, fontSize, plainFont,
 		boldFont, italicFont, boldItalicFont));
     }
@@ -151,6 +154,17 @@ public class TextFlow implements TextSequence, WidthRespecting {
 	if (text.size() > 0) {
 	    clearCache();
 	    return text.remove(text.size() - 1);
+	}
+	return null;
+    }
+
+    /**
+     * @return the last added fragment (if any).
+     */
+    public TextFragment getLast() {
+	if (text.size() > 0) {
+	    clearCache();
+	    return text.get(text.size() - 1);
 	}
 	return null;
     }

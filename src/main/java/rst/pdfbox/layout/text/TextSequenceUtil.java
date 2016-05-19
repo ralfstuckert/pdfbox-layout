@@ -110,17 +110,30 @@ public class TextSequenceUtil {
     public static TextFlow wordWrap(final TextSequence text,
 	    final float maxWidth) throws IOException {
 
+	float indention = 0;
 	TextFlow result = new TextFlow();
-	float lineLength = 0;
+	float lineLength = indention;
 	for (TextFragment fragment : text) {
 	    if (fragment instanceof NewLine) {
 		result.add(fragment);
-		lineLength = 0;
-	    } else {
+		lineLength = indention;
+		if (indention > 0) {
+		    result.add(new Indent(indention).toStyledText());
+		}
+	    } else if (fragment instanceof Indent) {
+		if (indention > 0) {
+		    // reset indention
+		    result.removeLast();
+		    indention = 0;
+		}
+		indention = fragment.getWidth();
+		lineLength = fragment.getWidth();
+		result.add(((Indent)fragment).toStyledText());
+	    } else  {
 		TextFlow words = splitWords(fragment);
 		for (TextFragment word : words) {
 
-		    if (lineLength == 0) {
+		    if (lineLength == indention) {
 			TextFragment[] replaceLeadingBlanks = replaceLeadingBlanks(word);
 			word = replaceLeadingBlanks[0];
 			if (replaceLeadingBlanks.length > 1) {
@@ -131,14 +144,17 @@ public class TextSequenceUtil {
 		    FontDescriptor fontDescriptor = word.getFontDescriptor();
 		    float length = word.getWidth();
 
-		    if (maxWidth > 0 && lineLength > 0
+		    if (maxWidth > 0 && lineLength > indention
 			    && lineLength + length > maxWidth) {
 			// word exceeds max width, so create new line
 			result.add(new WrappingNewLine(fontDescriptor));
-			lineLength = 0;
+			if (indention > 0) {
+			    result.add(new Indent(indention).toStyledText());
+			}
+			lineLength = indention;
 		    }
 
-		    if (lineLength == 0) {
+		    if (lineLength == indention) {
 			TextFragment[] replaceLeadingBlanks = replaceLeadingBlanks(word);
 			word = replaceLeadingBlanks[0];
 			length = word.getWidth();
@@ -155,7 +171,6 @@ public class TextSequenceUtil {
 		}
 	    }
 	}
-
 	return result;
     }
 

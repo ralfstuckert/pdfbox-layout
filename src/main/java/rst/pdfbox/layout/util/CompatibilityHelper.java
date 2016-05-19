@@ -23,6 +23,11 @@ public class CompatibilityHelper {
     private static final String IMAGE_CACHE = "IMAGE_CACHE";
     private static Map<PDDocument, Map<String, Map<?, ?>>> documentCaches = new WeakHashMap<PDDocument, Map<String, Map<?, ?>>>();
 
+    
+    public static String getBulletCharacter(final int level) {
+	return "\u00b7";
+    }
+    
     public static void clip(final PDPageContentStream contentStream)
 	    throws IOException {
 	contentStream.clipPath(PathIterator.WIND_NON_ZERO);
@@ -37,6 +42,12 @@ public class CompatibilityHelper {
 	    final PDPageContentStream contentStream, final float x,
 	    final float y) throws IOException {
 	contentStream.setTextTranslation(x, y);
+    }
+
+    public static void moveTextPositionByAmount(
+	    final PDPageContentStream contentStream, final float x,
+	    final float y) throws IOException {
+	contentStream.moveTextPositionByAmount(x, y);
     }
 
     public static PDPageContentStream createAppendablePDPageContentStream(

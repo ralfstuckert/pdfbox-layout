@@ -23,6 +23,10 @@ public class CompatibilityHelper {
     private static final String IMAGE_CACHE = "IMAGE_CACHE";
     private static Map<PDDocument, Map<String, Map<?, ?>>> documentCaches = new WeakHashMap<PDDocument, Map<String, Map<?, ?>>>();
 
+    public static String getBulletCharacter(final int level) {
+	return "\u2022";
+    }
+    
     public static void clip(final PDPageContentStream contentStream)
 	    throws IOException {
 	contentStream.clip();
@@ -37,6 +41,12 @@ public class CompatibilityHelper {
 	    final PDPageContentStream contentStream, final float x,
 	    final float y) throws IOException {
         contentStream.setTextMatrix(Matrix.getTranslateInstance(x, y));
+    }
+
+    public static void moveTextPositionByAmount(
+	    final PDPageContentStream contentStream, final float x,
+	    final float y) throws IOException {
+	contentStream.newLineAtOffset(x, y);
     }
 
     public static PDPageContentStream createAppendablePDPageContentStream(
