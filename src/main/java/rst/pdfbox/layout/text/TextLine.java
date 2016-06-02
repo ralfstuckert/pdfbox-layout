@@ -163,6 +163,7 @@ public class TextLine implements TextSequence {
 	CompatibilityHelper.setTextTranslation(contentStream, x, y);
 	FontDescriptor lastFontDesc = null;
 	Color lastColor = null;
+	float gap = 0f;
 	for (StyledText styledText : styledTextList) {
 	    if (!styledText.getFontDescriptor().equals(lastFontDesc)) {
 		lastFontDesc = styledText.getFontDescriptor();
@@ -174,16 +175,18 @@ public class TextLine implements TextSequence {
 		contentStream.setNonStrokingColor(lastColor);
 	    }
 	    if (styledText.getLeftMargin() > 0) {
-		CompatibilityHelper.moveTextPositionByAmount(contentStream,
-			styledText.getLeftMargin(), 0);
+		gap += styledText.getLeftMargin();
+	    }
+	    if (gap > 0) {
+		CompatibilityHelper.moveTextPosition(contentStream, gap, 0);
+		gap = 0;
 	    }
 	    if (styledText.getText().length() > 0) {
 		CompatibilityHelper.showText(contentStream,
 			styledText.getText());
 	    }
 	    if (styledText.getRightMargin() > 0) {
-		CompatibilityHelper.moveTextPositionByAmount(contentStream,
-			styledText.getRightMargin(), 0);
+		gap = styledText.getRightMargin();
 	    }
 	}
 	contentStream.endText();

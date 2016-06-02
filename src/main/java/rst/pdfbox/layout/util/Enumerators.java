@@ -1,12 +1,15 @@
 package rst.pdfbox.layout.util;
 
+
 /**
  * Container class for the default enumerators.
  */
 public class Enumerators {
 
     /**
-     * Uses arabian numbers for the enumeration, and dot as the default separator. <br/>
+     * Uses arabian numbers for the enumeration, and dot as the default
+     * separator. <br>
+     * 
      * <pre>
      * 1. At vero eos et accusam.
      * 2. Et justo duo dolores ea rebum. 
@@ -37,7 +40,9 @@ public class Enumerators {
     }
 
     /**
-     * Uses lower case letters for the enumeration, and braces as the default separator. <br/>
+     * Uses lower case letters for the enumeration, and braces as the default
+     * separator. <br>
+     * 
      * <pre>
      * a) At vero eos et accusam.
      * b) Et justo duo dolores ea rebum. 
@@ -46,7 +51,7 @@ public class Enumerators {
      */
     public static class LowerCaseAlphabeticEnumerator extends
 	    AlphabeticEnumerator {
-	
+
 	public LowerCaseAlphabeticEnumerator() {
 	    super();
 	}
@@ -54,7 +59,7 @@ public class Enumerators {
 	public LowerCaseAlphabeticEnumerator(final int startCount) {
 	    super(startCount);
 	}
-	
+
 	@Override
 	public String next() {
 	    return super.next().toLowerCase();
@@ -62,7 +67,9 @@ public class Enumerators {
     }
 
     /**
-     * Uses upper case letters for the enumeration, and braces as the default separator. <br/>
+     * Uses upper case letters for the enumeration, and braces as the default
+     * separator. <br>
+     * 
      * <pre>
      * A) At vero eos et accusam.
      * B) Et justo duo dolores ea rebum. 
@@ -113,7 +120,9 @@ public class Enumerators {
     }
 
     /**
-     * Uses lower case roman numbers for the enumeration, and dot as the default separator. <br/>
+     * Uses lower case roman numbers for the enumeration, and dot as the default
+     * separator. <br>
+     * 
      * <pre>
      *   i. At vero eos et accusam.
      *  ii. Et justo duo dolores ea rebum. 
@@ -137,7 +146,9 @@ public class Enumerators {
     }
 
     /**
-     * Uses upper case roman numbers for the enumeration, and dot as the default separator. <br/>
+     * Uses upper case roman numbers for the enumeration, and dot as the default
+     * separator. <br>
+     * 
      * <pre>
      *   I. At vero eos et accusam.
      *  II. Et justo duo dolores ea rebum. 
@@ -165,7 +176,7 @@ public class Enumerators {
 	public String getDefaultSeperator() {
 	    return ".";
 	}
-	
+
 	private String toRoman(int input) {
 	    if (input < 1 || input > 3999)
 		return "Invalid Roman Number Value";
@@ -225,4 +236,5 @@ public class Enumerators {
 	    return s;
 	}
     }
+
 }

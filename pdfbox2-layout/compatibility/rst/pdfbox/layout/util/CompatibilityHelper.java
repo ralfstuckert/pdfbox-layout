@@ -24,7 +24,10 @@ public class CompatibilityHelper {
     private static Map<PDDocument, Map<String, Map<?, ?>>> documentCaches = new WeakHashMap<PDDocument, Map<String, Map<?, ?>>>();
 
     public static String getBulletCharacter(final int level) {
-	return "\u2022";
+	if (level % 2 == 1) {
+	    return System.getProperty("pdfbox.layout.bullet.0", "\u2022");
+	}
+	return System.getProperty("pdfbox.layout.bullet.1", "u2043");
     }
     
     public static void clip(final PDPageContentStream contentStream)
@@ -43,10 +46,10 @@ public class CompatibilityHelper {
         contentStream.setTextMatrix(Matrix.getTranslateInstance(x, y));
     }
 
-    public static void moveTextPositionByAmount(
+    public static void moveTextPosition(
 	    final PDPageContentStream contentStream, final float x,
 	    final float y) throws IOException {
-	contentStream.newLineAtOffset(x, y);
+	contentStream.transform(new Matrix(1, 0, 0, 1, x, y));
     }
 
     public static PDPageContentStream createAppendablePDPageContentStream(

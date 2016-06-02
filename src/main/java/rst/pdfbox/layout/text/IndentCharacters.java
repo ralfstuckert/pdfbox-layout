@@ -93,8 +93,8 @@ public class IndentCharacters {
 	 */
 	public Indent createNewIndent(final float fontSize, final PDFont font,
 		final Color color) throws IOException {
-	    return new Indent(nextLabel(), level, indentWidth, indentUnit,
-		    fontSize, font, color);
+	    return new Indent(nextLabel(), level*indentWidth, indentUnit,
+		    fontSize, font, Alignment.Right, color);
 	}
 
 	@Override

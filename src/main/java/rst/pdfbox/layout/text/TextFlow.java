@@ -12,7 +12,7 @@ import org.apache.pdfbox.pdmodel.font.PDFont;
 
 /**
  * A text flow is a text sequence that {@link WidthRespecting respects a given
- * width} by word wrapping the text. The text may contain line breaks ('\n').<br/>
+ * width} by word wrapping the text. The text may contain line breaks ('\n').<br>
  * In order to ease creation of styled text, this class supports a kind of
  * {@link #addMarkup(String, float, BaseFont) markup}. The following raw text
  * 

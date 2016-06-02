@@ -159,6 +159,10 @@ public class StyledText implements TextFragment {
     public float getRightMargin() {
 	return rightMargin;
     }
+    
+    public boolean hasMargin() {
+	return getLeftMargin() != 0 || getRightMargin() != 0;
+    }
 
     public TextSequence asSequence() {
 	TextLine line = new TextLine();

@@ -23,11 +23,13 @@ public class CompatibilityHelper {
     private static final String IMAGE_CACHE = "IMAGE_CACHE";
     private static Map<PDDocument, Map<String, Map<?, ?>>> documentCaches = new WeakHashMap<PDDocument, Map<String, Map<?, ?>>>();
 
-    
     public static String getBulletCharacter(final int level) {
-	return "\u00b7";
+	if (level % 2 == 1) {
+	    return System.getProperty("pdfbox.layout.bullet.0", "\u00b7");
+	}
+	return System.getProperty("pdfbox.layout.bullet.1", "-");
     }
-    
+
     public static void clip(final PDPageContentStream contentStream)
 	    throws IOException {
 	contentStream.clipPath(PathIterator.WIND_NON_ZERO);
@@ -44,10 +46,10 @@ public class CompatibilityHelper {
 	contentStream.setTextTranslation(x, y);
     }
 
-    public static void moveTextPositionByAmount(
+    public static void moveTextPosition(
 	    final PDPageContentStream contentStream, final float x,
 	    final float y) throws IOException {
-	contentStream.moveTextPositionByAmount(x, y);
+	contentStream.concatenate2CTM(1, 0, 0, 1, x, y);
     }
 
     public static PDPageContentStream createAppendablePDPageContentStream(
@@ -64,7 +66,6 @@ public class CompatibilityHelper {
 	float y = upperLeft.getY() - height;
 	contentStream.drawXObject(cachedImage, x, y, width, height);
     }
-
 
     private static synchronized Map<String, Map<?, ?>> getDocumentCache(
 	    final PDDocument document) {
@@ -89,8 +90,9 @@ public class CompatibilityHelper {
 	return imageCache;
     }
 
-    private static synchronized PDXObjectImage getCachedImage(final PDDocument document,
-	    final BufferedImage image) throws IOException {
+    private static synchronized PDXObjectImage getCachedImage(
+	    final PDDocument document, final BufferedImage image)
+	    throws IOException {
 	Map<BufferedImage, PDXObjectImage> imageCache = getImageCache(document);
 	PDXObjectImage pdxObjectImage = imageCache.get(image);
 	if (pdxObjectImage == null) {

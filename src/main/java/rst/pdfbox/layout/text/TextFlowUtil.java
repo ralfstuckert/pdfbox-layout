@@ -272,8 +272,6 @@ public class TextFlowUtil {
      *            the control character to split by.
      * @param markup
      *            the markup to split.
-     * @param unescapeBackslash
-     *            indicates if backslash should be unescaped ('\\' to '\').
      * @return the splitted and replaced sequence.
      */
     protected static Iterable<CharSequence> splitByControlCharacter(

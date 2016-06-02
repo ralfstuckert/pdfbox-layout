@@ -11,7 +11,7 @@ import rst.pdfbox.layout.util.Enumerators.RomanEnumerator;
 
 /**
  * Enumerators are created using this factory. It allows you to register and use
- * your own enumerations, if the built ins does not satisfy your needs.<br/>
+ * your own enumerations, if the built ins does not satisfy your needs.<br>
  * Currently supported are:
  * <table>
  * <tr><th>Name</th><th>Key</th><th>Seperator</th></tr>

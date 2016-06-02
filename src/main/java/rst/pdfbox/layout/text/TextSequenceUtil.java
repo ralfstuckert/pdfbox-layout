@@ -128,8 +128,8 @@ public class TextSequenceUtil {
 		}
 		indention = fragment.getWidth();
 		lineLength = fragment.getWidth();
-		result.add(((Indent)fragment).toStyledText());
-	    } else  {
+		result.add(((Indent) fragment).toStyledText());
+	    } else {
 		TextFlow words = splitWords(fragment);
 		for (TextFragment word : words) {
 
@@ -259,17 +259,29 @@ public class TextSequenceUtil {
 	if (text instanceof NewLine) {
 	    result.add(text);
 	} else {
+	    float leftMargin = 0;
+	    float rightMargin = 0;
+	    if (text instanceof StyledText && ((StyledText) text).hasMargin()) {
+		leftMargin = ((StyledText) text).getLeftMargin();
+		rightMargin = ((StyledText) text).getRightMargin();
+	    }
+
 	    String[] words = text.getText().split(" ", -1);
-	    boolean firstWord = true;
-	    for (String word : words) {
-		String newWord = word;
-		if (!firstWord) {
-		    newWord = " " + newWord;
+	    for (int index = 0; index < words.length; ++index) {
+		String newWord = index == 0 ? words[index] : " " + words[index];
+
+		float currentLeftMargin = 0;
+		float currentRightMargin = 0;
+		if (index == 0) {
+		    currentLeftMargin = leftMargin;
+		}
+		if (index == words.length - 1) {
+		    currentRightMargin = rightMargin;
 		}
 		StyledText styledText = new StyledText(newWord,
-			text.getFontDescriptor(), text.getColor());
+			text.getFontDescriptor(), text.getColor(),
+			currentLeftMargin, currentRightMargin);
 		result.add(styledText);
-		firstWord = false;
 	    }
 	}
 	return result;
