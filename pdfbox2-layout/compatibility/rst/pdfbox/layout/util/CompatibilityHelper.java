@@ -20,16 +20,31 @@ import rst.pdfbox.layout.text.Position;
  */
 public class CompatibilityHelper {
 
+    private final static String BULLET = "\u2022";
+    private final static String DOUBLE_ANGLE = "\u00bb";
+    
     private static final String IMAGE_CACHE = "IMAGE_CACHE";
     private static Map<PDDocument, Map<String, Map<?, ?>>> documentCaches = new WeakHashMap<PDDocument, Map<String, Map<?, ?>>>();
 
+    /**
+     * Returns the bullet character for the given level. Actually only two
+     * bullets are used for odd and even levels. For odd levels the
+     * {@link #BULLET bullet} character is used, for even it is the
+     * {@link #DOUBLE_ANGLE double angle}. You may customize this by setting the
+     * system properties <code>pdfbox.layout.bullet.odd</code> and/or
+     * <code>pdfbox.layout.bullet.even</code>.
+     * 
+     * @param level
+     *            the level to return the bullet for.
+     * @return the bullet character for the leve.
+     */
     public static String getBulletCharacter(final int level) {
 	if (level % 2 == 1) {
-	    return System.getProperty("pdfbox.layout.bullet.0", "\u2022");
+	    return System.getProperty("pdfbox.layout.bullet.odd", BULLET);
 	}
-	return System.getProperty("pdfbox.layout.bullet.1", "u2043");
+	return System.getProperty("pdfbox.layout.bullet.even", DOUBLE_ANGLE);
     }
-    
+
     public static void clip(final PDPageContentStream contentStream)
 	    throws IOException {
 	contentStream.clip();

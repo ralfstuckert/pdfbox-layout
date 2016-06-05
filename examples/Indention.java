@@ -11,6 +11,7 @@ import rst.pdfbox.layout.text.BaseFont;
 import rst.pdfbox.layout.text.Constants;
 import rst.pdfbox.layout.text.Indent;
 import rst.pdfbox.layout.text.SpaceUnit;
+import rst.pdfbox.layout.util.CompatibilityHelper;
 import rst.pdfbox.layout.util.Enumerators.RomanEnumerator;
 import rst.pdfbox.layout.util.Enumerators.LowerCaseRomanEnumerator;
 import rst.pdfbox.layout.util.Enumerators.AlphabeticEnumerator;
@@ -20,6 +21,8 @@ import rst.pdfbox.layout.util.Enumerators.ArabianEnumerator;
 public class Indention {
 
     public static void main(String[] args) throws Exception {
+	String bulletOdd = CompatibilityHelper.getBulletCharacter(1) + " ";
+	String bulletEven = CompatibilityHelper.getBulletCharacter(2) + " ";
 	String text1 = "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, "
 		+ "sed diam nonumy eirmod tempor invidunt ut labore et dolore magna "
 		+ "aliquyam erat\n";
@@ -69,16 +72,16 @@ public class Indention {
 	paragraph.addMarkup(
 		"So, what can you do with that? How about lists:\n", 11,
 		BaseFont.Times);
-	paragraph.add(new Indent("\u00b7 ", 4, SpaceUnit.em, 11,
+	paragraph.add(new Indent(bulletOdd, 4, SpaceUnit.em, 11,
 		PDType1Font.TIMES_BOLD, Alignment.Right));
 	paragraph.addMarkup("This is a list item\n", 11, BaseFont.Times);
-	paragraph.add(new Indent("\u00b7 ", 4, SpaceUnit.em, 11,
+	paragraph.add(new Indent(bulletOdd, 4, SpaceUnit.em, 11,
 		PDType1Font.TIMES_BOLD, Alignment.Right));
 	paragraph.addMarkup("Another list item\n", 11, BaseFont.Times);
-	paragraph.add(new Indent("- ", 8, SpaceUnit.em, 11,
+	paragraph.add(new Indent(bulletEven, 8, SpaceUnit.em, 11,
 		PDType1Font.TIMES_BOLD, Alignment.Right));
 	paragraph.addMarkup("Sub list item\n", 11, BaseFont.Times);
-	paragraph.add(new Indent("\u00b7 ", 4, SpaceUnit.em, 11,
+	paragraph.add(new Indent(bulletOdd, 4, SpaceUnit.em, 11,
 		PDType1Font.TIMES_BOLD, Alignment.Right));
 	paragraph.addMarkup("And yet another one\n", 11, BaseFont.Times);
 	document.add(paragraph);

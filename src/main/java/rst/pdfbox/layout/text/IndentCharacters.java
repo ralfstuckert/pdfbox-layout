@@ -93,7 +93,7 @@ public class IndentCharacters {
 	 */
 	public Indent createNewIndent(final float fontSize, final PDFont font,
 		final Color color) throws IOException {
-	    return new Indent(nextLabel(), level*indentWidth, indentUnit,
+	    return new Indent(nextLabel(), level * indentWidth, indentUnit,
 		    fontSize, font, Alignment.Right, color);
 	}
 
@@ -150,8 +150,7 @@ public class IndentCharacters {
 		    label += " ";
 		}
 	    } else {
-		label = CompatibilityHelper.getBulletCharacter(getLevel())
-			+ " ";
+		label = CompatibilityHelper.getBulletCharacter(getLevel()) + " ";
 	    }
 	}
 
