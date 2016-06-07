@@ -16,7 +16,7 @@ import rst.pdfbox.layout.util.Enumerators.RomanEnumerator;
 import rst.pdfbox.layout.util.Enumerators.LowerCaseRomanEnumerator;
 import rst.pdfbox.layout.util.Enumerators.AlphabeticEnumerator;
 import rst.pdfbox.layout.util.Enumerators.LowerCaseAlphabeticEnumerator;
-import rst.pdfbox.layout.util.Enumerators.ArabianEnumerator;
+import rst.pdfbox.layout.util.Enumerators.ArabicEnumerator;
 
 public class Indention {
 
@@ -125,9 +125,9 @@ public class Indention {
 		Alignment.Right));
 	paragraph.addMarkup("LowerCaseAlphabeticEnumerator\n", 11,
 		BaseFont.Times);
-	paragraph.add(new Indent(new ArabianEnumerator().next() + " ", 4,
+	paragraph.add(new Indent(new ArabicEnumerator().next() + " ", 4,
 		SpaceUnit.em, 11, PDType1Font.TIMES_BOLD, Alignment.Right));
-	paragraph.addMarkup("ArabianEnumerator\n", 11, BaseFont.Times);
+	paragraph.addMarkup("ArabicEnumerator\n", 11, BaseFont.Times);
 	document.add(paragraph);
 
 	paragraph = new Paragraph();

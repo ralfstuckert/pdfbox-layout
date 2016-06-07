@@ -7,7 +7,7 @@ package rst.pdfbox.layout.util;
 public class Enumerators {
 
     /**
-     * Uses arabian numbers for the enumeration, and dot as the default
+     * Uses arabic numbers for the enumeration, and dot as the default
      * separator. <br>
      * 
      * <pre>
@@ -16,15 +16,15 @@ public class Enumerators {
      * 3. Stet clita ...
      * </pre>
      */
-    public static class ArabianEnumerator implements Enumerator {
+    public static class ArabicEnumerator implements Enumerator {
 
 	private int count;
 
-	public ArabianEnumerator() {
+	public ArabicEnumerator() {
 	    this(1);
 	}
 
-	public ArabianEnumerator(final int startCount) {
+	public ArabicEnumerator(final int startCount) {
 	    this.count = startCount;
 	}
 

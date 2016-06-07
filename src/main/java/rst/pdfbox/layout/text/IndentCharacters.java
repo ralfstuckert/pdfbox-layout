@@ -191,8 +191,8 @@ public class IndentCharacters {
      * characters in markup, using <code>a)...b)...etc</code> as the
      * enumeration. The number, the unit, enumeration type/separator, and the
      * brackets are optional. Default indention is 4 characters, default unit is
-     * <code>em</code>. Default enumeration are arabian numbers, the separator
-     * depends on the enumerator by default ('.' for arabian). For available
+     * <code>em</code>. Default enumeration are arabic numbers, the separator
+     * depends on the enumerator by default ('.' for arabic). For available
      * enumerators see {@link EnumeratorFactory}.It can be escaped with a
      * backslash ('\').
      */
