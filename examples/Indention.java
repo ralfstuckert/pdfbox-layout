@@ -111,6 +111,9 @@ public class Indention {
 	paragraph = new Paragraph();
 	paragraph.addMarkup("The following types are built in:\n", 11,
 		BaseFont.Times);
+	paragraph.add(new Indent(new ArabicEnumerator().next() + " ", 4,
+		SpaceUnit.em, 11, PDType1Font.TIMES_BOLD, Alignment.Right));
+	paragraph.addMarkup("ArabicEnumerator\n", 11, BaseFont.Times);
 	paragraph.add(new Indent(new RomanEnumerator().next() + " ", 4,
 		SpaceUnit.em, 11, PDType1Font.TIMES_BOLD, Alignment.Right));
 	paragraph.addMarkup("RomanEnumerator\n", 11, BaseFont.Times);
@@ -125,9 +128,6 @@ public class Indention {
 		Alignment.Right));
 	paragraph.addMarkup("LowerCaseAlphabeticEnumerator\n", 11,
 		BaseFont.Times);
-	paragraph.add(new Indent(new ArabicEnumerator().next() + " ", 4,
-		SpaceUnit.em, 11, PDType1Font.TIMES_BOLD, Alignment.Right));
-	paragraph.addMarkup("ArabicEnumerator\n", 11, BaseFont.Times);
 	document.add(paragraph);
 
 	paragraph = new Paragraph();
