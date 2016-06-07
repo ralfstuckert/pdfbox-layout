@@ -11,7 +11,7 @@ import org.apache.pdfbox.pdmodel.font.PDFont;
 public class Indent extends ControlFragment {
 
     /**
-     * Constant for the indention of 0.
+     * Constant for the indentation of 0.
      */
     public final static Indent UNINDENT = new Indent(0);
 
@@ -24,9 +24,9 @@ public class Indent extends ControlFragment {
      * Creates a new line with the given font descriptor.
      * 
      * @param indentWidth
-     *            the indention.
+     *            the indentation.
      * @param indentUnit
-     *            the indention unit.
+     *            the indentation unit.
      * @throws IOException
      *             by pdfbox
      */
@@ -42,11 +42,11 @@ public class Indent extends ControlFragment {
      * height.
      * 
      * @param label
-     *            the label of the indention.
+     *            the label of the indentation.
      * @param indentWidth
-     *            the indention.
+     *            the indentation.
      * @param indentUnit
-     *            the indention unit.
+     *            the indentation unit.
      * @param fontSize
      *            the font size, resp. the height of the new line.
      * @param font
@@ -68,11 +68,11 @@ public class Indent extends ControlFragment {
      * height.
      * 
      * @param label
-     *            the label of the indention.
+     *            the label of the indentation.
      * @param indentWidth
-     *            the indention.
+     *            the indentation.
      * @param indentUnit
-     *            the indention unit.
+     *            the indentation unit.
      * @param fontSize
      *            the font size, resp. the height of the new line.
      * @param font
@@ -95,11 +95,11 @@ public class Indent extends ControlFragment {
      * height.
      * 
      * @param label
-     *            the label of the indention.
+     *            the label of the indentation.
      * @param indentWidth
-     *            the indention.
+     *            the indentation.
      * @param indentUnit
-     *            the indention unit.
+     *            the indentation unit.
      * @param fontSize
      *            the font size, resp. the height of the new line.
      * @param font
@@ -123,11 +123,11 @@ public class Indent extends ControlFragment {
      * Creates a new line with the given font descriptor.
      * 
      * @param label
-     *            the label of the indention.
+     *            the label of the indentation.
      * @param indentWidth
-     *            the indention width.
+     *            the indentation width.
      * @param indentUnit
-     *            the indention unit.
+     *            the indentation unit.
      * @param fontDescriptor
      *            the font and size associated with this new line.
      * @param alignment
@@ -172,7 +172,7 @@ public class Indent extends ControlFragment {
      * Directly creates an indent of the given width in pt.
      * 
      * @param indentPt
-     *            the indention in pt.
+     *            the indentation in pt.
      */
     public Indent(final float indentPt) {
 	super("", DEFAULT_FONT_DESCRIPTOR);

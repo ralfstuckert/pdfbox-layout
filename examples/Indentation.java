@@ -18,7 +18,7 @@ import rst.pdfbox.layout.util.Enumerators.AlphabeticEnumerator;
 import rst.pdfbox.layout.util.Enumerators.LowerCaseAlphabeticEnumerator;
 import rst.pdfbox.layout.util.Enumerators.ArabicEnumerator;
 
-public class Indention {
+public class Indentation {
 
     public static void main(String[] args) throws Exception {
 	String bulletOdd = CompatibilityHelper.getBulletCharacter(1) + " ";
@@ -31,12 +31,12 @@ public class Indention {
 	Paragraph paragraph = new Paragraph();
 	paragraph
 		.addMarkup(
-			"This is an example for the new indent feature. Let's do some empty space indention:\n",
+			"This is an example for the new indent feature. Let's do some empty space indentation:\n",
 			11, BaseFont.Times);
 	paragraph.add(new Indent(50, SpaceUnit.pt));
 	paragraph.addMarkup("Here we go indented.\n", 11, BaseFont.Times);
 	paragraph.addMarkup(
-		"The Indention holds for the rest of the paragraph, or... \n",
+		"The Indentation holds for the rest of the paragraph, or... \n",
 		11, BaseFont.Times);
 	paragraph.add(new Indent(70, SpaceUnit.pt));
 	paragraph.addMarkup("any new indent comes.\n", 11, BaseFont.Times);
@@ -45,14 +45,14 @@ public class Indention {
 	paragraph = new Paragraph();
 	paragraph
 		.addMarkup(
-			"New paragraph, now indention is gone. But we can indent with a label also:\n",
+			"New paragraph, now indentation is gone. But we can indent with a label also:\n",
 			11, BaseFont.Times);
 	paragraph.add(new Indent("This is some label", 100, SpaceUnit.pt, 11,
 		PDType1Font.TIMES_BOLD));
 	paragraph.addMarkup("Here we go indented.\n", 11, BaseFont.Times);
 	paragraph
 		.addMarkup(
-			"And again, the Indention holds for the rest of the paragraph, or any new indent comes.\nLabels can be aligned:\n",
+			"And again, the Indentation holds for the rest of the paragraph, or any new indent comes.\nLabels can be aligned:\n",
 			11, BaseFont.Times);
 	paragraph.add(new Indent("Left", 100, SpaceUnit.pt, 11,
 		PDType1Font.TIMES_BOLD, Alignment.Left));
@@ -131,9 +131,9 @@ public class Indention {
 	document.add(paragraph);
 
 	paragraph = new Paragraph();
-	text1 = "For your convenience, you can do all that much easier with markup, e.g. simple indention\n"
+	text1 = "For your convenience, you can do all that much easier with markup, e.g. simple indentation\n"
 		+ "--At vero eos et accusam\n\n"
-		+ "-!And end the indention. Now a list:\n"
+		+ "-!And end the indentation. Now a list:\n"
 		+ "-+This is a list item\n"
 		+ "-+Another list item\n"
 		+ " -+A sub list item\n"
@@ -151,7 +151,7 @@ public class Indention {
 	paragraph.addMarkup(text1, 11, BaseFont.Times);
 	document.add(paragraph);
 
-	final OutputStream outputStream = new FileOutputStream("indention.pdf");
+	final OutputStream outputStream = new FileOutputStream("indentation.pdf");
 	document.save(outputStream);
     }
 

@@ -110,30 +110,30 @@ public class TextSequenceUtil {
     public static TextFlow wordWrap(final TextSequence text,
 	    final float maxWidth) throws IOException {
 
-	float indention = 0;
+	float indentation = 0;
 	TextFlow result = new TextFlow();
-	float lineLength = indention;
+	float lineLength = indentation;
 	for (TextFragment fragment : text) {
 	    if (fragment instanceof NewLine) {
 		result.add(fragment);
-		lineLength = indention;
-		if (indention > 0) {
-		    result.add(new Indent(indention).toStyledText());
+		lineLength = indentation;
+		if (indentation > 0) {
+		    result.add(new Indent(indentation).toStyledText());
 		}
 	    } else if (fragment instanceof Indent) {
-		if (indention > 0) {
-		    // reset indention
+		if (indentation > 0) {
+		    // reset indentation
 		    result.removeLast();
-		    indention = 0;
+		    indentation = 0;
 		}
-		indention = fragment.getWidth();
+		indentation = fragment.getWidth();
 		lineLength = fragment.getWidth();
 		result.add(((Indent) fragment).toStyledText());
 	    } else {
 		TextFlow words = splitWords(fragment);
 		for (TextFragment word : words) {
 
-		    if (lineLength == indention) {
+		    if (lineLength == indentation) {
 			TextFragment[] replaceLeadingBlanks = replaceLeadingBlanks(word);
 			word = replaceLeadingBlanks[0];
 			if (replaceLeadingBlanks.length > 1) {
@@ -144,17 +144,17 @@ public class TextSequenceUtil {
 		    FontDescriptor fontDescriptor = word.getFontDescriptor();
 		    float length = word.getWidth();
 
-		    if (maxWidth > 0 && lineLength > indention
+		    if (maxWidth > 0 && lineLength > indentation
 			    && lineLength + length > maxWidth) {
 			// word exceeds max width, so create new line
 			result.add(new WrappingNewLine(fontDescriptor));
-			if (indention > 0) {
-			    result.add(new Indent(indention).toStyledText());
+			if (indentation > 0) {
+			    result.add(new Indent(indentation).toStyledText());
 			}
-			lineLength = indention;
+			lineLength = indentation;
 		    }
 
-		    if (lineLength == indention) {
+		    if (lineLength == indentation) {
 			TextFragment[] replaceLeadingBlanks = replaceLeadingBlanks(word);
 			word = replaceLeadingBlanks[0];
 			length = word.getWidth();

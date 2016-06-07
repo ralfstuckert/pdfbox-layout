@@ -158,7 +158,7 @@ public class TextFlowUtil {
 		if (fragment instanceof IndentCharacter) {
 		    IndentCharacter currentIndent = (IndentCharacter) fragment;
 		    if (currentIndent.getLevel() == 0) {
-			// indention of 0 resets indent
+			// indentation of 0 resets indent
 			indentStack.clear();
 			result.add(Indent.UNINDENT);
 			continue;

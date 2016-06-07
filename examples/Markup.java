@@ -41,9 +41,9 @@ public class Markup {
 		30, 0));
 
 	paragraph = new Paragraph();
-	text1 = "\nAlso, you can do all that indention stuff much easier with markup, e.g. simple indention\n"
+	text1 = "\nAlso, you can do all that indentation stuff much easier with markup, e.g. simple indentation\n"
 		+ "--At vero eos et accusam\n\n"
-		+ "-!And end the indention. Now a list:\n"
+		+ "-!And end the indentation. Now a list:\n"
 		+ "-+This is a list item\n"
 		+ "-+Another list item\n"
 		+ " -+A sub list item\n"

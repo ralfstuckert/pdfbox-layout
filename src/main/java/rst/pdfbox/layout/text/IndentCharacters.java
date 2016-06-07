@@ -14,7 +14,7 @@ import rst.pdfbox.layout.util.Enumerator;
 import rst.pdfbox.layout.util.EnumeratorFactory;
 
 /**
- * Container class for current supported indention control characters.
+ * Container class for current supported indentation control characters.
  */
 public class IndentCharacters {
 
@@ -24,15 +24,15 @@ public class IndentCharacters {
     public static ControlCharacterFactory INDENT_FACTORY = new IndentCharacterFactory();
 
     /**
-     * Represent un-indention, means effectively indent of 0.
+     * Represent un-indentation, means effectively indent of 0.
      */
     public static IndentCharacter UNINDENT_CHARACTER = new IndentCharacter("0",
 	    "0", "pt");
 
     /**
-     * An <code>--{7em}</code> indicates an indention of 7 characters in markup,
+     * An <code>--{7em}</code> indicates an indentation of 7 characters in markup,
      * where the number, the unit, and the brackets are optional. Default
-     * indention is 4 characters, default unit is <code>7em</code> It can be
+     * indentation is 4 characters, default unit is <code>7em</code> It can be
      * escaped with a backslash ('\').
      */
     public static class IndentCharacter extends ControlCharacter {
@@ -63,7 +63,7 @@ public class IndentCharacters {
 	}
 
 	/**
-	 * @return the level of indention, where 0 means no indent.
+	 * @return the level of indentation, where 0 means no indent.
 	 */
 	public int getLevel() {
 	    return level;
@@ -130,9 +130,9 @@ public class IndentCharacters {
     }
 
     /**
-     * An <code>-+{--:7em}</code> indicates a list indention of 7 characters in
+     * An <code>-+{--:7em}</code> indicates a list indentation of 7 characters in
      * markup, using <code>--</code> as the bullet. The number, the unit, bullet
-     * character and the brackets are optional. Default indention is 4
+     * character and the brackets are optional. Default indentation is 4
      * characters, default unit is <code>em</code> and the default bullet
      * depends on {@link CompatibilityHelper#getBulletCharacter(int)}. It can be
      * escaped with a backslash ('\').
@@ -187,10 +187,10 @@ public class IndentCharacters {
     }
 
     /**
-     * An <code>-#{a):7em}</code> indicates an enumeration indention of 7
+     * An <code>-#{a):7em}</code> indicates an enumeration indentation of 7
      * characters in markup, using <code>a)...b)...etc</code> as the
      * enumeration. The number, the unit, enumeration type/separator, and the
-     * brackets are optional. Default indention is 4 characters, default unit is
+     * brackets are optional. Default indentation is 4 characters, default unit is
      * <code>em</code>. Default enumeration are arabic numbers, the separator
      * depends on the enumerator by default ('.' for arabic). For available
      * enumerators see {@link EnumeratorFactory}.It can be escaped with a
@@ -297,7 +297,7 @@ public class IndentCharacters {
 			matcher.group(16), matcher.group(17));
 	    }
 
-	    throw new IllegalArgumentException("unkown indention " + text);
+	    throw new IllegalArgumentException("unkown indentation " + text);
 	}
 
 	@Override
