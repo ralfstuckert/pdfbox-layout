@@ -34,6 +34,8 @@ public class Document implements RenderListener {
     private final List<Entry<Element, LayoutHint>> elements = new ArrayList<>();
     private final List<RenderListener> renderListener = new CopyOnWriteArrayList<RenderListener>();
 
+    private PDDocument pdDocument;
+
     /**
      * Creates a Document based on the given media box. By default, a
      * {@link VerticalLayout} is used.
@@ -51,10 +53,14 @@ public class Document implements RenderListener {
      * 
      * @param mediaBox
      *            the media box to use.
-     * @param marginLeft the left margin
-     * @param marginRight the right margin
-     * @param marginTop the top margin
-     * @param marginBottom the bottom margin
+     * @param marginLeft
+     *            the left margin
+     * @param marginRight
+     *            the right margin
+     * @param marginTop
+     *            the top margin
+     * @param marginBottom
+     *            the bottom margin
      */
     public Document(PDRectangle mediaBox, float marginLeft, float marginRight,
 	    float marginTop, float marginBottom) {
@@ -68,7 +74,8 @@ public class Document implements RenderListener {
     /**
      * Adds an element to the document using a {@link VerticalLayoutHint}.
      * 
-     * @param element the element to add
+     * @param element
+     *            the element to add
      */
     public void add(final Element element) {
 	add(element, new VerticalLayoutHint());
@@ -77,8 +84,10 @@ public class Document implements RenderListener {
     /**
      * Adds an element with the given layout hint.
      * 
-     * @param element the element to add
-     * @param layoutHint the hint for the {@link Layout}.
+     * @param element
+     *            the element to add
+     * @param layoutHint
+     *            the hint for the {@link Layout}.
      */
     public void add(final Element element, final LayoutHint layoutHint) {
 	elements.add(createEntry(element, layoutHint));
@@ -92,7 +101,8 @@ public class Document implements RenderListener {
     /**
      * Removes the given element.
      * 
-     * @param element the element to remove.
+     * @param element
+     *            the element to remove.
      */
     public void remove(final Element element) {
 	elements.remove(element);
@@ -136,27 +146,49 @@ public class Document implements RenderListener {
     public float getPageWidth() {
 	return getMediaBox().getWidth() - getMarginLeft() - getMarginRight();
     }
-    
+
     /**
      * @return the media box height minus margins.
      */
     public float getPageHeight() {
 	return getMediaBox().getHeight() - getMarginTop() - getMarginBottom();
     }
+
+    /**
+     * Returns the {@link PDDocument} to be created by method {@link #render()}. Beware
+     * that this PDDocument is released after rendering. This means each rendering process creates
+     * a new PDDocument.
+     * @return the PDDocument to be used on the next call to {@link #render()}.
+     */
+    public PDDocument getPDDocument() {
+	if (pdDocument == null) {
+	    pdDocument = new PDDocument();
+	}
+	return pdDocument;
+    }
+
+    /**
+     * Called after {@link #render()} in order to release the current document.
+     */
+    protected void resetPDDocument() {
+	this.pdDocument = null;
+    }
     
     /**
      * Renders all elements and returns the resulting {@link PDDocument}.
      * 
      * @return the resulting {@link PDDocument}
-     * @throws IOException by pdfbox
+     * @throws IOException
+     *             by pdfbox
      */
     public PDDocument render() throws IOException {
-	PDDocument document = new PDDocument();
+	PDDocument document = getPDDocument();
 	RenderContext renderContext = new RenderContext(this, document);
 	for (Entry<Element, LayoutHint> entry : elements) {
 	    Element element = entry.getKey();
 	    LayoutHint layoutHint = entry.getValue();
-	    boolean success = renderContext.render(renderContext, element, layoutHint);
+	    boolean success = renderContext.render(renderContext, element,
+		    layoutHint);
 	    if (!success) {
 		throw new IllegalArgumentException(
 			String.format(
@@ -166,17 +198,21 @@ public class Document implements RenderListener {
 	    }
 	}
 	renderContext.close();
+	
+	resetPDDocument();
 	return document;
     }
 
     /**
      * {@link #render() Renders} the document and saves it to the given file.
      * 
-     * @param file the file to save to.
-     * @throws IOException by pdfbox
+     * @param file
+     *            the file to save to.
+     * @throws IOException
+     *             by pdfbox
      */
     public void save(final File file) throws IOException {
-	try (OutputStream out = new FileOutputStream( file )) {
+	try (OutputStream out = new FileOutputStream(file)) {
 	    save(out);
 	}
     }
@@ -185,8 +221,10 @@ public class Document implements RenderListener {
      * {@link #render() Renders} the document and saves it to the given output
      * stream.
      * 
-     * @param output the stream to save to.
-     * @throws IOException by pdfbox
+     * @param output
+     *            the stream to save to.
+     * @throws IOException
+     *             by pdfbox
      */
     public void save(final OutputStream output) throws IOException {
 	try (PDDocument document = render()) {
@@ -204,7 +242,8 @@ public class Document implements RenderListener {
      * Adds a {@link RenderListener} that will be notified during
      * {@link #render() rendering}.
      * 
-     * @param listener the listener to add.
+     * @param listener
+     *            the listener to add.
      */
     public void addRenderListener(final RenderListener listener) {
 	if (listener != null) {
@@ -215,7 +254,8 @@ public class Document implements RenderListener {
     /**
      * Removes a {@link RenderListener} .
      * 
-     * @param listener the listener to remove.
+     * @param listener
+     *            the listener to remove.
      */
     public void removeRenderListener(final RenderListener listener) {
 	renderListener.remove(listener);
