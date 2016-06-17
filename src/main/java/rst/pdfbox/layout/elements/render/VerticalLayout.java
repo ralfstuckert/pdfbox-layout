@@ -2,6 +2,7 @@ package rst.pdfbox.layout.elements.render;
 
 import java.io.IOException;
 
+import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.edit.PDPageContentStream;
 
 import rst.pdfbox.layout.elements.ControlElement;
@@ -29,6 +30,7 @@ public class VerticalLayout implements Layout {
 
     /**
      * See {@link Drawable#removeLeadingEmptyVerticalSpace()}
+     * 
      * @return <code>true</code> if empty space (e.g. empty lines) should be
      *         removed at the begin of a page.
      */
@@ -38,8 +40,7 @@ public class VerticalLayout implements Layout {
 
     /**
      * Indicates if empty space (e.g. empty lines) should be removed at the
-     * begin of a page.
-     * See {@link Drawable#removeLeadingEmptyVerticalSpace()}
+     * begin of a page. See {@link Drawable#removeLeadingEmptyVerticalSpace()}
      * 
      * @param removeLeadingEmptyLines
      *            <code>true</code> if space should be removed.
@@ -273,7 +274,7 @@ public class VerticalLayout implements Layout {
 	}
 
 	contentStream.saveGraphicsState();
-	contentStream.addRect(0, document.getMarginBottom(), document
+	contentStream.addRect(0, document.getMarginBottom(), renderContext
 		.getMediaBox().getWidth(), renderContext.getHeight());
 	CompatibilityHelper.clip(contentStream);
 
@@ -300,8 +301,8 @@ public class VerticalLayout implements Layout {
     }
 
     /**
-     * Removes empty space (e.g. empty lines) at the begin of a page.
-     * See {@link Drawable#removeLeadingEmptyVerticalSpace()}
+     * Removes empty space (e.g. empty lines) at the begin of a page. See
+     * {@link Drawable#removeLeadingEmptyVerticalSpace()}
      * 
      * @param drawable
      *            the drawable to process.
@@ -319,6 +320,5 @@ public class VerticalLayout implements Layout {
 	}
 	return drawable;
     }
-
 
 }

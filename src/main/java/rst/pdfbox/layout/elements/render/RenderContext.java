@@ -5,11 +5,14 @@ import java.io.IOException;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.edit.PDPageContentStream;
 
 import rst.pdfbox.layout.elements.ControlElement;
 import rst.pdfbox.layout.elements.Document;
 import rst.pdfbox.layout.elements.Element;
+import rst.pdfbox.layout.elements.Orientation;
+import rst.pdfbox.layout.elements.PageFormat;
 import rst.pdfbox.layout.elements.PositionControl;
 import rst.pdfbox.layout.elements.PositionControl.MarkPosition;
 import rst.pdfbox.layout.elements.PositionControl.MovePosition;
@@ -31,6 +34,7 @@ public class RenderContext implements Layout, Closeable {
     private Position currentPosition;
     private Position markedPosition;
     private Layout layout = new VerticalLayout();
+    private PageFormat pageFormat;
 
     /**
      * Creates a render context.
@@ -67,12 +71,40 @@ public class RenderContext implements Layout, Closeable {
     }
 
     /**
+     * @return the orientation to use for the page. If no special
+     *         {@link #setPageFormat(PageFormat) page format} is set, the
+     *         {@link Document#getOrientation() document orientation} is used.
+     */
+    public Orientation getOrientation() {
+	if (pageFormat == null) {
+	    return document.getOrientation();
+	}
+	return pageFormat.getOrientation();
+    }
+
+    /**
+     * @return the media box to use for the page. If no special
+     *         {@link #setPageFormat(PageFormat) page format} is set, the
+     *         {@link Document#getMediaBox() document media box} is used.
+     */
+    public PDRectangle getMediaBox() {
+	if (pageFormat == null) {
+	    return document.getMediaBox();
+	}
+	return pageFormat.getMediaBox();
+    }
+
+    public void setPageFormat(final PageFormat pageFormat) {
+	this.pageFormat = pageFormat;
+    }
+
+    /**
      * @return the upper left position in the document respecting the
      *         {@link Document document} margins.
      */
     public Position getUpperLeft() {
-	return new Position(document.getMarginLeft(), page.getMediaBox()
-		.getHeight() - document.getMarginTop());
+	return new Position(document.getMarginLeft(), getPageHeight()
+		- document.getMarginTop());
     }
 
     /**
@@ -80,8 +112,8 @@ public class RenderContext implements Layout, Closeable {
      *         {@link Document document} margins.
      */
     public Position getLowerRight() {
-	return new Position(page.getMediaBox().getWidth()
-		- document.getMarginRight(), document.getMarginBottom());
+	return new Position(getPageWidth() - document.getMarginRight(),
+		document.getMarginBottom());
     }
 
     /**
@@ -91,18 +123,18 @@ public class RenderContext implements Layout, Closeable {
 	return currentPosition;
     }
 
-    /** 
+    /**
      * @return the {@link PositionControl#MARKED_POSITION}.
      */
     public Position getMarkedPosition() {
-        return markedPosition;
+	return markedPosition;
     }
 
     protected void setMarkedPosition(Position markedPosition) {
-        this.markedPosition = markedPosition;
+	this.markedPosition = markedPosition;
     }
 
-   /**
+    /**
      * Moves the {@link #getCurrentPosition() current position} relatively by
      * the given offset.
      * 
@@ -123,18 +155,60 @@ public class RenderContext implements Layout, Closeable {
     }
 
     /**
-     * @return the width of the page respecting the margins.
+     * @return the orientation of the current page
+     */
+    protected Orientation getPageOrientation() {
+	if (getPageWidth() > getPageHeight()) {
+	    return Orientation.Landscape;
+	}
+	return Orientation.Portrait;
+    }
+
+    /**
+     * @return <code>true</code> if the page is rotated by 90/270 degrees.
+     */
+    public boolean isPageTilted() {
+	return page.getRotation() != null
+		&& (page.getRotation() == 90 || page.getRotation() == 270);
+    }
+
+    /**
+     * @return the page' width, or - if {@link #isPageTilted() rotated} - the
+     *         height.
+     */
+    public float getPageWidth() {
+	if (isPageTilted()) {
+	    return page.getMediaBox().getHeight();
+	}
+	return page.getMediaBox().getWidth();
+    }
+
+    /**
+     * @return the page' height, or - if {@link #isPageTilted() rotated} - the
+     *         width.
+     */
+    public float getPageHeight() {
+	if (isPageTilted()) {
+	    return page.getMediaBox().getWidth();
+	}
+	return page.getMediaBox().getHeight();
+    }
+
+    /**
+     * @return the {@link #getPageWidth() width of the page} respecting the
+     *         margins.
      */
     public float getWidth() {
-	return page.getMediaBox().getWidth() - document.getMarginLeft()
+	return getPageWidth() - document.getMarginLeft()
 		- document.getMarginRight();
     }
 
     /**
-     * @return the height of the page respecting the margins.
+     * @return the {@link #getPageHeight() height of the page} respecting the
+     *         margins.
      */
     public float getHeight() {
-	return page.getMediaBox().getHeight() - document.getMarginTop()
+	return getPageHeight() - document.getMarginTop()
 		- document.getMarginBottom();
     }
 
@@ -193,7 +267,11 @@ public class RenderContext implements Layout, Closeable {
 	    return true;
 	}
 	if (element instanceof PositionControl) {
-	    return render((PositionControl)element);
+	    return render((PositionControl) element);
+	}
+	if (element instanceof PageFormat) {
+	    setPageFormat((PageFormat)element);
+	    return true;
 	}
 	if (element instanceof Layout) {
 	    setLayout((Layout) element);
@@ -201,15 +279,14 @@ public class RenderContext implements Layout, Closeable {
 	}
 	return false;
     }
-    
-    
+
     protected boolean render(final PositionControl positionControl) {
 	if (positionControl instanceof MarkPosition) {
 	    setMarkedPosition(getCurrentPosition());
 	    return true;
 	}
 	if (positionControl instanceof SetPosition) {
-	    SetPosition setPosition = (SetPosition)positionControl;
+	    SetPosition setPosition = (SetPosition) positionControl;
 	    Float x = setPosition.getX();
 	    if (x == PositionControl.MARKED_POSITION) {
 		x = getMarkedPosition().getX();
@@ -224,12 +301,12 @@ public class RenderContext implements Layout, Closeable {
 	    if (y == null) {
 		y = getCurrentPosition().getY();
 	    }
-	    Position newPosition = new Position(x,y);
+	    Position newPosition = new Position(x, y);
 	    currentPosition = newPosition;
 	    return true;
 	}
 	if (positionControl instanceof MovePosition) {
-	    MovePosition movePosition = (MovePosition)positionControl;
+	    MovePosition movePosition = (MovePosition) positionControl;
 	    movePositionBy(movePosition.getX(), movePosition.getY());
 	    return true;
 	}
@@ -246,10 +323,21 @@ public class RenderContext implements Layout, Closeable {
 	if (closePage()) {
 	    ++pageIndex;
 	}
-	this.page = new PDPage(document.getMediaBox());
+	this.page = new PDPage(getMediaBox());
 	this.pdDocument.addPage(page);
 	this.contentStream = CompatibilityHelper
 		.createAppendablePDPageContentStream(pdDocument, page);
+	
+	// fix orientation
+	if (getPageOrientation() != getOrientation()) {
+	    if (isPageTilted()) {
+		page.setRotation(0);
+	    } else {
+		page.setRotation(90);
+		contentStream.concatenate2CTM(0, 1, -1, 0, getPageHeight(), 0);
+	    }
+	}
+
 	resetPositionToUpperLeft();
 	document.beforePage(this);
     }

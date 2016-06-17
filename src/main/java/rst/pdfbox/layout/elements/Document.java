@@ -19,17 +19,19 @@ import rst.pdfbox.layout.elements.render.RenderContext;
 import rst.pdfbox.layout.elements.render.RenderListener;
 import rst.pdfbox.layout.elements.render.VerticalLayout;
 import rst.pdfbox.layout.elements.render.VerticalLayoutHint;
+import rst.pdfbox.layout.text.Constants;
 
 /**
  * The central class for creating a document.
  */
 public class Document implements RenderListener {
 
-    private final float marginLeft;
+    private final float marginLeft; 
     private final float marginRight;
     private final float marginTop;
     private final float marginBottom;
     private final PDRectangle mediaBox;
+    private final Orientation orientation;
 
     private final List<Entry<Element, LayoutHint>> elements = new ArrayList<>();
     private final List<RenderListener> renderListener = new CopyOnWriteArrayList<RenderListener>();
@@ -64,7 +66,32 @@ public class Document implements RenderListener {
      */
     public Document(PDRectangle mediaBox, float marginLeft, float marginRight,
 	    float marginTop, float marginBottom) {
+	this(mediaBox, Orientation.Portrait, marginLeft, marginRight,
+		marginTop, marginBottom);
+    }
+
+    /**
+     * Creates a Document based on the given media box and margins. By default,
+     * a {@link VerticalLayout} is used.
+     * 
+     * @param mediaBox
+     *            the media box to use.
+     * @param orientation
+     *            the orientation to use.
+     * @param marginLeft
+     *            the left margin
+     * @param marginRight
+     *            the right margin
+     * @param marginTop
+     *            the top margin
+     * @param marginBottom
+     *            the bottom margin
+     */
+    public Document(PDRectangle mediaBox, Orientation orientation,
+	    float marginLeft, float marginRight, float marginTop,
+	    float marginBottom) {
 	this.mediaBox = mediaBox;
+	this.orientation = orientation;
 	this.marginLeft = marginLeft;
 	this.marginRight = marginRight;
 	this.marginTop = marginTop;
@@ -136,10 +163,20 @@ public class Document implements RenderListener {
 	return marginBottom;
     }
 
+    /**
+     * @return the media box to use.
+     */
     public PDRectangle getMediaBox() {
 	return mediaBox;
     }
 
+    /**
+     * @return the orientation to use.
+     */
+    public Orientation getOrientation() {
+	return orientation;
+    }
+    
     /**
      * @return the media box width minus margins.
      */
@@ -155,9 +192,10 @@ public class Document implements RenderListener {
     }
 
     /**
-     * Returns the {@link PDDocument} to be created by method {@link #render()}. Beware
-     * that this PDDocument is released after rendering. This means each rendering process creates
-     * a new PDDocument.
+     * Returns the {@link PDDocument} to be created by method {@link #render()}.
+     * Beware that this PDDocument is released after rendering. This means each
+     * rendering process creates a new PDDocument.
+     * 
      * @return the PDDocument to be used on the next call to {@link #render()}.
      */
     public PDDocument getPDDocument() {
@@ -173,7 +211,7 @@ public class Document implements RenderListener {
     protected void resetPDDocument() {
 	this.pdDocument = null;
     }
-    
+
     /**
      * Renders all elements and returns the resulting {@link PDDocument}.
      * 
@@ -198,7 +236,7 @@ public class Document implements RenderListener {
 	    }
 	}
 	renderContext.close();
-	
+
 	resetPDDocument();
 	return document;
     }
@@ -274,6 +312,59 @@ public class Document implements RenderListener {
 	for (RenderListener listener : renderListener) {
 	    listener.afterPage(renderContext);
 	}
+    }
+    
+    /**
+     * @return a document builder.
+     */
+    public static DocumentBuilder builder() {
+	return new DocumentBuilder();
+    }
+    
+    public static class DocumentBuilder {
+	    private float marginLeft;
+	    private float marginRight;
+	    private float marginTop;
+	    private float marginBottom;
+	    private PDRectangle mediaBox = Constants.A4;
+	    private Orientation orientation = Orientation.Portrait;
+
+	    protected DocumentBuilder() {}
+
+	    public Document build() {
+		return new Document(mediaBox, orientation, marginLeft, marginRight, marginTop, marginBottom);
+	    }
+	    public DocumentBuilder marginLeft(float marginLeft) {
+	        this.marginLeft = marginLeft;
+	        return this;
+	    }
+
+	    public DocumentBuilder marginRight(float marginRight) {
+	        this.marginRight = marginRight;
+	        return this;
+	    }
+
+	    public DocumentBuilder marginTop(float marginTop) {
+	        this.marginTop = marginTop;
+	        return this;
+	    }
+
+	    public DocumentBuilder marginBottom(float marginBottom) {
+	        this.marginBottom = marginBottom;
+	        return this;
+	    }
+
+	    public DocumentBuilder mediaBox(PDRectangle mediaBox) {
+	        this.mediaBox = mediaBox;
+	        return this;
+	    }
+
+	    public DocumentBuilder orientation(Orientation orientation) {
+	        this.orientation = orientation;
+	        return this;
+	    }
+	    
+	    
     }
 
 }
