@@ -6,6 +6,8 @@ import org.apache.pdfbox.pdmodel.font.PDType1Font;
 
 import rst.pdfbox.layout.elements.Document;
 import rst.pdfbox.layout.elements.Paragraph;
+import rst.pdfbox.layout.elements.Orientation;
+import rst.pdfbox.layout.elements.PageFormat;
 import rst.pdfbox.layout.elements.render.RenderContext;
 import rst.pdfbox.layout.elements.render.RenderListener;
 import rst.pdfbox.layout.text.Alignment;
@@ -39,7 +41,8 @@ public class Listener {
 
 
 
-	Document document = new Document(Constants.A4, 40, 60, 40, 60);
+	PageFormat pageFormat = new PageFormat(Constants.A4, Orientation.Portrait, 40f, 60f, 40f, 60f);
+	Document document = new Document(pageFormat);
 	document.addRenderListener(new RenderListener() {
 
 	    @Override
@@ -54,7 +57,7 @@ public class Listener {
 			renderContext.getPageIndex() + 1);
 		TextFlow text = TextFlowUtil.createTextFlow(content, 11,
 			PDType1Font.TIMES_ROMAN);
-		float offset = renderContext.getDocument().getMarginLeft()
+		float offset = renderContext.getPageFormat().getMarginLeft()
 			+ TextSequenceUtil.getOffset(text,
 				renderContext.getWidth(), Alignment.Right);
 		text.drawText(renderContext.getContentStream(), new Position(

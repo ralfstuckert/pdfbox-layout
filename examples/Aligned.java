@@ -4,6 +4,8 @@ import java.io.OutputStream;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 
 import rst.pdfbox.layout.elements.Document;
+import rst.pdfbox.layout.elements.Orientation;
+import rst.pdfbox.layout.elements.PageFormat;
 import rst.pdfbox.layout.elements.Paragraph;
 import rst.pdfbox.layout.elements.render.VerticalLayoutHint;
 import rst.pdfbox.layout.text.Alignment;
@@ -12,7 +14,8 @@ import rst.pdfbox.layout.text.Constants;
 public class Aligned {
 
     public static void main(String[] args) throws Exception {
-	Document document = new Document(Constants.A4, 40, 60, 40, 60);
+	PageFormat pageFormat = new PageFormat(Constants.A4, Orientation.Portrait, 40f, 60f, 40f, 60f);
+	Document document = new Document(pageFormat);
 	Paragraph paragraph = new Paragraph();
 	paragraph.addText("This is some left aligned text", 11,
 		PDType1Font.HELVETICA);

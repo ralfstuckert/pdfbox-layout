@@ -6,6 +6,8 @@ import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import rst.pdfbox.layout.elements.Document;
 import rst.pdfbox.layout.elements.Paragraph;
 import rst.pdfbox.layout.elements.ImageElement;
+import rst.pdfbox.layout.elements.Orientation;
+import rst.pdfbox.layout.elements.PageFormat;
 import rst.pdfbox.layout.elements.VerticalSpacer;
 import rst.pdfbox.layout.elements.render.VerticalLayoutHint;
 import rst.pdfbox.layout.text.Alignment;
@@ -18,8 +20,9 @@ public class Letter {
     public static void main(String[] args) throws Exception {
 	float hMargin = 40;
 	float vMargin = 50;
-	Document document = new Document(Constants.A4, hMargin, hMargin,
+	PageFormat pageFormat = new PageFormat(Constants.A4, Orientation.Portrait, hMargin, hMargin,
 		vMargin, vMargin);
+	Document document = new Document(pageFormat);
 
 	ImageElement image = new ImageElement("arrow.png");
 	image.setWidth(image.getWidth()/7);

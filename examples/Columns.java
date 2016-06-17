@@ -3,6 +3,8 @@ import java.io.OutputStream;
 
 import rst.pdfbox.layout.elements.Document;
 import rst.pdfbox.layout.elements.Paragraph;
+import rst.pdfbox.layout.elements.Orientation;
+import rst.pdfbox.layout.elements.PageFormat;
 import rst.pdfbox.layout.elements.VerticalSpacer;
 import rst.pdfbox.layout.elements.render.ColumnLayout;
 import rst.pdfbox.layout.elements.render.ColumnLayoutHint;
@@ -31,7 +33,8 @@ public class Columns {
 		+ "eos et _accusam et *justo* duo dolores_ et ea rebum. Stet clita kasd "
 		+ "gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.\n";
 
-	Document document = new Document(Constants.A4, 40, 50, 40, 60);
+	PageFormat pageFormat = new PageFormat(Constants.A4, Orientation.Portrait, 40f, 50f, 40f, 60f);
+	Document document = new Document(pageFormat);
 	
 	Paragraph title = new Paragraph();
 	title.addMarkup("*This Text is organized in Colums*", 20, BaseFont.Times);

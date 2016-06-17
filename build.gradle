@@ -14,11 +14,17 @@ buildscript {
 
 subprojects {
 
+  gradle.projectsEvaluated {
+    tasks.withType(JavaCompile) {
+      options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+    }
+  }
+
   apply plugin: "java"
   apply plugin: 'org.dm.bundle'  
 
   group = 'com.github.ralfstuckert.pdfbox-layout'
-  version = '0.6.0'
+  version = '0.6.1-SNAPSHOT'
 
   repositories {
       mavenCentral()

@@ -26,17 +26,13 @@ import rst.pdfbox.layout.text.Constants;
  */
 public class Document implements RenderListener {
 
-    private final float marginLeft; 
-    private final float marginRight;
-    private final float marginTop;
-    private final float marginBottom;
-    private final PDRectangle mediaBox;
-    private final Orientation orientation;
+    private final static PageFormat DEFAULT_PAGE_FORMAT = new PageFormat(Constants.A4, Orientation.Portrait, 0f, 0f, 0f, 0f);
 
     private final List<Entry<Element, LayoutHint>> elements = new ArrayList<>();
     private final List<RenderListener> renderListener = new CopyOnWriteArrayList<RenderListener>();
 
     private PDDocument pdDocument;
+    private PageFormat pageFormat;
 
     /**
      * Creates a Document based on the given media box. By default, a
@@ -44,7 +40,9 @@ public class Document implements RenderListener {
      * 
      * @param mediaBox
      *            the media box to use.
+     *@deprecated use {@link #Document(PageFormat)} instead.
      */
+    @Deprecated
     public Document(PDRectangle mediaBox) {
 	this(mediaBox, 0, 0, 0, 0);
     }
@@ -63,39 +61,24 @@ public class Document implements RenderListener {
      *            the top margin
      * @param marginBottom
      *            the bottom margin
+     *@deprecated use {@link #Document(PageFormat)} instead.
      */
+    @Deprecated
     public Document(PDRectangle mediaBox, float marginLeft, float marginRight,
 	    float marginTop, float marginBottom) {
-	this(mediaBox, Orientation.Portrait, marginLeft, marginRight,
-		marginTop, marginBottom);
+	this(new PageFormat(mediaBox, Orientation.Portrait, marginLeft, marginRight,
+		marginTop, marginBottom));
     }
 
     /**
-     * Creates a Document based on the given media box and margins. By default,
+     * Creates a Document based on the given page format. By default,
      * a {@link VerticalLayout} is used.
      * 
-     * @param mediaBox
-     *            the media box to use.
-     * @param orientation
-     *            the orientation to use.
-     * @param marginLeft
-     *            the left margin
-     * @param marginRight
-     *            the right margin
-     * @param marginTop
-     *            the top margin
-     * @param marginBottom
-     *            the bottom margin
+     * @param pageFormat
+     *            the page format box to use.
      */
-    public Document(PDRectangle mediaBox, Orientation orientation,
-	    float marginLeft, float marginRight, float marginTop,
-	    float marginBottom) {
-	this.mediaBox = mediaBox;
-	this.orientation = orientation;
-	this.marginLeft = marginLeft;
-	this.marginRight = marginRight;
-	this.marginTop = marginTop;
-	this.marginBottom = marginBottom;
+    public Document(final PageFormat pageFormat) {
+	this.pageFormat = pageFormat.useDefaults(DEFAULT_PAGE_FORMAT);
     }
 
     /**
@@ -136,45 +119,64 @@ public class Document implements RenderListener {
     }
 
     /**
-     * @return the left document margin.
+     * @return the page format to use as default.
      */
+    public PageFormat getPageFormat() {
+	return pageFormat;
+    }
+    
+    /**
+     * @return the left document margin.
+     * @deprecated use {@link #getPageFormat()} instead.
+     */
+    @Deprecated
     public float getMarginLeft() {
-	return marginLeft;
+	return getPageFormat().getMarginLeft();
     }
 
     /**
      * @return the right document margin.
+     * @deprecated use {@link #getPageFormat()} instead.
      */
+    @Deprecated
     public float getMarginRight() {
-	return marginRight;
+	return getPageFormat().getMarginRight();
     }
 
     /**
      * @return the top document margin.
+     * @deprecated use {@link #getPageFormat()} instead.
      */
+    @Deprecated
     public float getMarginTop() {
-	return marginTop;
+	return getPageFormat().getMarginTop();
     }
 
     /**
      * @return the bottom document margin.
+     * @deprecated use {@link #getPageFormat()} instead.
      */
+    @Deprecated
     public float getMarginBottom() {
-	return marginBottom;
+	return getPageFormat().getMarginBottom();
     }
 
     /**
      * @return the media box to use.
+     * @deprecated use {@link #getPageFormat()} instead.
      */
+    @Deprecated
     public PDRectangle getMediaBox() {
-	return mediaBox;
+	return getPageFormat().getMediaBox();
     }
 
     /**
      * @return the orientation to use.
+     * @deprecated use {@link #getPageFormat()} instead.
      */
+    @Deprecated
     public Orientation getOrientation() {
-	return orientation;
+	return getPageFormat().getOrientation();
     }
     
     /**
@@ -314,57 +316,4 @@ public class Document implements RenderListener {
 	}
     }
     
-    /**
-     * @return a document builder.
-     */
-    public static DocumentBuilder builder() {
-	return new DocumentBuilder();
-    }
-    
-    public static class DocumentBuilder {
-	    private float marginLeft;
-	    private float marginRight;
-	    private float marginTop;
-	    private float marginBottom;
-	    private PDRectangle mediaBox = Constants.A4;
-	    private Orientation orientation = Orientation.Portrait;
-
-	    protected DocumentBuilder() {}
-
-	    public Document build() {
-		return new Document(mediaBox, orientation, marginLeft, marginRight, marginTop, marginBottom);
-	    }
-	    public DocumentBuilder marginLeft(float marginLeft) {
-	        this.marginLeft = marginLeft;
-	        return this;
-	    }
-
-	    public DocumentBuilder marginRight(float marginRight) {
-	        this.marginRight = marginRight;
-	        return this;
-	    }
-
-	    public DocumentBuilder marginTop(float marginTop) {
-	        this.marginTop = marginTop;
-	        return this;
-	    }
-
-	    public DocumentBuilder marginBottom(float marginBottom) {
-	        this.marginBottom = marginBottom;
-	        return this;
-	    }
-
-	    public DocumentBuilder mediaBox(PDRectangle mediaBox) {
-	        this.mediaBox = mediaBox;
-	        return this;
-	    }
-
-	    public DocumentBuilder orientation(Orientation orientation) {
-	        this.orientation = orientation;
-	        return this;
-	    }
-	    
-	    
-    }
-
 }

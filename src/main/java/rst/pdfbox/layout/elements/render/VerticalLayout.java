@@ -2,16 +2,15 @@ package rst.pdfbox.layout.elements.render;
 
 import java.io.IOException;
 
-import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.edit.PDPageContentStream;
 
 import rst.pdfbox.layout.elements.ControlElement;
 import rst.pdfbox.layout.elements.Cutter;
 import rst.pdfbox.layout.elements.Dividable;
 import rst.pdfbox.layout.elements.Dividable.Divided;
-import rst.pdfbox.layout.elements.Document;
 import rst.pdfbox.layout.elements.Drawable;
 import rst.pdfbox.layout.elements.Element;
+import rst.pdfbox.layout.elements.PageFormat;
 import rst.pdfbox.layout.elements.VerticalSpacer;
 import rst.pdfbox.layout.text.Alignment;
 import rst.pdfbox.layout.text.Position;
@@ -252,7 +251,7 @@ public class VerticalLayout implements Layout {
 	    final LayoutHint layoutHint, final boolean movePosition)
 	    throws IOException {
 	PDPageContentStream contentStream = renderContext.getContentStream();
-	Document document = renderContext.getDocument();
+	PageFormat pageFormat = renderContext.getPageFormat();
 	float offsetX = 0;
 	if (layoutHint instanceof VerticalLayoutHint) {
 	    VerticalLayoutHint verticalLayoutHint = (VerticalLayoutHint) layoutHint;
@@ -274,7 +273,7 @@ public class VerticalLayout implements Layout {
 	}
 
 	contentStream.saveGraphicsState();
-	contentStream.addRect(0, document.getMarginBottom(), renderContext
+	contentStream.addRect(0, pageFormat.getMarginBottom(), pageFormat
 		.getMediaBox().getWidth(), renderContext.getHeight());
 	CompatibilityHelper.clip(contentStream);
 

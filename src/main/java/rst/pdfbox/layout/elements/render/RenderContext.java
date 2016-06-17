@@ -50,6 +50,7 @@ public class RenderContext implements Layout, Closeable {
 	    throws IOException {
 	this.document = document;
 	this.pdDocument = pdDocument;
+	this.pageFormat = document.getPageFormat();
 	newPage();
     }
 
@@ -74,28 +75,34 @@ public class RenderContext implements Layout, Closeable {
      * @return the orientation to use for the page. If no special
      *         {@link #setPageFormat(PageFormat) page format} is set, the
      *         {@link Document#getOrientation() document orientation} is used.
+     * @deprecated use {@link #getPageFormat()} instead.
      */
+    @Deprecated
     public Orientation getOrientation() {
-	if (pageFormat == null) {
-	    return document.getOrientation();
-	}
-	return pageFormat.getOrientation();
+	return getPageFormat().getOrientation();
     }
 
     /**
      * @return the media box to use for the page. If no special
      *         {@link #setPageFormat(PageFormat) page format} is set, the
      *         {@link Document#getMediaBox() document media box} is used.
+     * @deprecated use {@link #getPageFormat()} instead.
      */
+    @Deprecated
     public PDRectangle getMediaBox() {
-	if (pageFormat == null) {
-	    return document.getMediaBox();
-	}
-	return pageFormat.getMediaBox();
+	return getPageFormat().getMediaBox();
     }
 
     public void setPageFormat(final PageFormat pageFormat) {
-	this.pageFormat = pageFormat;
+	if (pageFormat == null) {
+	    this.pageFormat = document.getPageFormat();
+	} else {
+	    this.pageFormat = pageFormat.useDefaults(document.getPageFormat());
+	}
+    }
+
+    public PageFormat getPageFormat() {
+	return pageFormat;
     }
 
     /**
@@ -103,8 +110,8 @@ public class RenderContext implements Layout, Closeable {
      *         {@link Document document} margins.
      */
     public Position getUpperLeft() {
-	return new Position(document.getMarginLeft(), getPageHeight()
-		- document.getMarginTop());
+	return new Position(getPageFormat().getMarginLeft(), getPageHeight()
+		- getPageFormat().getMarginTop());
     }
 
     /**
@@ -112,8 +119,8 @@ public class RenderContext implements Layout, Closeable {
      *         {@link Document document} margins.
      */
     public Position getLowerRight() {
-	return new Position(getPageWidth() - document.getMarginRight(),
-		document.getMarginBottom());
+	return new Position(getPageWidth() - getPageFormat().getMarginRight(),
+		getPageFormat().getMarginBottom());
     }
 
     /**
@@ -168,8 +175,8 @@ public class RenderContext implements Layout, Closeable {
      * @return <code>true</code> if the page is rotated by 90/270 degrees.
      */
     public boolean isPageTilted() {
-	return page.getRotation() != null
-		&& (page.getRotation() == 90 || page.getRotation() == 270);
+	return CompatibilityHelper.getPageRotation(page) == 90
+		|| CompatibilityHelper.getPageRotation(page) == 270;
     }
 
     /**
@@ -199,8 +206,8 @@ public class RenderContext implements Layout, Closeable {
      *         margins.
      */
     public float getWidth() {
-	return getPageWidth() - document.getMarginLeft()
-		- document.getMarginRight();
+	return getPageWidth() - getPageFormat().getMarginLeft()
+		- getPageFormat().getMarginRight();
     }
 
     /**
@@ -208,15 +215,15 @@ public class RenderContext implements Layout, Closeable {
      *         margins.
      */
     public float getHeight() {
-	return getPageHeight() - document.getMarginTop()
-		- document.getMarginBottom();
+	return getPageHeight() - getPageFormat().getMarginTop()
+		- getPageFormat().getMarginBottom();
     }
 
     /**
      * @return the remaining height on the page.
      */
     public float getRemainingHeight() {
-	return getCurrentPosition().getY() - document.getMarginBottom();
+	return getCurrentPosition().getY() - getPageFormat().getMarginBottom();
     }
 
     /**
@@ -270,7 +277,7 @@ public class RenderContext implements Layout, Closeable {
 	    return render((PositionControl) element);
 	}
 	if (element instanceof PageFormat) {
-	    setPageFormat((PageFormat)element);
+	    setPageFormat((PageFormat) element);
 	    return true;
 	}
 	if (element instanceof Layout) {
@@ -327,14 +334,14 @@ public class RenderContext implements Layout, Closeable {
 	this.pdDocument.addPage(page);
 	this.contentStream = CompatibilityHelper
 		.createAppendablePDPageContentStream(pdDocument, page);
-	
+
 	// fix orientation
 	if (getPageOrientation() != getOrientation()) {
 	    if (isPageTilted()) {
 		page.setRotation(0);
 	    } else {
 		page.setRotation(90);
-		contentStream.concatenate2CTM(0, 1, -1, 0, getPageHeight(), 0);
+		CompatibilityHelper.transform(contentStream, 0, 1, -1, 0, getPageHeight(), 0);
 	    }
 	}
 

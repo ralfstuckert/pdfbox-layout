@@ -22,7 +22,7 @@ public class CompatibilityHelper {
 
     private final static String BULLET = "\u2022";
     private final static String DOUBLE_ANGLE = "\u00bb";
-    
+
     private static final String IMAGE_CACHE = "IMAGE_CACHE";
     private static Map<PDDocument, Map<String, Map<?, ?>>> documentCaches = new WeakHashMap<PDDocument, Map<String, Map<?, ?>>>();
 
@@ -50,15 +50,21 @@ public class CompatibilityHelper {
 	contentStream.clip();
     }
 
-    public static void showText(final PDPageContentStream contentStream, final String text)
+    public static void transform(final PDPageContentStream contentStream,
+	    float a, float b, float c, float d, float e, float f)
 	    throws IOException {
+	contentStream.transform(new Matrix(a, b, c, d, e, f));
+    }
+
+    public static void showText(final PDPageContentStream contentStream,
+	    final String text) throws IOException {
 	contentStream.showText(text);
     }
-    
+
     public static void setTextTranslation(
 	    final PDPageContentStream contentStream, final float x,
 	    final float y) throws IOException {
-        contentStream.setTextMatrix(Matrix.getTranslateInstance(x, y));
+	contentStream.setTextMatrix(Matrix.getTranslateInstance(x, y));
     }
 
     public static void moveTextPosition(
@@ -71,7 +77,8 @@ public class CompatibilityHelper {
 	    final PDDocument pdDocument, final PDPage page) throws IOException {
 	// stay compatible with 2.0.0-RC3
 	return new PDPageContentStream(pdDocument, page, true, true);
-//	return new PDPageContentStream(pdDocument, page, AppendMode.APPEND, true);
+	// return new PDPageContentStream(pdDocument, page, AppendMode.APPEND,
+	// true);
     }
 
     public static void drawImage(final BufferedImage image,
@@ -84,6 +91,9 @@ public class CompatibilityHelper {
 	contentStream.drawImage(cachedImage, x, y, width, height);
     }
 
+    public static int getPageRotation(final PDPage page) {
+	return page.getRotation();
+    }
 
     private static synchronized Map<String, Map<?, ?>> getDocumentCache(
 	    final PDDocument document) {
@@ -108,8 +118,9 @@ public class CompatibilityHelper {
 	return imageCache;
     }
 
-    private static synchronized PDImageXObject getCachedImage(final PDDocument document,
-	    final BufferedImage image) throws IOException {
+    private static synchronized PDImageXObject getCachedImage(
+	    final PDDocument document, final BufferedImage image)
+	    throws IOException {
 	Map<BufferedImage, PDImageXObject> imageCache = getImageCache(document);
 	PDImageXObject pdxObjectImage = imageCache.get(image);
 	if (pdxObjectImage == null) {

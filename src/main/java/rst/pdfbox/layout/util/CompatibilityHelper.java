@@ -51,6 +51,12 @@ public class CompatibilityHelper {
 	contentStream.clipPath(PathIterator.WIND_NON_ZERO);
     }
 
+    public static void transform(final PDPageContentStream contentStream,
+	    float a, float b, float c, float d, float e, float f)
+	    throws IOException {
+	contentStream.concatenate2CTM(a, b, c, d, e, f);
+    }
+    
     public static void showText(final PDPageContentStream contentStream,
 	    final String text) throws IOException {
 	contentStream.drawString(text);
@@ -83,6 +89,10 @@ public class CompatibilityHelper {
 	contentStream.drawXObject(cachedImage, x, y, width, height);
     }
 
+    public static int getPageRotation(final PDPage page) {
+	return page.getRotation() == null ? 0 : page.getRotation();
+    }
+    
     private static synchronized Map<String, Map<?, ?>> getDocumentCache(
 	    final PDDocument document) {
 	Map<String, Map<?, ?>> cache = documentCaches.get(document);
