@@ -273,8 +273,8 @@ public class VerticalLayout implements Layout {
 	}
 
 	contentStream.saveGraphicsState();
-	contentStream.addRect(0, pageFormat.getMarginBottom(), pageFormat
-		.getMediaBox().getWidth(), renderContext.getHeight());
+	contentStream.addRect(0, pageFormat.getMarginBottom(), renderContext.getPageWidth(),
+		renderContext.getHeight());
 	CompatibilityHelper.clip(contentStream);
 
 	drawable.draw(renderContext.getPdDocument(), contentStream,
