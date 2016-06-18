@@ -23,8 +23,7 @@ public class LineSpacing {
 		+ "ut labore et dolore magna aliquyam erat, sed diam.";
 
 	// create document without margins
-	PageFormat pageFormat = new PageFormat(Constants.A4);
-	Document document = new Document(pageFormat);
+	Document document = new Document();
 	document.add(new ColumnLayout(2, 5));
 
 	Paragraph left = new Paragraph();

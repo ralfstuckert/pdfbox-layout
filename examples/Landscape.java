@@ -47,8 +47,8 @@ public class Landscape {
 	Paragraph titleA5 = new Paragraph();
 	titleA5.addMarkup("*Format A5 in Landscape*", 20, BaseFont.Times);
 	
-	PageFormat a5_landscape = new PageFormat(Constants.A5, Orientation.Landscape, 10f, 50f, 0f, 30f);
-	PageFormat a4_portrait = new PageFormat(Constants.A4, Orientation.Portrait, 40f, 50f, 40f, 60f);
+	PageFormat a5_landscape = PageFormat.with().A5().landscape().margins(10, 50, 0, 30).build();
+	PageFormat a4_portrait = PageFormat.with().margins(40, 50, 40, 60).build();
 	Document document = new Document(a4_portrait);
 	
 	document.add(titleA4, VerticalLayoutHint.CENTER);

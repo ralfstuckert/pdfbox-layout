@@ -20,8 +20,8 @@ public class Letter {
     public static void main(String[] args) throws Exception {
 	float hMargin = 40;
 	float vMargin = 50;
-	PageFormat pageFormat = new PageFormat(Constants.A4, Orientation.Portrait, hMargin, hMargin,
-		vMargin, vMargin);
+	PageFormat pageFormat = PageFormat.with().margins(hMargin, hMargin,
+		vMargin, vMargin).build();
 	Document document = new Document(pageFormat);
 
 	ImageElement image = new ImageElement("arrow.png");

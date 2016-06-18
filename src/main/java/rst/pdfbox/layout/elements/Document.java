@@ -19,7 +19,6 @@ import rst.pdfbox.layout.elements.render.RenderContext;
 import rst.pdfbox.layout.elements.render.RenderListener;
 import rst.pdfbox.layout.elements.render.VerticalLayout;
 import rst.pdfbox.layout.elements.render.VerticalLayoutHint;
-import rst.pdfbox.layout.text.Constants;
 
 /**
  * The central class for creating a document.
@@ -29,8 +28,7 @@ public class Document implements RenderListener {
     /**
      * A4 portrait without margins.
      */
-    public final static PageFormat DEFAULT_PAGE_FORMAT = new PageFormat(
-	    Constants.A4, Orientation.Portrait, 0f, 0f, 0f, 0f);
+    public final static PageFormat DEFAULT_PAGE_FORMAT = new PageFormat();
 
     private final List<Entry<Element, LayoutHint>> elements = new ArrayList<>();
     private final List<RenderListener> renderListener = new CopyOnWriteArrayList<RenderListener>();
@@ -89,7 +87,7 @@ public class Document implements RenderListener {
      *            the page format box to use.
      */
     public Document(final PageFormat pageFormat) {
-	this.pageFormat = pageFormat.useDefaults(DEFAULT_PAGE_FORMAT);
+	this.pageFormat = pageFormat;
     }
 
     /**

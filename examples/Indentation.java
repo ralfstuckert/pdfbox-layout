@@ -29,7 +29,7 @@ public class Indentation {
 		+ "sed diam nonumy eirmod tempor invidunt ut labore et dolore magna "
 		+ "aliquyam erat\n";
 
-	PageFormat pageFormat = new PageFormat(Constants.A4, Orientation.Portrait, 40f, 60f, 40f, 60f);
+	PageFormat pageFormat = PageFormat.with().margins(40, 60, 40, 60).build();
 	Document document = new Document(pageFormat);
 	Paragraph paragraph = new Paragraph();
 	paragraph

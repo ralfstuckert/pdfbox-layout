@@ -99,7 +99,7 @@ public class RenderContext implements Layout, Closeable {
 	if (pageFormat == null) {
 	    this.pageFormat = document.getPageFormat();
 	} else {
-	    this.pageFormat = pageFormat.useDefaults(document.getPageFormat());
+	    this.pageFormat = pageFormat;
 	}
     }
 

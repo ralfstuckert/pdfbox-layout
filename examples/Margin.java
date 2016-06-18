@@ -36,7 +36,7 @@ public class Margin {
 		+ "eos et accusam et justo duo dolores et ea rebum. Stet clita kasd "
 		+ "gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.";
 
-	PageFormat pageFormat = new PageFormat(Constants.A4, Orientation.Portrait, 40f, 60f, 40f, 60f);
+	PageFormat pageFormat = PageFormat.with().margins(40, 60, 40, 60).build();
 	Document document = new Document(pageFormat);
 	Paragraph paragraph = new Paragraph();
 	paragraph.addText(text1, 11, PDType1Font.HELVETICA);

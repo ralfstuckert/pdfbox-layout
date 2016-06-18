@@ -29,7 +29,7 @@ public class MultiplePages {
 		+ "eos et _accusam et *justo* duo dolores_ et ea rebum. Stet clita kasd "
 		+ "gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.\n";
 
-	PageFormat pageFormat = new PageFormat(Constants.A4, Orientation.Portrait, 40f, 60f, 40f, 60f);
+	PageFormat pageFormat = PageFormat.with().margins(40, 60, 40, 60).build();
 	Document document = new Document(pageFormat);
 
 	Paragraph paragraph1 = new Paragraph();

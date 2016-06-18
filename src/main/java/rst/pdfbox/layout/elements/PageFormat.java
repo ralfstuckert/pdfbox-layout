@@ -1,28 +1,29 @@
 package rst.pdfbox.layout.elements;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 
 import rst.pdfbox.layout.elements.render.VerticalLayout;
 import rst.pdfbox.layout.text.Constants;
 
 /**
- * Defines the size and orientation of a page.
+ * Defines the size and orientation of a page. The default is A4 portrait
+ * without margins.
  */
 public class PageFormat implements Element {
 
-    protected static final String MARGIN_BOTTOM = "marginBottom";
-    protected static final String MARGIN_TOP = "marginTop";
-    protected static final String MARGIN_RIGHT = "marginRight";
-    protected static final String MARGIN_LEFT = "marginLeft";
-    protected static final String ORIENTATION = "orientation";
-    protected static final String MEDIA_BOX = "mediaBox";
+    private final float marginLeft;
+    private final float marginRight;
+    private final float marginTop;
+    private final float marginBottom;
+    private final PDRectangle mediaBox;
+    private final Orientation orientation;
 
-    private PageFormat defaults;
-
-    private Map<String, Object> properties = new HashMap<String, Object>();
+    /**
+     * Creates a PageFormat with A4 portrait without margins.
+     */
+    public PageFormat() {
+	this(Constants.A4);
+    }
 
     /**
      * Creates a PageFormat with a given size and orientation portrait.
@@ -43,7 +44,7 @@ public class PageFormat implements Element {
      *            the orientation.
      */
     public PageFormat(final PDRectangle mediaBox, final Orientation orientation) {
-	this(mediaBox, orientation, null, null, null, null);
+	this(mediaBox, orientation, 0, 0, 0, 0);
     }
 
     /**
@@ -64,112 +65,71 @@ public class PageFormat implements Element {
      *            the bottom margin
      */
     public PageFormat(PDRectangle mediaBox, Orientation orientation,
-	    Float marginLeft, Float marginRight, Float marginTop,
-	    Float marginBottom) {
-	setValue(MEDIA_BOX, mediaBox);
-	setValue(ORIENTATION, orientation);
-	setValue(MARGIN_LEFT, marginLeft);
-	setValue(MARGIN_RIGHT, marginRight);
-	setValue(MARGIN_TOP, marginTop);
-	setValue(MARGIN_BOTTOM, marginBottom);
-    }
-
-    protected PageFormat(final Map<String, Object> properties) {
-	this(properties, null);
-    }
-
-    protected PageFormat(final Map<String, Object> properties,
-	    final PageFormat defaults) {
-	this.properties = properties;
-	this.defaults = defaults;
-    }
-
-    protected <T> T getValue(final String property, final Class<T> type) {
-	@SuppressWarnings("unchecked")
-	T value = (T) properties.get(property);
-	if (value == null && defaults != null) {
-	    value = defaults.getValue(property, type);
-	}
-	return value;
-    }
-
-    protected void setValue(final String property, final Object value) {
-	properties.put(property, value);
-    }
-
-    /**
-     * @return the media box to use.
-     */
-    public PDRectangle getMediaBox() {
-	return getValue(MEDIA_BOX, PDRectangle.class);
+	    float marginLeft, float marginRight, float marginTop,
+	    float marginBottom) {
+	this.mediaBox = mediaBox;
+	this.orientation = orientation;
+	this.marginLeft = marginLeft;
+	this.marginRight = marginRight;
+	this.marginTop = marginTop;
+	this.marginBottom = marginBottom;
     }
 
     /**
      * @return the orientation to use.
      */
     public Orientation getOrientation() {
-	return getValue(ORIENTATION, Orientation.class);
+	return orientation;
     }
 
     /**
      * @return the left document margin.
      */
-    public Float getMarginLeft() {
-	return getValue(MARGIN_LEFT, Float.class);
+    public float getMarginLeft() {
+	return marginLeft;
     }
 
     /**
      * @return the right document margin.
      */
-    public Float getMarginRight() {
-	return getValue(MARGIN_RIGHT, Float.class);
+    public float getMarginRight() {
+	return marginRight;
     }
 
     /**
      * @return the top document margin.
      */
-    public Float getMarginTop() {
-	return getValue(MARGIN_TOP, Float.class);
+    public float getMarginTop() {
+	return marginTop;
     }
 
     /**
      * @return the bottom document margin.
      */
-    public Float getMarginBottom() {
-	return getValue(MARGIN_BOTTOM, Float.class);
-    }
-
-    @Override
-    protected PageFormat clone() {
-	return new PageFormat(this.properties);
+    public float getMarginBottom() {
+	return marginBottom;
     }
 
     /**
-     * Returns a copy of this PageFormat that uses the given PageFormat as
-     * defaults. Means if a property is not found in this one, it will be looked
-     * up in the other and so on.
-     * 
-     * @param defaults
-     *            the defaults to use.
-     * @return a new PageFormat.
+     * @return the media box to use.
      */
-    public PageFormat useDefaults(final PageFormat defaults) {
-	return new PageFormat(this.properties, defaults);
+    public PDRectangle getMediaBox() {
+	return mediaBox;
     }
 
     /**
-     * @return a page format builder.
+     * @return a page format builder. The default of the builder is A4 portrait
+     *         without margins.
      */
-    public static PageFormatBuilder builder() {
+    public static PageFormatBuilder with() {
 	return new PageFormatBuilder();
     }
 
-
     public static class PageFormatBuilder {
-	private Float marginLeft;
-	private Float marginRight;
-	private Float marginTop;
-	private Float marginBottom;
+	private float marginLeft;
+	private float marginRight;
+	private float marginTop;
+	private float marginBottom;
 	private PDRectangle mediaBox = Constants.A4;
 	private Orientation orientation = Orientation.Portrait;
 
@@ -215,8 +175,53 @@ public class PageFormat implements Element {
 	    return this;
 	}
 
+	public PageFormatBuilder A0() {
+	    this.mediaBox = Constants.A0;
+	    return this;
+	}
+
+	public PageFormatBuilder A1() {
+	    this.mediaBox = Constants.A1;
+	    return this;
+	}
+
+	public PageFormatBuilder A2() {
+	    this.mediaBox = Constants.A2;
+	    return this;
+	}
+
+	public PageFormatBuilder A3() {
+	    this.mediaBox = Constants.A3;
+	    return this;
+	}
+
+	public PageFormatBuilder A4() {
+	    this.mediaBox = Constants.A4;
+	    return this;
+	}
+
+	public PageFormatBuilder A5() {
+	    this.mediaBox = Constants.A5;
+	    return this;
+	}
+
+	public PageFormatBuilder A6() {
+	    this.mediaBox = Constants.A6;
+	    return this;
+	}
+
 	public PageFormatBuilder orientation(Orientation orientation) {
 	    this.orientation = orientation;
+	    return this;
+	}
+
+	public PageFormatBuilder portrait() {
+	    this.orientation = Orientation.Portrait;
+	    return this;
+	}
+
+	public PageFormatBuilder landscape() {
+	    this.orientation = Orientation.Landscape;
 	    return this;
 	}
 
