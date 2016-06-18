@@ -20,9 +20,7 @@ public class Letter {
     public static void main(String[] args) throws Exception {
 	float hMargin = 40;
 	float vMargin = 50;
-	PageFormat pageFormat = PageFormat.with().margins(hMargin, hMargin,
-		vMargin, vMargin).build();
-	Document document = new Document(pageFormat);
+	Document document = new Document(hMargin, hMargin, vMargin, vMargin);
 
 	ImageElement image = new ImageElement("arrow.png");
 	image.setWidth(image.getWidth()/7);

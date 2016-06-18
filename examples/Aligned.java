@@ -14,8 +14,7 @@ import rst.pdfbox.layout.text.Constants;
 public class Aligned {
 
     public static void main(String[] args) throws Exception {
-	PageFormat pageFormat = PageFormat.with().margins(40, 60, 40, 60).build();
-	Document document = new Document(pageFormat);
+	Document document = new Document(40, 60, 40, 60);
 	Paragraph paragraph = new Paragraph();
 	paragraph.addText("This is some left aligned text", 11,
 		PDType1Font.HELVETICA);

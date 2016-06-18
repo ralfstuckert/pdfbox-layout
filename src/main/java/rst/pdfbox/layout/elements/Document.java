@@ -44,6 +44,26 @@ public class Document implements RenderListener {
     }
 
     /**
+     * Creates a Document in A4 with orientation portrait and the given margins.
+     * By default, a {@link VerticalLayout} is used.
+     * 
+     * @param marginLeft
+     *            the left margin
+     * @param marginRight
+     *            the right margin
+     * @param marginTop
+     *            the top margin
+     * @param marginBottom
+     *            the bottom margin
+     */
+    public Document(float marginLeft, float marginRight, float marginTop,
+	    float marginBottom) {
+	this(PageFormat.with()
+		.margins(marginLeft, marginRight, marginTop, marginBottom)
+		.build());
+    }
+
+    /**
      * Creates a Document based on the given media box. By default, a
      * {@link VerticalLayout} is used.
      * 

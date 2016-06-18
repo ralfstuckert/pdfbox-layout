@@ -40,8 +40,7 @@ public class Listener {
 		+ "gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.\n";
 
 
-	PageFormat pageFormat = PageFormat.with().margins(40, 60, 40, 60).build();
-	Document document = new Document(pageFormat);
+	Document document = new Document(40, 60, 40, 60);
 	document.addRenderListener(new RenderListener() {
 
 	    @Override
