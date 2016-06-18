@@ -26,7 +26,11 @@ import rst.pdfbox.layout.text.Constants;
  */
 public class Document implements RenderListener {
 
-    private final static PageFormat DEFAULT_PAGE_FORMAT = new PageFormat(Constants.A4, Orientation.Portrait, 0f, 0f, 0f, 0f);
+    /**
+     * A4 portrait without margins.
+     */
+    public final static PageFormat DEFAULT_PAGE_FORMAT = new PageFormat(
+	    Constants.A4, Orientation.Portrait, 0f, 0f, 0f, 0f);
 
     private final List<Entry<Element, LayoutHint>> elements = new ArrayList<>();
     private final List<RenderListener> renderListener = new CopyOnWriteArrayList<RenderListener>();
@@ -35,12 +39,19 @@ public class Document implements RenderListener {
     private PageFormat pageFormat;
 
     /**
+     * Creates a Document using the {@link #DEFAULT_PAGE_FORMAT}.
+     */
+    public Document() {
+	this(DEFAULT_PAGE_FORMAT);
+    }
+
+    /**
      * Creates a Document based on the given media box. By default, a
      * {@link VerticalLayout} is used.
      * 
      * @param mediaBox
      *            the media box to use.
-     *@deprecated use {@link #Document(PageFormat)} instead.
+     * @deprecated use {@link #Document(PageFormat)} instead.
      */
     @Deprecated
     public Document(PDRectangle mediaBox) {
@@ -61,18 +72,18 @@ public class Document implements RenderListener {
      *            the top margin
      * @param marginBottom
      *            the bottom margin
-     *@deprecated use {@link #Document(PageFormat)} instead.
+     * @deprecated use {@link #Document(PageFormat)} instead.
      */
     @Deprecated
     public Document(PDRectangle mediaBox, float marginLeft, float marginRight,
 	    float marginTop, float marginBottom) {
-	this(new PageFormat(mediaBox, Orientation.Portrait, marginLeft, marginRight,
-		marginTop, marginBottom));
+	this(new PageFormat(mediaBox, Orientation.Portrait, marginLeft,
+		marginRight, marginTop, marginBottom));
     }
 
     /**
-     * Creates a Document based on the given page format. By default,
-     * a {@link VerticalLayout} is used.
+     * Creates a Document based on the given page format. By default, a
+     * {@link VerticalLayout} is used.
      * 
      * @param pageFormat
      *            the page format box to use.
@@ -124,7 +135,7 @@ public class Document implements RenderListener {
     public PageFormat getPageFormat() {
 	return pageFormat;
     }
-    
+
     /**
      * @return the left document margin.
      * @deprecated use {@link #getPageFormat()} instead.
@@ -178,7 +189,7 @@ public class Document implements RenderListener {
     public Orientation getOrientation() {
 	return getPageFormat().getOrientation();
     }
-    
+
     /**
      * @return the media box width minus margins.
      */
@@ -315,5 +326,5 @@ public class Document implements RenderListener {
 	    listener.afterPage(renderContext);
 	}
     }
-    
+
 }

@@ -14,15 +14,10 @@ import rst.pdfbox.layout.text.Constants;
 public class PageFormat implements Element {
 
     protected static final String MARGIN_BOTTOM = "marginBottom";
-
     protected static final String MARGIN_TOP = "marginTop";
-
     protected static final String MARGIN_RIGHT = "marginRight";
-
     protected static final String MARGIN_LEFT = "marginLeft";
-
     protected static final String ORIENTATION = "orientation";
-
     protected static final String MEDIA_BOX = "mediaBox";
 
     private PageFormat defaults;
