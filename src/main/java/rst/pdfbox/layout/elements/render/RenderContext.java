@@ -34,6 +34,8 @@ public class RenderContext implements Layout, Closeable {
     private Position currentPosition;
     private Position markedPosition;
     private Layout layout = new VerticalLayout();
+
+    private PageFormat nextPageFormat;
     private PageFormat pageFormat;
 
     /**
@@ -277,7 +279,7 @@ public class RenderContext implements Layout, Closeable {
 	    return render((PositionControl) element);
 	}
 	if (element instanceof PageFormat) {
-	    setPageFormat((PageFormat) element);
+	    nextPageFormat = (PageFormat) element;
 	    return true;
 	}
 	if (element instanceof Layout) {
@@ -330,19 +332,27 @@ public class RenderContext implements Layout, Closeable {
 	if (closePage()) {
 	    ++pageIndex;
 	}
-	this.page = new PDPage(getMediaBox());
+	if (nextPageFormat != null) {
+	    setPageFormat(nextPageFormat);
+	}
+
+	this.page = new PDPage(getPageFormat().getMediaBox());
 	this.pdDocument.addPage(page);
 	this.contentStream = CompatibilityHelper
 		.createAppendablePDPageContentStream(pdDocument, page);
 
 	// fix orientation
-	if (getPageOrientation() != getOrientation()) {
+	if (getPageOrientation() != getPageFormat().getOrientation()) {
 	    if (isPageTilted()) {
 		page.setRotation(0);
 	    } else {
 		page.setRotation(90);
-		CompatibilityHelper.transform(contentStream, 0, 1, -1, 0, getPageHeight(), 0);
 	    }
+	}
+
+	if (isPageTilted()) {
+	    CompatibilityHelper.transform(contentStream, 0, 1, -1, 0,
+		    getPageHeight(), 0);
 	}
 
 	resetPositionToUpperLeft();
