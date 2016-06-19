@@ -136,31 +136,55 @@ public class PageFormat implements Element {
 	protected PageFormatBuilder() {
 	}
 
+	/**
+	 * Actually builds the PageFormat.
+	 * @return the resulting PageFormat.
+	 */
 	public PageFormat build() {
 	    return new PageFormat(mediaBox, orientation, marginLeft,
 		    marginRight, marginTop, marginBottom);
 	}
 
+	/**
+	 * Sets the left margin.
+	 * @return the builder.
+	 */
 	public PageFormatBuilder marginLeft(float marginLeft) {
 	    this.marginLeft = marginLeft;
 	    return this;
 	}
 
+	/**
+	 * Sets the right margin.
+	 * @return the builder.
+	 */
 	public PageFormatBuilder marginRight(float marginRight) {
 	    this.marginRight = marginRight;
 	    return this;
 	}
 
+	/**
+	 * Sets the top margin.
+	 * @return the builder.
+	 */
 	public PageFormatBuilder marginTop(float marginTop) {
 	    this.marginTop = marginTop;
 	    return this;
 	}
 
+	/**
+	 * Sets the bottom margin.
+	 * @return the builder.
+	 */
 	public PageFormatBuilder marginBottom(float marginBottom) {
 	    this.marginBottom = marginBottom;
 	    return this;
 	}
 
+	/**
+	 * Sets the margins.
+	 * @return the builder.
+	 */
 	public PageFormatBuilder margins(float marginLeft, float marginRight,
 		float marginTop, float marginBottom) {
 	    this.marginLeft = marginLeft;
@@ -170,56 +194,109 @@ public class PageFormat implements Element {
 	    return this;
 	}
 
+	/**
+	 * Sets the media box to the given size.
+	 * @return the builder.
+	 */
 	public PageFormatBuilder mediaBox(PDRectangle mediaBox) {
 	    this.mediaBox = mediaBox;
 	    return this;
 	}
 
+	/**
+	 * Sets the media box to size  {@link Constants#A0}.
+	 * @return the builder.
+	 */
 	public PageFormatBuilder A0() {
 	    this.mediaBox = Constants.A0;
 	    return this;
 	}
 
+	/**
+	 * Sets the media box to size  {@link Constants#A1}.
+	 * @return the builder.
+	 */
 	public PageFormatBuilder A1() {
 	    this.mediaBox = Constants.A1;
 	    return this;
 	}
 
+	/**
+	 * Sets the media box to size  {@link Constants#A2}.
+	 * @return the builder.
+	 */
 	public PageFormatBuilder A2() {
 	    this.mediaBox = Constants.A2;
 	    return this;
 	}
 
+	/**
+	 * Sets the media box to size  {@link Constants#A3}.
+	 * @return the builder.
+	 */
 	public PageFormatBuilder A3() {
 	    this.mediaBox = Constants.A3;
 	    return this;
 	}
 
+	/**
+	 * Sets the media box to size  {@link Constants#A4}.
+	 * @return the builder.
+	 */
 	public PageFormatBuilder A4() {
 	    this.mediaBox = Constants.A4;
 	    return this;
 	}
 
+	/**
+	 * Sets the media box to size  {@link Constants#A5}.
+	 * @return the builder.
+	 */
 	public PageFormatBuilder A5() {
 	    this.mediaBox = Constants.A5;
 	    return this;
 	}
 
+	/**
+	 * Sets the media box to size  {@link Constants#A6}.
+	 * @return the builder.
+	 */
 	public PageFormatBuilder A6() {
 	    this.mediaBox = Constants.A6;
 	    return this;
 	}
 
+	/**
+	 * Sets the media box to size  {@link Constants#Letter}.
+	 * @return the builder.
+	 */
+	public PageFormatBuilder letter() {
+	    this.mediaBox = Constants.Letter;
+	    return this;
+	}
+
+	/**
+	 * Sets the orientation to the given one.
+	 * @return the builder.
+	 */
 	public PageFormatBuilder orientation(Orientation orientation) {
 	    this.orientation = orientation;
 	    return this;
 	}
 
+	/**
+	 * Sets the orientation to {@link Orientation#Portrait}.
+	 * @return the builder.
+	 */
 	public PageFormatBuilder portrait() {
 	    this.orientation = Orientation.Portrait;
 	    return this;
 	}
 
+	/**
+	 * Sets the orientation to {@link Orientation#Landscape}.
+	 * @return the builder.
+	 */
 	public PageFormatBuilder landscape() {
 	    this.orientation = Orientation.Landscape;
 	    return this;

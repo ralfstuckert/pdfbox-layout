@@ -22,4 +22,7 @@ public class Constants {
 	    210 * MM_TO_UNITS);
     public static final PDRectangle A6 = new PDRectangle(105 * MM_TO_UNITS,
 	    148 * MM_TO_UNITS);
+
+    public static final PDRectangle Letter = new PDRectangle(215.9f * MM_TO_UNITS,
+	    279.4f * MM_TO_UNITS);
 }
