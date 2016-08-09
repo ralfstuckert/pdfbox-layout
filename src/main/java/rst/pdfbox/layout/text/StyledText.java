@@ -1,9 +1,3 @@
-/**
- * Copyright (c) 2014-2016 Deutsche Verrechnungsstelle GmbH
- * All rights reserved. The use of this program and the
- * accompanying materials are subject to license terms.
- */
-
 package rst.pdfbox.layout.text;
 
 import java.awt.Color;
