@@ -12,11 +12,15 @@ public class StyledText implements TextFragment {
 
     private final String text;
     private final FontDescriptor fontDescriptor;
-    private Float width = null;
     private final Color color;
     private final float leftMargin;
     private final float rightMargin;
 
+    /**
+     * The cached (calculated) width of the text. 
+     */
+    private Float width = null;
+    
     /**
      * Creates a styled text.
      * 
