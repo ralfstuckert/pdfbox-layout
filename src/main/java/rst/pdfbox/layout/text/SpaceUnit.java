@@ -7,10 +7,17 @@ import java.io.IOException;
  */
 public enum SpaceUnit {
 
-    em, pt;
+    /**
+     * The average character width of the associated font.
+     */
+    em, 
+    /**
+     * Measuring in points.
+     */
+    pt;
     
     /**
-     * Converst the given unit to pt.
+     * Converts the given unit to pt.
      * @param size the size with respect to the unit.
      * @param fontDescriptor the font/size to use.
      * @return the size in pt.
