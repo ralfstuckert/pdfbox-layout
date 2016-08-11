@@ -7,7 +7,14 @@ import org.apache.pdfbox.pdmodel.font.PDFont;
  */
 public class FontDescriptor {
 
+    /**
+     * the associated font.
+     */
     private final PDFont font;
+
+    /**
+     * the font size.
+     */
     private final float size;
 
     /**
