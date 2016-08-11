@@ -19,8 +19,17 @@ import rst.pdfbox.layout.util.CompatibilityHelper;
  */
 public class TextLine implements TextSequence {
 
+    /**
+     * The font ascent.
+     */
     private static final String ASCENT = "ascent";
+    /**
+     * The font height.
+     */
     private static final String HEIGHT = "height";
+    /**
+     * The text width.
+     */
     private static final String WIDTH = "width";
 
     private final List<StyledText> styledTextList = new ArrayList<StyledText>();
