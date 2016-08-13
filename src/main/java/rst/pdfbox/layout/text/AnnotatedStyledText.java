@@ -29,6 +29,8 @@ public class AnnotatedStyledText extends StyledText implements Annotated {
      *            the margin left to the text.
      * @param rightMargin
      *            the margin right to the text.
+     * @param annotations
+     *            the annotations associated with the text.
      */
     public AnnotatedStyledText(final String text,
 	    final FontDescriptor fontDescriptor, final Color color,
@@ -38,6 +40,20 @@ public class AnnotatedStyledText extends StyledText implements Annotated {
 	this.annotations.addAll(annotations);
     }
 
+    /**
+     * Creates a styled text.
+     * 
+     * @param text
+     *            the text to draw. Must not contain line feeds ('\n').
+     * @param size
+     *            the size of the font.
+     * @param font
+     *            the font to use..
+     * @param color
+     *            the color to use.
+     * @param annotations
+     *            the annotations associated with the text.
+     */
     public AnnotatedStyledText(String text, float size, PDFont font,
 	    Color color, Collection<Annotation> annotations) {
 	this(text, new FontDescriptor(font, size), color, 0, 0, annotations);
