@@ -1,5 +1,6 @@
 package rst.pdfbox.layout.text;
 
+import java.awt.Color;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -7,8 +8,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.apache.pdfbox.cos.COSArray;
+import org.apache.pdfbox.cos.COSFloat;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
+import org.apache.pdfbox.pdmodel.graphics.color.PDGamma;
 import org.apache.pdfbox.pdmodel.interactive.action.type.PDAction;
 import org.apache.pdfbox.pdmodel.interactive.action.type.PDActionGoTo;
 import org.apache.pdfbox.pdmodel.interactive.action.type.PDActionURI;
@@ -74,7 +78,9 @@ public class AnnotationDrawListener implements DrawListener {
 	    bounds.setLowerLeftY(upperLeft.getY() - height);
 	    bounds.setUpperRightX(upperLeft.getX() + width);
 	    bounds.setUpperRightY(upperLeft.getY());
-	    links.add(new Hyperlink(bounds, hyperlinkAnnotation.getHyperlink()));
+	    links.add(new Hyperlink(bounds,
+		    toPDGamma(annotatedText.getColor()), hyperlinkAnnotation
+			    .getHyperlink()));
 	}
     }
 
@@ -88,6 +94,7 @@ public class AnnotationDrawListener implements DrawListener {
 		borderStyle.setStyle(PDBorderStyleDictionary.STYLE_UNDERLINE);
 		pdLink.setBorderStyle(borderStyle);
 		pdLink.setRectangle(hyperlink.getRect());
+		pdLink.setColour(hyperlink.getColor());
 
 		String uri = hyperlink.getHyperlink();
 		PDAction action = null;
@@ -118,6 +125,14 @@ public class AnnotationDrawListener implements DrawListener {
 	PDActionGoTo gotoAction = new PDActionGoTo();
 	gotoAction.setDestination(xyzDestination);
 	return gotoAction;
+    }
+
+    private PDGamma toPDGamma(final Color color) {
+	COSArray values = new COSArray();
+	values.add(new COSFloat(color.getRed() / 255f));
+	values.add(new COSFloat(color.getGreen() / 255f));
+	values.add(new COSFloat(color.getBlue() / 255f));
+	return new PDGamma(values);
     }
 
     private static class PageAnchor {
@@ -152,15 +167,21 @@ public class AnnotationDrawListener implements DrawListener {
 
     private static class Hyperlink {
 	private final PDRectangle rect;
+	private final PDGamma color;
 	private final String hyperlink;
 
-	public Hyperlink(PDRectangle rect, String hyperlink) {
+	public Hyperlink(PDRectangle rect, PDGamma color, String hyperlink) {
 	    this.rect = rect;
+	    this.color = color;
 	    this.hyperlink = hyperlink;
 	}
 
 	public PDRectangle getRect() {
 	    return rect;
+	}
+
+	public PDGamma getColor() {
+	    return color;
 	}
 
 	public String getHyperlink() {
@@ -169,7 +190,8 @@ public class AnnotationDrawListener implements DrawListener {
 
 	@Override
 	public String toString() {
-	    return "Hyperlink [rect=" + rect + ", hyperlink=" + hyperlink + "]";
+	    return "Hyperlink [rect=" + rect + ", color=" + color
+		    + ", hyperlink=" + hyperlink + "]";
 	}
 
     }
