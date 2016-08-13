@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotationLink;
@@ -18,12 +19,28 @@ import rst.pdfbox.layout.text.Annotations.HyperlinkAnnotation;
 import rst.pdfbox.layout.text.Annotations.HyperlinkAnnotation.LinkStyle;
 import rst.pdfbox.layout.util.CompatibilityHelper;
 
+/**
+ * This listener has to be passed to all
+ * {@link DrawableText#drawText(org.apache.pdfbox.pdmodel.edit.PDPageContentStream, Position, Alignment, DrawListener)
+ * draw()} methods, in order collect all annotation metadata. After all drawing
+ * is done, you have to call {@link #finalizeAnnotations()} which creates all
+ * necessary annotations and sets them to the corresponding pages. This listener
+ * is used by the the rendering API, but you may also use it with the low-level
+ * text API.
+ */
 public class AnnotationDrawListener implements DrawListener {
 
     private final DrawContext drawContext;
     private Map<String, PageAnchor> anchorMap = new HashMap<String, PageAnchor>();
     private Map<PDPage, List<Hyperlink>> linkMap = new HashMap<PDPage, List<Hyperlink>>();
 
+    /**
+     * Creates an AnnotationDrawListener with the given {@link DrawContext}.
+     * 
+     * @param drawContext
+     *            the context which provides the {@link PDDocument} and the
+     *            {@link PDPage} currently drawn to.
+     */
     public AnnotationDrawListener(final DrawContext drawContext) {
 	this.drawContext = drawContext;
     }
@@ -40,10 +57,6 @@ public class AnnotationDrawListener implements DrawListener {
 	handleAnchorAnnotations(annotatedText, upperLeft);
     }
 
-    /**
-     * @param annotatedText
-     * @param upperLeft
-     */
     protected void handleAnchorAnnotations(AnnotatedStyledText annotatedText,
 	    Position upperLeft) {
 	Iterable<AnchorAnnotation> anchorAnnotations = annotatedText
@@ -79,6 +92,12 @@ public class AnnotationDrawListener implements DrawListener {
 	}
     }
 
+    /**
+     * Creates all necessary annotations and sets them to the corresponding
+     * pages.
+     * 
+     * @throws IOException
+     */
     public void finalizeAnnotations() throws IOException {
 	for (Entry<PDPage, List<Hyperlink>> entry : linkMap.entrySet()) {
 	    PDPage page = entry.getKey();

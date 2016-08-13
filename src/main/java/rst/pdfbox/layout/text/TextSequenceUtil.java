@@ -309,9 +309,9 @@ public class TextSequenceUtil {
      *            the stream to draw to
      * @param upperLeft
      *            the position of the start of the first line.
-     * @param drawContext
-     *            the context to
-     *            {@link DrawContext#drawn(Object, Position, Area) notify} on
+     * @param drawListener
+     *            the listener to
+     *            {@link DrawListener#drawn(Object, Position, float, float) notify} on
      *            drawn objects.
      * @param alignment
      *            how to align the text lines.

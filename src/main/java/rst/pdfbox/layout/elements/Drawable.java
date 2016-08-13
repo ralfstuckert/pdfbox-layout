@@ -6,7 +6,6 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.edit.PDPageContentStream;
 
 import rst.pdfbox.layout.elements.render.Layout;
-import rst.pdfbox.layout.text.Area;
 import rst.pdfbox.layout.text.DrawListener;
 import rst.pdfbox.layout.text.Position;
 
@@ -50,7 +49,7 @@ public interface Drawable {
      *            the upper left position to start drawing.
      * @param drawListener
      *            the listener to
-     *            {@link drawListener#drawn(Object, Position, Area) notify} on
+     *            {@link DrawListener#drawn(Object, Position, float, float) notify} on
      *            drawn objects.
      * @throws IOException
      *             by pdfbox

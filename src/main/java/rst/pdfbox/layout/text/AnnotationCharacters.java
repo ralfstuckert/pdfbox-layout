@@ -111,7 +111,7 @@ public class AnnotationCharacters {
 
     /**
      * A <code>{link:#title1}</code> indicates an internal link to the
-     * {@link #AnchorControlCharacter anchor} <code>title1</code>. Any other
+     * {@link AnchorControlCharacter anchor} <code>title1</code>. Any other
      * link (not starting with <code>#</code> will be treated as an external
      * link. It can be escaped with a backslash ('\').
      */

@@ -147,6 +147,7 @@ public class PageFormat implements Element {
 
 	/**
 	 * Sets the left margin.
+	 * @param marginLeft the left margin to use.
 	 * @return the builder.
 	 */
 	public PageFormatBuilder marginLeft(float marginLeft) {
@@ -156,6 +157,7 @@ public class PageFormat implements Element {
 
 	/**
 	 * Sets the right margin.
+	 * @param marginRight the right margin to use.
 	 * @return the builder.
 	 */
 	public PageFormatBuilder marginRight(float marginRight) {
@@ -165,6 +167,7 @@ public class PageFormat implements Element {
 
 	/**
 	 * Sets the top margin.
+	 * @param marginTop the top margin to use.
 	 * @return the builder.
 	 */
 	public PageFormatBuilder marginTop(float marginTop) {
@@ -174,6 +177,7 @@ public class PageFormat implements Element {
 
 	/**
 	 * Sets the bottom margin.
+	 * @param marginBottom the bottom margin to use.
 	 * @return the builder.
 	 */
 	public PageFormatBuilder marginBottom(float marginBottom) {
@@ -183,6 +187,10 @@ public class PageFormat implements Element {
 
 	/**
 	 * Sets the margins.
+	 * @param marginLeft the left margin to use.
+	 * @param marginRight the right margin to use.
+	 * @param marginTop the top margin to use.
+	 * @param marginBottom the bottom margin to use.
 	 * @return the builder.
 	 */
 	public PageFormatBuilder margins(float marginLeft, float marginRight,
@@ -196,6 +204,7 @@ public class PageFormat implements Element {
 
 	/**
 	 * Sets the media box to the given size.
+	 * @param mediaBox the media box to use.
 	 * @return the builder.
 	 */
 	public PageFormatBuilder mediaBox(PDRectangle mediaBox) {
@@ -277,6 +286,7 @@ public class PageFormat implements Element {
 
 	/**
 	 * Sets the orientation to the given one.
+	 * @param orientation the orientation to use.
 	 * @return the builder.
 	 */
 	public PageFormatBuilder orientation(Orientation orientation) {
