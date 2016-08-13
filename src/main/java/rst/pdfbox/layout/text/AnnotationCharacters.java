@@ -6,6 +6,7 @@ import java.util.regex.Pattern;
 
 import rst.pdfbox.layout.text.Annotations.AnchorAnnotation;
 import rst.pdfbox.layout.text.Annotations.HyperlinkAnnotation;
+import rst.pdfbox.layout.text.Annotations.HyperlinkAnnotation.LinkStyle;
 import rst.pdfbox.layout.text.ControlCharacters.ControlCharacterFactory;
 
 public class AnnotationCharacters {
@@ -24,14 +25,15 @@ public class AnnotationCharacters {
 	    ControlCharacterFactory {
 
 	private final static Pattern PATTERN = Pattern
-		.compile("(?<!\\\\)(\\\\\\\\)*\\{link(:(([^}]+)))?\\}");
+		.compile("(?<!\\\\)(\\\\\\\\)*\\{link(:(ul|none))?(\\[(([^}]+))\\])?\\}");
 
 	private final static String TO_ESCAPE = "{";
 
 	@Override
 	public ControlCharacter createControlCharacter(String text,
 		Matcher matcher, final List<CharSequence> charactersSoFar) {
-	    return new HyperlinkControlCharacter(matcher.group(3));
+	    return new HyperlinkControlCharacter(matcher.group(5),
+		    matcher.group(3));
 	}
 
 	@Override
@@ -117,10 +119,15 @@ public class AnnotationCharacters {
 	    AnnotationControlCharacter<HyperlinkAnnotation> {
 	private HyperlinkAnnotation hyperlink;
 
-	protected HyperlinkControlCharacter(final String hyperlink) {
+	protected HyperlinkControlCharacter(final String hyperlink,
+		final String linkStyle) {
 	    super("HYPERLINK", HyperlinkControlCharacterFactory.TO_ESCAPE);
 	    if (hyperlink != null) {
-		this.hyperlink = new HyperlinkAnnotation(hyperlink);
+		LinkStyle style = LinkStyle.ul;
+		if (linkStyle != null) {
+		    style = LinkStyle.valueOf(linkStyle);
+		}
+		this.hyperlink = new HyperlinkAnnotation(hyperlink, style);
 	    }
 	}
 
@@ -163,8 +170,8 @@ public class AnnotationCharacters {
 
     public static void main(String[] args) {
 	Pattern PATTERN = Pattern//
-		.compile("(?<!\\\\)(\\\\\\\\)*\\{link(:(([^}]+)))?\\}");
-	Matcher matcher = PATTERN.matcher("{link}");
+		.compile("(?<!\\\\)(\\\\\\\\)*\\{link(:(ul|none))?(\\[(([^}]+))\\])?\\}");
+	Matcher matcher = PATTERN.matcher("{link:none[sdfsfd]}");
 	System.out.println("matches: " + matcher.find());
 	if (!matcher.matches()) {
 	    System.err.println("exit");

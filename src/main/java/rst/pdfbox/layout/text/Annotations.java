@@ -9,16 +9,25 @@ public class Annotations {
      * Represents a hyperlink annotation
      */
     public static class HyperlinkAnnotation implements Annotation {
+	
+	public static enum LinkStyle {
+	    ul, none;
+	}
+	
 	private final String hyperlink;
+	private final LinkStyle linkStyle;
 
 	/**
 	 * Creates a hyperlink annotation.
 	 * 
 	 * @param hyperlink
 	 *            the hyperlink.
+	 * @param linkStyle
+	 *            the link style.
 	 */
-	public HyperlinkAnnotation(String hyperlink) {
+	public HyperlinkAnnotation(String hyperlink, LinkStyle linkStyle) {
 	    this.hyperlink = hyperlink;
+	    this.linkStyle = linkStyle;
 	}
 
 	/**
@@ -28,9 +37,14 @@ public class Annotations {
 	    return hyperlink;
 	}
 
+	public LinkStyle getLinkStyle() {
+	    return linkStyle;
+	}
+
 	@Override
 	public String toString() {
-	    return "HyperlinkAnnotation [hyperlink=" + hyperlink + "]";
+	    return "HyperlinkAnnotation [hyperlink=" + hyperlink
+		    + ", linkStyle=" + linkStyle + "]";
 	}
 
     }

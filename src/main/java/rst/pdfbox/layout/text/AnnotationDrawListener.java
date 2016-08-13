@@ -22,11 +22,13 @@ import org.apache.pdfbox.pdmodel.interactive.documentnavigation.destination.PDPa
 
 import rst.pdfbox.layout.text.Annotations.AnchorAnnotation;
 import rst.pdfbox.layout.text.Annotations.HyperlinkAnnotation;
+import rst.pdfbox.layout.text.Annotations.HyperlinkAnnotation.LinkStyle;
 
 public class AnnotationDrawListener implements DrawListener {
 
+    private static PDBorderStyleDictionary noBorder;
+    
     private final DrawContext drawContext;
-
     private Map<String, PageAnchor> anchorMap = new HashMap<String, PageAnchor>();
     private Map<PDPage, List<Hyperlink>> linkMap = new HashMap<PDPage, List<Hyperlink>>();
 
@@ -78,9 +80,11 @@ public class AnnotationDrawListener implements DrawListener {
 	    bounds.setLowerLeftY(upperLeft.getY() - height);
 	    bounds.setUpperRightX(upperLeft.getX() + width);
 	    bounds.setUpperRightY(upperLeft.getY());
+
 	    links.add(new Hyperlink(bounds,
-		    toPDGamma(annotatedText.getColor()), hyperlinkAnnotation
-			    .getHyperlink()));
+		    toPDGamma(annotatedText.getColor()),
+		    toBorderStyle(hyperlinkAnnotation.getLinkStyle()),
+		    hyperlinkAnnotation.getHyperlink()));
 	}
     }
 
@@ -90,9 +94,11 @@ public class AnnotationDrawListener implements DrawListener {
 	    List<Hyperlink> links = entry.getValue();
 	    for (Hyperlink hyperlink : links) {
 		PDAnnotationLink pdLink = new PDAnnotationLink();
-		PDBorderStyleDictionary borderStyle = new PDBorderStyleDictionary();
-		borderStyle.setStyle(PDBorderStyleDictionary.STYLE_UNDERLINE);
-		pdLink.setBorderStyle(borderStyle);
+		if (hyperlink.getBorderStyle() != null) {
+			pdLink.setBorderStyle(hyperlink.getBorderStyle());
+		} else {
+		    pdLink.setBorderStyle(getNoBorder());
+		}
 		pdLink.setRectangle(hyperlink.getRect());
 		pdLink.setColour(hyperlink.getColor());
 
@@ -135,6 +141,23 @@ public class AnnotationDrawListener implements DrawListener {
 	return new PDGamma(values);
     }
 
+    private PDBorderStyleDictionary toBorderStyle(final LinkStyle linkStyle) {
+	if (linkStyle == LinkStyle.none) {
+	    return null;
+	}
+	PDBorderStyleDictionary borderStyle = new PDBorderStyleDictionary();
+	borderStyle.setStyle(PDBorderStyleDictionary.STYLE_UNDERLINE);
+	return borderStyle;
+    }
+    
+    private static PDBorderStyleDictionary getNoBorder() {
+	if (noBorder == null) {
+	    noBorder = new PDBorderStyleDictionary();
+	    noBorder.setWidth(0);
+	}
+	return noBorder;
+    }
+
     private static class PageAnchor {
 	private final PDPage page;
 	private final float x;
@@ -169,11 +192,14 @@ public class AnnotationDrawListener implements DrawListener {
 	private final PDRectangle rect;
 	private final PDGamma color;
 	private final String hyperlink;
+	private final PDBorderStyleDictionary borderStyle;
 
-	public Hyperlink(PDRectangle rect, PDGamma color, String hyperlink) {
+	public Hyperlink(PDRectangle rect, PDGamma color,
+		PDBorderStyleDictionary borderStyle, String hyperlink) {
 	    this.rect = rect;
 	    this.color = color;
 	    this.hyperlink = hyperlink;
+	    this.borderStyle = borderStyle;
 	}
 
 	public PDRectangle getRect() {
@@ -188,10 +214,15 @@ public class AnnotationDrawListener implements DrawListener {
 	    return hyperlink;
 	}
 
+	public PDBorderStyleDictionary getBorderStyle() {
+	    return borderStyle;
+	}
+
 	@Override
 	public String toString() {
 	    return "Hyperlink [rect=" + rect + ", color=" + color
-		    + ", hyperlink=" + hyperlink + "]";
+		    + ", hyperlink=" + hyperlink + ", borderStyle="
+		    + borderStyle + "]";
 	}
 
     }
