@@ -58,14 +58,14 @@ public class AnnotationCharacters {
 	    ControlCharacterFactory {
 
 	private final static Pattern PATTERN = Pattern
-		.compile("(?<!\\\\)(\\\\\\\\)*\\{anchor:((\\w+))\\}");
+		.compile("(?<!\\\\)(\\\\\\\\)*\\{anchor(:((\\w+)))?\\}");
 
 	private final static String TO_ESCAPE = "{";
 
 	@Override
 	public ControlCharacter createControlCharacter(String text,
 		Matcher matcher, final List<CharSequence> charactersSoFar) {
-	    return new AnchorControlCharacter(matcher.group(2));
+	    return new AnchorControlCharacter(matcher.group(3));
 	}
 
 	@Override
@@ -153,7 +153,9 @@ public class AnnotationCharacters {
 
 	protected AnchorControlCharacter(final String anchor) {
 	    super("ANCHOR", AnchorControlCharacterFactory.TO_ESCAPE);
-	    this.anchor = new AnchorAnnotation(anchor);
+	    if (anchor != null) {
+		this.anchor = new AnchorAnnotation(anchor);
+	    }
 	}
 
 	@Override
@@ -170,8 +172,8 @@ public class AnnotationCharacters {
 
     public static void main(String[] args) {
 	Pattern PATTERN = Pattern//
-		.compile("(?<!\\\\)(\\\\\\\\)*\\{link(:(ul|none))?(\\[(([^}]+))\\])?\\}");
-	Matcher matcher = PATTERN.matcher("{link:none[sdfsfd]}");
+		.compile("(?<!\\\\)(\\\\\\\\)*\\{anchor(:((\\w+)))?\\}");
+	Matcher matcher = PATTERN.matcher("{anchor}");
 	System.out.println("matches: " + matcher.find());
 	if (!matcher.matches()) {
 	    System.err.println("exit");

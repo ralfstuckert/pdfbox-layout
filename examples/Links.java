@@ -48,7 +48,7 @@ public class Links {
 	document.add(paragraph3);
 
 	Paragraph paragraph4 = new Paragraph();
-	paragraph4.addMarkup("\n\n{anchor:hello}Here comes the internal anchor named *hello*\n\n", 15, BaseFont.Courier);
+	paragraph4.addMarkup("\n\n{anchor:hello}Here{anchor} comes the internal anchor named *hello*\n\n", 15, BaseFont.Courier);
 
 	document.add(paragraph1);
 	document.add(paragraph3);
