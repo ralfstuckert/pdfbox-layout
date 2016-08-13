@@ -10,6 +10,7 @@ import javax.imageio.ImageIO;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.edit.PDPageContentStream;
 
+import rst.pdfbox.layout.text.DrawListener;
 import rst.pdfbox.layout.text.Position;
 import rst.pdfbox.layout.text.WidthRespecting;
 import rst.pdfbox.layout.util.CompatibilityHelper;
@@ -117,7 +118,9 @@ public class ImageElement implements Element, Drawable, Dividable,
 
     /**
      * Sets the absolute position to render at.
-     * @param absolutePosition the absolute position.
+     * 
+     * @param absolutePosition
+     *            the absolute position.
      */
     public void setAbsolutePosition(Position absolutePosition) {
 	this.absolutePosition = absolutePosition;
@@ -125,13 +128,16 @@ public class ImageElement implements Element, Drawable, Dividable,
 
     @Override
     public void draw(PDDocument pdDocument, PDPageContentStream contentStream,
-	    Position upperLeft) throws IOException {
+	    Position upperLeft, DrawListener drawListener) throws IOException {
 	CompatibilityHelper.drawImage(image, pdDocument, contentStream,
 		upperLeft, getWidth(), getHeight());
+	if (drawListener != null) {
+	    drawListener.drawn(this, upperLeft, getWidth(), getHeight());
+	}
     }
 
     @Override
     public Drawable removeLeadingEmptyVerticalSpace() {
-        return this;
+	return this;
     }
 }

@@ -6,6 +6,7 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.edit.PDPageContentStream;
 
 import rst.pdfbox.layout.text.Alignment;
+import rst.pdfbox.layout.text.DrawListener;
 import rst.pdfbox.layout.text.Position;
 import rst.pdfbox.layout.text.TextFlow;
 import rst.pdfbox.layout.text.TextSequenceUtil;
@@ -57,8 +58,8 @@ public class Paragraph extends TextFlow implements Drawable, Element,
 
     @Override
     public void draw(PDDocument pdDocument, PDPageContentStream contentStream,
-	    Position upperLeft) throws IOException {
-	drawText(contentStream, upperLeft, getAlignment());
+	    Position upperLeft, DrawListener drawListener) throws IOException {
+	drawText(contentStream, upperLeft, getAlignment(), drawListener	);
     }
 
     @Override

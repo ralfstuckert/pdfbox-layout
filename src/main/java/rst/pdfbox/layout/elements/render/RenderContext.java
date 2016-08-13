@@ -17,6 +17,9 @@ import rst.pdfbox.layout.elements.PositionControl;
 import rst.pdfbox.layout.elements.PositionControl.MarkPosition;
 import rst.pdfbox.layout.elements.PositionControl.MovePosition;
 import rst.pdfbox.layout.elements.PositionControl.SetPosition;
+import rst.pdfbox.layout.text.AnnotationDrawListener;
+import rst.pdfbox.layout.text.DrawContext;
+import rst.pdfbox.layout.text.DrawListener;
 import rst.pdfbox.layout.text.Position;
 import rst.pdfbox.layout.util.CompatibilityHelper;
 
@@ -24,7 +27,7 @@ import rst.pdfbox.layout.util.CompatibilityHelper;
  * The render context is a container providing all state of the current
  * rendering process.
  */
-public class RenderContext implements Layout, Closeable {
+public class RenderContext implements Layout, Closeable, DrawContext, DrawListener {
 
     private final Document document;
     private final PDDocument pdDocument;
@@ -38,6 +41,8 @@ public class RenderContext implements Layout, Closeable {
     private PageFormat nextPageFormat;
     private PageFormat pageFormat;
 
+    private AnnotationDrawListener annotationDrawListener;
+    
     /**
      * Creates a render context.
      * 
@@ -53,6 +58,7 @@ public class RenderContext implements Layout, Closeable {
 	this.document = document;
 	this.pdDocument = pdDocument;
 	this.pageFormat = document.getPageFormat();
+	this.annotationDrawListener = new AnnotationDrawListener(this);
 	newPage();
     }
 
@@ -238,15 +244,22 @@ public class RenderContext implements Layout, Closeable {
     /**
      * @return the PDDocument.
      */
+    @Override
     public PDDocument getPdDocument() {
 	return pdDocument;
+    }
+
+    @Override
+    public PDPage getCurrentPage() {
+	return page;
     }
 
     /**
      * @return the current PDPage.
      */
+    @Deprecated
     public PDPage getPage() {
-	return page;
+	return getCurrentPage();
     }
 
     /**
@@ -379,7 +392,14 @@ public class RenderContext implements Layout, Closeable {
 
     @Override
     public void close() throws IOException {
+	annotationDrawListener.finalizeAnnotations();
 	closePage();
+    }
+
+    @Override
+    public void drawn(Object drawnObject, Position upperLeft, float width,
+	    float height) {
+	annotationDrawListener.drawn(drawnObject, upperLeft, width, height);
     }
 
 }

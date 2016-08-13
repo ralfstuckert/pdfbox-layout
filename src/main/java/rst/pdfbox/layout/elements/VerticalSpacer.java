@@ -5,6 +5,7 @@ import java.io.IOException;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.edit.PDPageContentStream;
 
+import rst.pdfbox.layout.text.DrawListener;
 import rst.pdfbox.layout.text.Position;
 
 /**
@@ -18,7 +19,8 @@ public class VerticalSpacer implements Drawable, Element, Dividable {
     /**
      * Creates a vertical space with the given height.
      * 
-     * @param height the height of the space.
+     * @param height
+     *            the height of the space.
      */
     public VerticalSpacer(float height) {
 	this.height = height;
@@ -40,9 +42,11 @@ public class VerticalSpacer implements Drawable, Element, Dividable {
     }
 
     @Override
-    public void draw(PDDocument pdDocument, PDPageContentStream contentStream, Position upperLeft)
-	    throws IOException {
-	// nothing to draw
+    public void draw(PDDocument pdDocument, PDPageContentStream contentStream,
+	    Position upperLeft, DrawListener drawListener) throws IOException {
+	if (drawListener != null) {
+	    drawListener.drawn(this, upperLeft, getWidth(), getHeight());
+	}
     }
 
     @Override
@@ -51,10 +55,10 @@ public class VerticalSpacer implements Drawable, Element, Dividable {
 	return new Divided(new VerticalSpacer(remainingHeight),
 		new VerticalSpacer(getHeight() - remainingHeight));
     }
-    
+
     @Override
     public Drawable removeLeadingEmptyVerticalSpace() {
-        return this;
+	return this;
     }
 
 }

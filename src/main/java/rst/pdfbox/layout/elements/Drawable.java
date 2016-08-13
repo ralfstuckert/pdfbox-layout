@@ -6,6 +6,8 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.edit.PDPageContentStream;
 
 import rst.pdfbox.layout.elements.render.Layout;
+import rst.pdfbox.layout.text.Area;
+import rst.pdfbox.layout.text.DrawListener;
 import rst.pdfbox.layout.text.Position;
 
 /**
@@ -46,16 +48,20 @@ public interface Drawable {
      *            the stream to draw to.
      * @param upperLeft
      *            the upper left position to start drawing.
+     * @param drawListener
+     *            the listener to
+     *            {@link drawListener#drawn(Object, Position, Area) notify} on
+     *            drawn objects.
      * @throws IOException
      *             by pdfbox
      */
     void draw(PDDocument pdDocument, PDPageContentStream contentStream,
-	    Position upperLeft) throws IOException;
+	    Position upperLeft, DrawListener drawListener) throws IOException;
 
     /**
      * @return a copy of this drawable where any leading empty vertical space is
-     *         removed, if possible. This is useful for avoiding leading empty space
-     *         on a new page.
+     *         removed, if possible. This is useful for avoiding leading empty
+     *         space on a new page.
      * @throws IOException
      *             by pdfbox
      */

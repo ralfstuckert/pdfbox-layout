@@ -115,7 +115,7 @@ public class VerticalLayout implements Layout {
 	    Drawable drawable, final LayoutHint layoutHint,
 	    final Position position) throws IOException {
 	drawable.draw(renderContext.getPdDocument(),
-		renderContext.getContentStream(), position);
+		renderContext.getContentStream(), position, renderContext);
     }
 
     /**
@@ -278,7 +278,7 @@ public class VerticalLayout implements Layout {
 	CompatibilityHelper.clip(contentStream);
 
 	drawable.draw(renderContext.getPdDocument(), contentStream,
-		renderContext.getCurrentPosition().add(offsetX, 0));
+		renderContext.getCurrentPosition().add(offsetX, 0),renderContext);
 
 	contentStream.restoreGraphicsState();
 

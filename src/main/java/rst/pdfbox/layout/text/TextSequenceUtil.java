@@ -194,8 +194,14 @@ public class TextSequenceUtil {
 	} else {
 	    ReplacedWhitespace whitespace = new ReplacedWhitespace(
 		    text.substring(0, splitIndex), word.getFontDescriptor());
-	    StyledText newWord = new StyledText(text.substring(splitIndex),
-		    word.getFontDescriptor(), word.getColor());
+	    StyledText newWord = null;
+	    if (word instanceof StyledText) {
+		newWord = ((StyledText) word).inheritAttributes(text
+			.substring(splitIndex));
+	    } else {
+		newWord = new StyledText(text.substring(splitIndex),
+			word.getFontDescriptor(), word.getColor());
+	    }
 	    return new TextFragment[] { newWord, whitespace };
 	}
     }
@@ -278,9 +284,15 @@ public class TextSequenceUtil {
 		if (index == words.length - 1) {
 		    currentRightMargin = rightMargin;
 		}
-		StyledText styledText = new StyledText(newWord,
-			text.getFontDescriptor(), text.getColor(),
-			currentLeftMargin, currentRightMargin);
+		StyledText styledText = null;
+		if (text instanceof StyledText) {
+		    styledText = ((StyledText) text).inheritAttributes(newWord,
+			    currentLeftMargin, currentRightMargin);
+		} else {
+		    styledText = new StyledText(newWord,
+			    text.getFontDescriptor(), text.getColor(),
+			    currentLeftMargin, currentRightMargin);
+		}
 		result.add(styledText);
 	    }
 	}
@@ -297,6 +309,10 @@ public class TextSequenceUtil {
      *            the stream to draw to
      * @param upperLeft
      *            the position of the start of the first line.
+     * @param drawContext
+     *            the context to
+     *            {@link DrawContext#drawn(Object, Position, Area) notify} on
+     *            drawn objects.
      * @param alignment
      *            how to align the text lines.
      * @param maxWidth
@@ -311,8 +327,9 @@ public class TextSequenceUtil {
      */
     public static void drawText(TextSequence text,
 	    PDPageContentStream contentStream, Position upperLeft,
-	    Alignment alignment, float maxWidth, final float lineSpacing,
-	    final boolean applyLineSpacingToFirstLine) throws IOException {
+	    DrawListener drawListener, Alignment alignment, float maxWidth,
+	    final float lineSpacing, final boolean applyLineSpacingToFirstLine)
+	    throws IOException {
 	List<TextLine> lines = wordWrapToLines(text, maxWidth);
 	float targetWidth = getMaxWidth(lines);
 	Position position = upperLeft;
@@ -329,7 +346,7 @@ public class TextSequenceUtil {
 	    position = position.add(0, -lead);
 	    float offset = getOffset(textLine, targetWidth, alignment);
 	    position = new Position(upperLeft.getX() + offset, position.getY());
-	    textLine.drawText(contentStream, position, alignment);
+	    textLine.drawText(contentStream, position, alignment, drawListener);
 	}
     }
 

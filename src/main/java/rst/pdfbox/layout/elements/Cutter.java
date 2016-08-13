@@ -5,6 +5,7 @@ import java.io.IOException;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.edit.PDPageContentStream;
 
+import rst.pdfbox.layout.text.DrawListener;
 import rst.pdfbox.layout.text.Position;
 
 /**
@@ -51,9 +52,9 @@ public class Cutter implements Dividable, Drawable {
 
     @Override
     public void draw(PDDocument pdDocument, PDPageContentStream contentStream,
-	    Position upperLeft) throws IOException {
+	    Position upperLeft, DrawListener drawListener) throws IOException {
 	Position viewPortOrigin = upperLeft.add(0, -viewPortY);
-	undividable.draw(pdDocument, contentStream, viewPortOrigin);
+	undividable.draw(pdDocument, contentStream, viewPortOrigin, drawListener);
     }
 
     @Override

@@ -4,12 +4,15 @@ import java.awt.Color;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Stack;
 import java.util.regex.Matcher;
 
 import org.apache.pdfbox.pdmodel.font.PDFont;
 
+import rst.pdfbox.layout.text.AnnotationCharacters.AnnotationControlCharacter;
 import rst.pdfbox.layout.text.ControlCharacters.BoldControlCharacter;
 import rst.pdfbox.layout.text.ControlCharacters.ColorControlCharacter;
 import rst.pdfbox.layout.text.ControlCharacters.ControlCharacterFactory;
@@ -30,7 +33,8 @@ public class TextFlowUtil {
      * @param font
      *            the font to use.
      * @return the created text flow.
-     * @throws IOException by pdfbox
+     * @throws IOException
+     *             by pdfbox
      */
     public static TextFlow createTextFlow(final String text,
 	    final float fontSize, final PDFont font) throws IOException {
@@ -52,7 +56,8 @@ public class TextFlowUtil {
      *            the base font describing the bundle of
      *            plain/blold/italic/bold-italic fonts.
      * @return the created text flow.
-     * @throws IOException by pdfbox
+     * @throws IOException
+     *             by pdfbox
      */
     public static TextFlow createTextFlowFromMarkup(final String markup,
 	    final float fontSize, final BaseFont baseFont) throws IOException {
@@ -101,7 +106,8 @@ public class TextFlowUtil {
      * @param boldItalicFont
      *            the bold-italic font.
      * @return the created text flow.
-     * @throws IOException by pdfbox
+     * @throws IOException
+     *             by pdfbox
      */
     public static TextFlow createTextFlowFromMarkup(final String markup,
 	    final float fontSize, final PDFont plainFont,
@@ -128,7 +134,8 @@ public class TextFlowUtil {
      * @param boldItalicFont
      *            the bold-italic font.
      * @return the created text flow.
-     * @throws IOException by pdfbox
+     * @throws IOException
+     *             by pdfbox
      */
     protected static TextFlow createTextFlow(
 	    final Iterable<CharSequence> parts, final float fontSize,
@@ -139,6 +146,7 @@ public class TextFlowUtil {
 	boolean bold = false;
 	boolean italic = false;
 	Color color = Color.black;
+	Map<Class<? extends Annotation>, Annotation> annotationMap = new HashMap<Class<? extends Annotation>, Annotation>();
 	Stack<IndentCharacter> indentStack = new Stack<IndentCharacter>();
 	for (final CharSequence fragment : parts) {
 
@@ -154,6 +162,17 @@ public class TextFlowUtil {
 		}
 		if (fragment instanceof ColorControlCharacter) {
 		    color = ((ColorControlCharacter) fragment).getColor();
+		}
+		if (fragment instanceof AnnotationControlCharacter) {
+		    AnnotationControlCharacter<?> annotationControlCharacter = (AnnotationControlCharacter<?>) fragment;
+		    if (annotationControlCharacter.getAnnotation() == null) {
+			annotationMap.remove(annotationControlCharacter
+				.getAnnotationType());
+		    } else {
+			annotationMap.put(
+				annotationControlCharacter.getAnnotationType(),
+				annotationControlCharacter.getAnnotation());
+		    }
 		}
 		if (fragment instanceof IndentCharacter) {
 		    IndentCharacter currentIndent = (IndentCharacter) fragment;
@@ -181,9 +200,16 @@ public class TextFlowUtil {
 	    } else {
 		PDFont font = getFont(bold, italic, plainFont, boldFont,
 			italicFont, boldItalicFont);
-		StyledText styledText = new StyledText(fragment.toString(),
-			fontSize, font, color);
-		result.add(styledText);
+		if (annotationMap.isEmpty()) {
+		    StyledText styledText = new StyledText(fragment.toString(),
+			    fontSize, font, color);
+		    result.add(styledText);
+		} else {
+		    AnnotatedStyledText styledText = new AnnotatedStyledText(
+			    fragment.toString(), fontSize, font, color,
+			    annotationMap.values());
+		    result.add(styledText);
+		}
 	    }
 	}
 	return result;
@@ -258,6 +284,10 @@ public class TextFlowUtil {
 	text = splitByControlCharacter(ControlCharacters.BOLD_FACTORY, text);
 	text = splitByControlCharacter(ControlCharacters.ITALIC_FACTORY, text);
 	text = splitByControlCharacter(ControlCharacters.COLOR_FACTORY, text);
+	text = splitByControlCharacter(AnnotationCharacters.HYPERLINK_FACTORY,
+		text);
+	text = splitByControlCharacter(AnnotationCharacters.ANCHOR_FACTORY,
+		text);
 	text = splitByControlCharacter(IndentCharacters.INDENT_FACTORY, text);
 
 	text = unescapeBackslash(text);

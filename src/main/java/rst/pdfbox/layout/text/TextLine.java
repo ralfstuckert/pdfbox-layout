@@ -158,7 +158,7 @@ public class TextLine implements TextSequence {
 
     @Override
     public void drawText(PDPageContentStream contentStream, Position upperLeft,
-	    Alignment alignment) throws IOException {
+	    Alignment alignment, DrawListener drawListener) throws IOException {
 	contentStream.saveGraphicsState();
 	contentStream.beginText();
 	float x = upperLeft.getX();
@@ -182,12 +182,21 @@ public class TextLine implements TextSequence {
 	    }
 	    if (gap > 0) {
 		CompatibilityHelper.moveTextPosition(contentStream, gap, 0);
+		x += gap;
 		gap = 0;
 	    }
 	    if (styledText.getText().length() > 0) {
 		CompatibilityHelper.showText(contentStream,
 			styledText.getText());
 	    }
+
+	    if (drawListener != null) {
+		drawListener.drawn(styledText, new Position(x, y),
+			styledText.getWidthWithoutMargin(),
+			styledText.getHeight());
+	    }
+	    x += styledText.getWidthWithoutMargin();
+
 	    if (styledText.getRightMargin() > 0) {
 		gap = styledText.getRightMargin();
 	    }
@@ -202,11 +211,23 @@ public class TextLine implements TextSequence {
 		+ newLine + "]";
     }
 
+    /**
+     * An iterator for the text line. See {@link TextLine#iterator()}.
+     */
     private static class TextLineIterator implements Iterator<TextFragment> {
 
 	private Iterator<StyledText> styledText;
 	private NewLine newLine;
 
+	/**
+	 * Creates an iterator of the given styled texts with an optional
+	 * trailing new line.
+	 * 
+	 * @param styledText
+	 *            the text fragments to iterate.
+	 * @param newLine
+	 *            the optional trailing new line.
+	 */
 	public TextLineIterator(Iterator<StyledText> styledText, NewLine newLine) {
 	    super();
 	    this.styledText = styledText;

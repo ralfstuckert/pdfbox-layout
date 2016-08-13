@@ -260,16 +260,16 @@ public class TextFlow implements TextSequence, WidthRespecting {
 
     @Override
     public void drawText(PDPageContentStream contentStream, Position upperLeft,
-	    Alignment alignment) throws IOException {
-	TextSequenceUtil.drawText(this, contentStream, upperLeft, alignment,
+	    Alignment alignment, DrawListener drawListener) throws IOException {
+	TextSequenceUtil.drawText(this, contentStream, upperLeft, drawListener, alignment,
 		getMaxWidth(), getLineSpacing(),
 		isApplyLineSpacingToFirstLine());
     }
 
     public void drawTextRightAligned(PDPageContentStream contentStream,
-	    Position endOfFirstLine) throws IOException {
+	    Position endOfFirstLine, DrawListener drawListener) throws IOException {
 	drawText(contentStream, endOfFirstLine.add(-getWidth(), 0),
-		Alignment.Right);
+		Alignment.Right, drawListener);
     }
 
     /**

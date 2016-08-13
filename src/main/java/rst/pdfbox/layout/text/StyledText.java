@@ -6,7 +6,7 @@ import java.io.IOException;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 
 /**
- * A drawable text styled with font, size, color etc.
+ * Base class representing drawable text styled with font, size, color etc.
  */
 public class StyledText implements TextFragment {
 
@@ -17,10 +17,10 @@ public class StyledText implements TextFragment {
     private final float rightMargin;
 
     /**
-     * The cached (calculated) width of the text. 
+     * The cached (calculated) width of the text.
      */
     private Float width = null;
-    
+
     /**
      * Creates a styled text.
      * 
@@ -100,12 +100,10 @@ public class StyledText implements TextFragment {
 		    "StyledText must not contain line breaks, use TextFragment.LINEBREAK for that");
 	}
 	if (leftMargin < 0) {
-	    throw new IllegalArgumentException(
-		    "leftMargin must be >= 0");
+	    throw new IllegalArgumentException("leftMargin must be >= 0");
 	}
 	if (rightMargin < 0) {
-	    throw new IllegalArgumentException(
-		    "rightMargin must be >= 0");
+	    throw new IllegalArgumentException("rightMargin must be >= 0");
 	}
 	this.text = text;
 	this.fontDescriptor = fontDescriptor;
@@ -140,6 +138,10 @@ public class StyledText implements TextFragment {
 	return width;
     }
 
+    public float getWidthWithoutMargin() throws IOException {
+	return getWidth() - leftMargin - rightMargin;
+    }
+    
     @Override
     public float getHeight() throws IOException {
 	return getFontDescriptor().getSize();
@@ -150,24 +152,44 @@ public class StyledText implements TextFragment {
 	return color;
     }
 
+    /**
+     * @return the margin left to the text represented by this object.
+     */
     public float getLeftMargin() {
 	return leftMargin;
     }
 
+    /**
+     * @return the margin right to the text represented by this object.
+     */
     public float getRightMargin() {
 	return rightMargin;
     }
-    
+
+    /**
+     * @return indicates if this text has margin.
+     */
     public boolean hasMargin() {
 	return getLeftMargin() != 0 || getRightMargin() != 0;
     }
 
+    /**
+     * @return converts this text to a sequence.
+     */
     public TextSequence asSequence() {
 	TextLine line = new TextLine();
 	line.add(this);
 	return line;
     }
 
+    public StyledText inheritAttributes(String text) {
+	return inheritAttributes(text, getLeftMargin(), getRightMargin());
+    }
+    
+    public StyledText inheritAttributes(String text, float leftMargin, float rightMargin) {
+	return new StyledText(text, getFontDescriptor(), getColor(), leftMargin, rightMargin);
+    }
+    
     @Override
     public String toString() {
 	return "StyledText [text=" + text + ", fontDescriptor="
