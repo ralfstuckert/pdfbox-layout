@@ -51,10 +51,6 @@ public class AnnotationDrawListener implements DrawListener {
 	Iterable<AnchorAnnotation> anchorAnnotations = annotatedText
 		.getAnnotationsOfType(AnchorAnnotation.class);
 	for (AnchorAnnotation anchorAnnotation : anchorAnnotations) {
-	    if (anchorMap.get(anchorAnnotation.getAnchor()) != null) {
-		throw new IllegalArgumentException(
-			String.format("anchor with name '%s' already exists"));
-	    }
 	    anchorMap.put(
 		    anchorAnnotation.getAnchor(),
 		    new PageAnchor(drawContext.getCurrentPage(), upperLeft
@@ -75,9 +71,9 @@ public class AnnotationDrawListener implements DrawListener {
 	    }
 	    PDRectangle bounds = new PDRectangle();
 	    bounds.setLowerLeftX(upperLeft.getX());
-	    bounds.setLowerLeftY(upperLeft.getY());
+	    bounds.setLowerLeftY(upperLeft.getY() - height);
 	    bounds.setUpperRightX(upperLeft.getX() + width);
-	    bounds.setUpperRightY(upperLeft.getY() + height);
+	    bounds.setUpperRightY(upperLeft.getY());
 	    links.add(new Hyperlink(bounds, hyperlinkAnnotation.getHyperlink()));
 	}
     }
@@ -89,14 +85,14 @@ public class AnnotationDrawListener implements DrawListener {
 	    for (Hyperlink hyperlink : links) {
 		PDAnnotationLink pdLink = new PDAnnotationLink();
 		PDBorderStyleDictionary borderStyle = new PDBorderStyleDictionary();
-		borderStyle.setStyle(PDBorderStyleDictionary.STYLE_BEVELED);
+		borderStyle.setStyle(PDBorderStyleDictionary.STYLE_UNDERLINE);
 		pdLink.setBorderStyle(borderStyle);
 		pdLink.setRectangle(hyperlink.getRect());
 
 		String uri = hyperlink.getHyperlink();
 		PDAction action = null;
 		if (uri.startsWith("#")) {
-		    action = createGotoAction(page, uri);
+		    action = createGotoAction(uri.substring(1));
 		} else {
 		    PDActionURI actionUri = new PDActionURI();
 		    actionUri.setURI(uri);
@@ -109,14 +105,14 @@ public class AnnotationDrawListener implements DrawListener {
 	}
     }
 
-    private PDActionGoTo createGotoAction(PDPage page, String uri) {
-	PageAnchor pageAnchor = anchorMap.get(uri.substring(1));
+    private PDActionGoTo createGotoAction(String anchor) {
+	PageAnchor pageAnchor = anchorMap.get(anchor);
 	if (pageAnchor == null) {
 	    throw new IllegalArgumentException(String.format(
-		    "anchor named '%s' not found", uri.substring(1)));
+		    "anchor named '%s' not found", anchor));
 	}
 	PDPageXYZDestination xyzDestination = new PDPageXYZDestination();
-	xyzDestination.setPage(page);
+	xyzDestination.setPage(pageAnchor.getPage());
 	xyzDestination.setLeft((int) pageAnchor.getX());
 	xyzDestination.setTop((int) pageAnchor.getY());
 	PDActionGoTo gotoAction = new PDActionGoTo();
@@ -147,6 +143,11 @@ public class AnnotationDrawListener implements DrawListener {
 	    return y;
 	}
 
+	@Override
+	public String toString() {
+	    return "PageAnchor [page=" + page + ", x=" + x + ", y=" + y + "]";
+	}
+
     }
 
     private static class Hyperlink {
@@ -164,6 +165,11 @@ public class AnnotationDrawListener implements DrawListener {
 
 	public String getHyperlink() {
 	    return hyperlink;
+	}
+
+	@Override
+	public String toString() {
+	    return "Hyperlink [rect=" + rect + ", hyperlink=" + hyperlink + "]";
 	}
 
     }

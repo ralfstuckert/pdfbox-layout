@@ -191,7 +191,7 @@ public class TextLine implements TextSequence {
 	    }
 
 	    if (drawListener != null) {
-		drawListener.drawn(styledText, new Position(x, y),
+		drawListener.drawn(styledText, new Position(x, upperLeft.getY()),
 			styledText.getWidthWithoutMargin(),
 			styledText.getHeight());
 	    }

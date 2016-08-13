@@ -28,6 +28,11 @@ public class Annotations {
 	    return hyperlink;
 	}
 
+	@Override
+	public String toString() {
+	    return "HyperlinkAnnotation [hyperlink=" + hyperlink + "]";
+	}
+
     }
 
     /**
@@ -51,6 +56,11 @@ public class Annotations {
 	 */
 	public String getAnchor() {
 	    return anchor;
+	}
+
+	@Override
+	public String toString() {
+	    return "AnchorAnnotation [anchor=" + anchor + "]";
 	}
 
     }
