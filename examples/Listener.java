@@ -59,7 +59,7 @@ public class Listener {
 			+ TextSequenceUtil.getOffset(text,
 				renderContext.getWidth(), Alignment.Right);
 		text.drawText(renderContext.getContentStream(), new Position(
-			offset, 30), Alignment.Right);
+			offset, 30), Alignment.Right, null);
 	    }
 	});
 

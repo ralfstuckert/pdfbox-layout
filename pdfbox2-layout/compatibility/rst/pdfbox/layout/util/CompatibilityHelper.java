@@ -1,19 +1,31 @@
 package rst.pdfbox.layout.util;
 
+import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.WeakHashMap;
 
+import org.apache.pdfbox.cos.COSArray;
+import org.apache.pdfbox.cos.COSFloat;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.common.PDRectangle;
+import org.apache.pdfbox.pdmodel.graphics.color.PDColor;
+import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceRGB;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.apache.pdfbox.pdmodel.graphics.image.LosslessFactory;
+import org.apache.pdfbox.pdmodel.interactive.action.PDActionGoTo;
+import org.apache.pdfbox.pdmodel.interactive.action.PDActionURI;
+import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotationLink;
+import org.apache.pdfbox.pdmodel.interactive.annotation.PDBorderStyleDictionary;
+import org.apache.pdfbox.pdmodel.interactive.documentnavigation.destination.PDDestination;
 import org.apache.pdfbox.util.Matrix;
 
 import rst.pdfbox.layout.text.Position;
+import rst.pdfbox.layout.text.Annotations.HyperlinkAnnotation.LinkStyle;
 
 /**
  * Provide compatible methods for API changes from pdfbox 1x to 2x.
@@ -25,6 +37,7 @@ public class CompatibilityHelper {
 
     private static final String IMAGE_CACHE = "IMAGE_CACHE";
     private static Map<PDDocument, Map<String, Map<?, ?>>> documentCaches = new WeakHashMap<PDDocument, Map<String, Map<?, ?>>>();
+    private static PDBorderStyleDictionary noBorder;
 
     /**
      * Returns the bullet character for the given level. Actually only two
@@ -94,6 +107,60 @@ public class CompatibilityHelper {
     public static int getPageRotation(final PDPage page) {
 	return page.getRotation();
     }
+
+    public static PDAnnotationLink createLink(PDRectangle rect, Color color,
+	    LinkStyle linkStyle, final String uri) {
+	PDAnnotationLink pdLink = createLink(rect, color, linkStyle);
+
+	PDActionURI actionUri = new PDActionURI();
+	actionUri.setURI(uri);
+	pdLink.setAction(actionUri);
+	return pdLink;
+    }
+
+    public static PDAnnotationLink createLink(PDRectangle rect, Color color,
+	    LinkStyle linkStyle, final PDDestination destination) {
+	PDAnnotationLink pdLink = createLink(rect, color, linkStyle);
+
+	PDActionGoTo gotoAction = new PDActionGoTo();
+	gotoAction.setDestination(destination);
+	pdLink.setAction(gotoAction);
+	return pdLink;
+    }
+
+    private static PDAnnotationLink createLink(PDRectangle rect, Color color,
+	    LinkStyle linkStyle) {
+	PDAnnotationLink pdLink = new PDAnnotationLink();
+	pdLink.setBorderStyle(toBorderStyle(linkStyle));
+	pdLink.setRectangle(rect);
+	pdLink.setColor(toPDColor(color));
+	return pdLink;
+    }
+
+    private static PDBorderStyleDictionary toBorderStyle(
+	    final LinkStyle linkStyle) {
+	if (linkStyle == LinkStyle.none) {
+	    return getNoBorder();
+	}
+	PDBorderStyleDictionary borderStyle = new PDBorderStyleDictionary();
+	borderStyle.setStyle(PDBorderStyleDictionary.STYLE_UNDERLINE);
+	return borderStyle;
+    }
+
+    private static PDColor toPDColor(final Color color) {
+        float[] components = new float[] {
+                color.getRed() / 255f, color.getGreen() / 255f, color.getBlue() / 255f };
+	return new PDColor(components, PDDeviceRGB.INSTANCE);
+    }
+
+    private static PDBorderStyleDictionary getNoBorder() {
+	if (noBorder == null) {
+	    noBorder = new PDBorderStyleDictionary();
+	    noBorder.setWidth(0);
+	}
+	return noBorder;
+    }
+
 
     private static synchronized Map<String, Map<?, ?>> getDocumentCache(
 	    final PDDocument document) {

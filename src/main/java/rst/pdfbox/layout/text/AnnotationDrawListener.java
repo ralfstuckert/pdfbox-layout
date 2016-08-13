@@ -8,26 +8,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.apache.pdfbox.cos.COSArray;
-import org.apache.pdfbox.cos.COSFloat;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
-import org.apache.pdfbox.pdmodel.graphics.color.PDGamma;
-import org.apache.pdfbox.pdmodel.interactive.action.type.PDAction;
-import org.apache.pdfbox.pdmodel.interactive.action.type.PDActionGoTo;
-import org.apache.pdfbox.pdmodel.interactive.action.type.PDActionURI;
 import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotationLink;
-import org.apache.pdfbox.pdmodel.interactive.annotation.PDBorderStyleDictionary;
 import org.apache.pdfbox.pdmodel.interactive.documentnavigation.destination.PDPageXYZDestination;
 
 import rst.pdfbox.layout.text.Annotations.AnchorAnnotation;
 import rst.pdfbox.layout.text.Annotations.HyperlinkAnnotation;
 import rst.pdfbox.layout.text.Annotations.HyperlinkAnnotation.LinkStyle;
+import rst.pdfbox.layout.util.CompatibilityHelper;
 
 public class AnnotationDrawListener implements DrawListener {
 
-    private static PDBorderStyleDictionary noBorder;
-    
     private final DrawContext drawContext;
     private Map<String, PageAnchor> anchorMap = new HashMap<String, PageAnchor>();
     private Map<PDPage, List<Hyperlink>> linkMap = new HashMap<PDPage, List<Hyperlink>>();
@@ -81,10 +73,9 @@ public class AnnotationDrawListener implements DrawListener {
 	    bounds.setUpperRightX(upperLeft.getX() + width);
 	    bounds.setUpperRightY(upperLeft.getY());
 
-	    links.add(new Hyperlink(bounds,
-		    toPDGamma(annotatedText.getColor()),
-		    toBorderStyle(hyperlinkAnnotation.getLinkStyle()),
-		    hyperlinkAnnotation.getHyperlink()));
+	    links.add(new Hyperlink(bounds, annotatedText.getColor(),
+		    hyperlinkAnnotation.getLinkStyle(), hyperlinkAnnotation
+			    .getHyperlink()));
 	}
     }
 
@@ -93,32 +84,22 @@ public class AnnotationDrawListener implements DrawListener {
 	    PDPage page = entry.getKey();
 	    List<Hyperlink> links = entry.getValue();
 	    for (Hyperlink hyperlink : links) {
-		PDAnnotationLink pdLink = new PDAnnotationLink();
-		if (hyperlink.getBorderStyle() != null) {
-			pdLink.setBorderStyle(hyperlink.getBorderStyle());
+		PDAnnotationLink pdLink = null;
+		if (hyperlink.getHyperlink().startsWith("#")) {
+		    pdLink = createGotoLink(hyperlink);
 		} else {
-		    pdLink.setBorderStyle(getNoBorder());
+		    pdLink = CompatibilityHelper.createLink(
+			    hyperlink.getRect(), hyperlink.getColor(),
+			    hyperlink.getLinkStyle(), hyperlink.getHyperlink());
 		}
-		pdLink.setRectangle(hyperlink.getRect());
-		pdLink.setColour(hyperlink.getColor());
-
-		String uri = hyperlink.getHyperlink();
-		PDAction action = null;
-		if (uri.startsWith("#")) {
-		    action = createGotoAction(uri.substring(1));
-		} else {
-		    PDActionURI actionUri = new PDActionURI();
-		    actionUri.setURI(uri);
-		    action = actionUri;
-		}
-		pdLink.setAction(action);
 		page.getAnnotations().add(pdLink);
 	    }
 
 	}
     }
 
-    private PDActionGoTo createGotoAction(String anchor) {
+    private PDAnnotationLink createGotoLink(Hyperlink hyperlink) {
+	String anchor = hyperlink.getHyperlink().substring(1);
 	PageAnchor pageAnchor = anchorMap.get(anchor);
 	if (pageAnchor == null) {
 	    throw new IllegalArgumentException(String.format(
@@ -128,34 +109,8 @@ public class AnnotationDrawListener implements DrawListener {
 	xyzDestination.setPage(pageAnchor.getPage());
 	xyzDestination.setLeft((int) pageAnchor.getX());
 	xyzDestination.setTop((int) pageAnchor.getY());
-	PDActionGoTo gotoAction = new PDActionGoTo();
-	gotoAction.setDestination(xyzDestination);
-	return gotoAction;
-    }
-
-    private PDGamma toPDGamma(final Color color) {
-	COSArray values = new COSArray();
-	values.add(new COSFloat(color.getRed() / 255f));
-	values.add(new COSFloat(color.getGreen() / 255f));
-	values.add(new COSFloat(color.getBlue() / 255f));
-	return new PDGamma(values);
-    }
-
-    private PDBorderStyleDictionary toBorderStyle(final LinkStyle linkStyle) {
-	if (linkStyle == LinkStyle.none) {
-	    return null;
-	}
-	PDBorderStyleDictionary borderStyle = new PDBorderStyleDictionary();
-	borderStyle.setStyle(PDBorderStyleDictionary.STYLE_UNDERLINE);
-	return borderStyle;
-    }
-    
-    private static PDBorderStyleDictionary getNoBorder() {
-	if (noBorder == null) {
-	    noBorder = new PDBorderStyleDictionary();
-	    noBorder.setWidth(0);
-	}
-	return noBorder;
+	return CompatibilityHelper.createLink(hyperlink.getRect(),
+		hyperlink.getColor(), hyperlink.getLinkStyle(), xyzDestination);
     }
 
     private static class PageAnchor {
@@ -190,23 +145,23 @@ public class AnnotationDrawListener implements DrawListener {
 
     private static class Hyperlink {
 	private final PDRectangle rect;
-	private final PDGamma color;
+	private final Color color;
 	private final String hyperlink;
-	private final PDBorderStyleDictionary borderStyle;
+	private final LinkStyle linkStyle;
 
-	public Hyperlink(PDRectangle rect, PDGamma color,
-		PDBorderStyleDictionary borderStyle, String hyperlink) {
+	public Hyperlink(PDRectangle rect, Color color, LinkStyle linkStyle,
+		String hyperlink) {
 	    this.rect = rect;
 	    this.color = color;
 	    this.hyperlink = hyperlink;
-	    this.borderStyle = borderStyle;
+	    this.linkStyle = linkStyle;
 	}
 
 	public PDRectangle getRect() {
 	    return rect;
 	}
 
-	public PDGamma getColor() {
+	public Color getColor() {
 	    return color;
 	}
 
@@ -214,15 +169,15 @@ public class AnnotationDrawListener implements DrawListener {
 	    return hyperlink;
 	}
 
-	public PDBorderStyleDictionary getBorderStyle() {
-	    return borderStyle;
+	public LinkStyle getLinkStyle() {
+	    return linkStyle;
 	}
 
 	@Override
 	public String toString() {
 	    return "Hyperlink [rect=" + rect + ", color=" + color
-		    + ", hyperlink=" + hyperlink + ", borderStyle="
-		    + borderStyle + "]";
+		    + ", hyperlink=" + hyperlink + ", linkStyle=" + linkStyle
+		    + "]";
 	}
 
     }

@@ -1,5 +1,6 @@
 package rst.pdfbox.layout.util;
 
+import java.awt.Color;
 import java.awt.geom.PathIterator;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -7,12 +8,22 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.WeakHashMap;
 
+import org.apache.pdfbox.cos.COSArray;
+import org.apache.pdfbox.cos.COSFloat;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.edit.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.graphics.color.PDGamma;
 import org.apache.pdfbox.pdmodel.graphics.xobject.PDPixelMap;
 import org.apache.pdfbox.pdmodel.graphics.xobject.PDXObjectImage;
+import org.apache.pdfbox.pdmodel.interactive.action.type.PDActionGoTo;
+import org.apache.pdfbox.pdmodel.interactive.action.type.PDActionURI;
+import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotationLink;
+import org.apache.pdfbox.pdmodel.interactive.annotation.PDBorderStyleDictionary;
+import org.apache.pdfbox.pdmodel.interactive.documentnavigation.destination.PDDestination;
 
+import rst.pdfbox.layout.text.Annotations.HyperlinkAnnotation.LinkStyle;
 import rst.pdfbox.layout.text.Position;
 
 /**
@@ -25,6 +36,7 @@ public class CompatibilityHelper {
 
     private static final String IMAGE_CACHE = "IMAGE_CACHE";
     private static Map<PDDocument, Map<String, Map<?, ?>>> documentCaches = new WeakHashMap<PDDocument, Map<String, Map<?, ?>>>();
+    private static PDBorderStyleDictionary noBorder;
 
     /**
      * Returns the bullet character for the given level. Actually only two
@@ -45,7 +57,6 @@ public class CompatibilityHelper {
 	return System.getProperty("pdfbox.layout.bullet.even", DOUBLE_ANGLE);
     }
 
-
     public static void clip(final PDPageContentStream contentStream)
 	    throws IOException {
 	contentStream.clipPath(PathIterator.WIND_NON_ZERO);
@@ -56,7 +67,7 @@ public class CompatibilityHelper {
 	    throws IOException {
 	contentStream.concatenate2CTM(a, b, c, d, e, f);
     }
-    
+
     public static void showText(final PDPageContentStream contentStream,
 	    final String text) throws IOException {
 	contentStream.drawString(text);
@@ -92,7 +103,62 @@ public class CompatibilityHelper {
     public static int getPageRotation(final PDPage page) {
 	return page.getRotation() == null ? 0 : page.getRotation();
     }
-    
+
+    public static PDAnnotationLink createLink(PDRectangle rect, Color color,
+	    LinkStyle linkStyle, final String uri) {
+	PDAnnotationLink pdLink = createLink(rect, color, linkStyle);
+
+	PDActionURI actionUri = new PDActionURI();
+	actionUri.setURI(uri);
+	pdLink.setAction(actionUri);
+	return pdLink;
+    }
+
+    public static PDAnnotationLink createLink(PDRectangle rect, Color color,
+	    LinkStyle linkStyle, final PDDestination destination) {
+	PDAnnotationLink pdLink = createLink(rect, color, linkStyle);
+
+	PDActionGoTo gotoAction = new PDActionGoTo();
+	gotoAction.setDestination(destination);
+	pdLink.setAction(gotoAction);
+	return pdLink;
+    }
+
+    private static PDAnnotationLink createLink(PDRectangle rect, Color color,
+	    LinkStyle linkStyle) {
+	PDAnnotationLink pdLink = new PDAnnotationLink();
+	pdLink.setBorderStyle(toBorderStyle(linkStyle));
+	pdLink.setRectangle(rect);
+	pdLink.setColour(toPDGamma(color));
+	return pdLink;
+    }
+
+    private static PDBorderStyleDictionary toBorderStyle(
+	    final LinkStyle linkStyle) {
+	if (linkStyle == LinkStyle.none) {
+	    return getNoBorder();
+	}
+	PDBorderStyleDictionary borderStyle = new PDBorderStyleDictionary();
+	borderStyle.setStyle(PDBorderStyleDictionary.STYLE_UNDERLINE);
+	return borderStyle;
+    }
+
+    private static PDGamma toPDGamma(final Color color) {
+	COSArray values = new COSArray();
+	values.add(new COSFloat(color.getRed() / 255f));
+	values.add(new COSFloat(color.getGreen() / 255f));
+	values.add(new COSFloat(color.getBlue() / 255f));
+	return new PDGamma(values);
+    }
+
+    private static PDBorderStyleDictionary getNoBorder() {
+	if (noBorder == null) {
+	    noBorder = new PDBorderStyleDictionary();
+	    noBorder.setWidth(0);
+	}
+	return noBorder;
+    }
+
     private static synchronized Map<String, Map<?, ?>> getDocumentCache(
 	    final PDDocument document) {
 	Map<String, Map<?, ?>> cache = documentCaches.get(document);

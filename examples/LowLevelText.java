@@ -41,7 +41,7 @@ public class LowLevelText {
 	float xOffset = TextSequenceUtil.getOffset(text, pageWidth,
 		Alignment.Right);
 	text.drawText(contentStream, new Position(xOffset, pageHeight - 50),
-		Alignment.Right);
+		Alignment.Right, null);
 
 	String textBlock = "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, "
 		+ "sed diam nonumy eirmod tempor invidunt ut labore et dolore magna "
@@ -58,7 +58,7 @@ public class LowLevelText {
 	text.setMaxWidth(200);
 	xOffset = TextSequenceUtil.getOffset(text, pageWidth, Alignment.Center);
 	text.drawText(contentStream, new Position(xOffset, pageHeight - 100),
-		Alignment.Center);
+		Alignment.Center, null);
 
 	contentStream.close();
 
