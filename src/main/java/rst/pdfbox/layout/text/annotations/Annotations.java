@@ -11,7 +11,14 @@ public class Annotations {
     public static class HyperlinkAnnotation implements Annotation {
 	
 	public static enum LinkStyle {
-	    ul, none;
+	    /**
+	     * Underline.
+	     */
+	    ul,
+	    /**
+	     * None.
+	     */
+	    none;
 	}
 	
 	private final String hyperlink;
