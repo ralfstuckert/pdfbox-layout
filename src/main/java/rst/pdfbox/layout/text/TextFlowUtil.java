@@ -12,13 +12,16 @@ import java.util.regex.Matcher;
 
 import org.apache.pdfbox.pdmodel.font.PDFont;
 
-import rst.pdfbox.layout.text.AnnotationCharacters.AnnotationControlCharacter;
 import rst.pdfbox.layout.text.ControlCharacters.BoldControlCharacter;
 import rst.pdfbox.layout.text.ControlCharacters.ColorControlCharacter;
 import rst.pdfbox.layout.text.ControlCharacters.ControlCharacterFactory;
 import rst.pdfbox.layout.text.ControlCharacters.ItalicControlCharacter;
 import rst.pdfbox.layout.text.ControlCharacters.NewLineControlCharacter;
 import rst.pdfbox.layout.text.IndentCharacters.IndentCharacter;
+import rst.pdfbox.layout.text.annotations.AnnotatedStyledText;
+import rst.pdfbox.layout.text.annotations.Annotation;
+import rst.pdfbox.layout.text.annotations.AnnotationCharacters;
+import rst.pdfbox.layout.text.annotations.AnnotationCharacters.AnnotationControlCharacter;
 
 public class TextFlowUtil {
 

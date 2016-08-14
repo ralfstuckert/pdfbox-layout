@@ -1,14 +1,18 @@
-package rst.pdfbox.layout.text;
+package rst.pdfbox.layout.text.annotations;
 
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import rst.pdfbox.layout.text.Annotations.AnchorAnnotation;
-import rst.pdfbox.layout.text.Annotations.HyperlinkAnnotation;
-import rst.pdfbox.layout.text.Annotations.HyperlinkAnnotation.LinkStyle;
+import rst.pdfbox.layout.text.ControlCharacter;
 import rst.pdfbox.layout.text.ControlCharacters.ControlCharacterFactory;
+import rst.pdfbox.layout.text.annotations.Annotations.AnchorAnnotation;
+import rst.pdfbox.layout.text.annotations.Annotations.HyperlinkAnnotation;
+import rst.pdfbox.layout.text.annotations.Annotations.HyperlinkAnnotation.LinkStyle;
 
+/**
+ * Container for annotation control characters.
+ */
 public class AnnotationCharacters {
 
     /**

@@ -1,4 +1,4 @@
-package rst.pdfbox.layout.text;
+package rst.pdfbox.layout.text.annotations;
 
 import java.awt.Color;
 import java.io.IOException;
@@ -14,9 +14,14 @@ import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotationLink;
 import org.apache.pdfbox.pdmodel.interactive.documentnavigation.destination.PDPageXYZDestination;
 
-import rst.pdfbox.layout.text.Annotations.AnchorAnnotation;
-import rst.pdfbox.layout.text.Annotations.HyperlinkAnnotation;
-import rst.pdfbox.layout.text.Annotations.HyperlinkAnnotation.LinkStyle;
+import rst.pdfbox.layout.text.Alignment;
+import rst.pdfbox.layout.text.DrawContext;
+import rst.pdfbox.layout.text.DrawListener;
+import rst.pdfbox.layout.text.DrawableText;
+import rst.pdfbox.layout.text.Position;
+import rst.pdfbox.layout.text.annotations.Annotations.AnchorAnnotation;
+import rst.pdfbox.layout.text.annotations.Annotations.HyperlinkAnnotation;
+import rst.pdfbox.layout.text.annotations.Annotations.HyperlinkAnnotation.LinkStyle;
 import rst.pdfbox.layout.util.CompatibilityHelper;
 
 /**

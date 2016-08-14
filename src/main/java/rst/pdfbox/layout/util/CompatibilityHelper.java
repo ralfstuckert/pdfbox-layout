@@ -23,7 +23,7 @@ import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotationLink;
 import org.apache.pdfbox.pdmodel.interactive.annotation.PDBorderStyleDictionary;
 import org.apache.pdfbox.pdmodel.interactive.documentnavigation.destination.PDDestination;
 
-import rst.pdfbox.layout.text.Annotations.HyperlinkAnnotation.LinkStyle;
+import rst.pdfbox.layout.text.annotations.Annotations.HyperlinkAnnotation.LinkStyle;
 import rst.pdfbox.layout.text.Position;
 
 /**

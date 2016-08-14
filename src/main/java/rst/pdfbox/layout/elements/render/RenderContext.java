@@ -17,10 +17,10 @@ import rst.pdfbox.layout.elements.PositionControl;
 import rst.pdfbox.layout.elements.PositionControl.MarkPosition;
 import rst.pdfbox.layout.elements.PositionControl.MovePosition;
 import rst.pdfbox.layout.elements.PositionControl.SetPosition;
-import rst.pdfbox.layout.text.AnnotationDrawListener;
 import rst.pdfbox.layout.text.DrawContext;
 import rst.pdfbox.layout.text.DrawListener;
 import rst.pdfbox.layout.text.Position;
+import rst.pdfbox.layout.text.annotations.AnnotationDrawListener;
 import rst.pdfbox.layout.util.CompatibilityHelper;
 
 /**

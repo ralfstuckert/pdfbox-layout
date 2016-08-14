@@ -1,4 +1,4 @@
-package rst.pdfbox.layout.text;
+package rst.pdfbox.layout.text.annotations;
 
 import java.awt.Color;
 import java.util.ArrayList;
@@ -8,6 +8,9 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.pdfbox.pdmodel.font.PDFont;
+
+import rst.pdfbox.layout.text.FontDescriptor;
+import rst.pdfbox.layout.text.StyledText;
 
 /**
  * Extension of styled text that supports annotations.

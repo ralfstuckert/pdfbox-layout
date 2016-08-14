@@ -1,4 +1,4 @@
-package rst.pdfbox.layout.text;
+package rst.pdfbox.layout.text.annotations;
 
 /**
  * Container for all annotations.
