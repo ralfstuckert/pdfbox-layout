@@ -38,7 +38,7 @@ public class AnnotatedStyledText extends StyledText implements Annotated {
     public AnnotatedStyledText(final String text,
 	    final FontDescriptor fontDescriptor, final Color color,
 	    final float leftMargin, final float rightMargin,
-	    Collection<Annotation> annotations) {
+	    Collection<? extends Annotation> annotations) {
 	super(text, fontDescriptor, color, leftMargin, rightMargin);
 	this.annotations.addAll(annotations);
     }
@@ -58,7 +58,7 @@ public class AnnotatedStyledText extends StyledText implements Annotated {
      *            the annotations associated with the text.
      */
     public AnnotatedStyledText(String text, float size, PDFont font,
-	    Color color, Collection<Annotation> annotations) {
+	    Color color, Collection<? extends Annotation> annotations) {
 	this(text, new FontDescriptor(font, size), color, 0, 0, annotations);
     }
 
