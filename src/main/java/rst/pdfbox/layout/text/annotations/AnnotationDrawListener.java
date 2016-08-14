@@ -101,7 +101,7 @@ public class AnnotationDrawListener implements DrawListener {
      * Creates all necessary annotations and sets them to the corresponding
      * pages.
      * 
-     * @throws IOException
+     * @throws IOException by pdfbox
      */
     public void finalizeAnnotations() throws IOException {
 	for (Entry<PDPage, List<Hyperlink>> entry : linkMap.entrySet()) {
