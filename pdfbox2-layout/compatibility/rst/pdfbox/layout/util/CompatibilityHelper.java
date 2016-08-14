@@ -25,7 +25,7 @@ import org.apache.pdfbox.pdmodel.interactive.documentnavigation.destination.PDDe
 import org.apache.pdfbox.util.Matrix;
 
 import rst.pdfbox.layout.text.Position;
-import rst.pdfbox.layout.text.Annotations.HyperlinkAnnotation.LinkStyle;
+import rst.pdfbox.layout.text.annotations.Annotations.HyperlinkAnnotation.LinkStyle;
 
 /**
  * Provide compatible methods for API changes from pdfbox 1x to 2x.
