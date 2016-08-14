@@ -93,7 +93,7 @@ public class AnnotationDrawListener implements DrawListener {
 
 	    links.add(new Hyperlink(bounds, annotatedText.getColor(),
 		    hyperlinkAnnotation.getLinkStyle(), hyperlinkAnnotation
-			    .getHyperlink()));
+			    .getHyperlinkURI()));
 	}
     }
 
@@ -109,12 +109,12 @@ public class AnnotationDrawListener implements DrawListener {
 	    List<Hyperlink> links = entry.getValue();
 	    for (Hyperlink hyperlink : links) {
 		PDAnnotationLink pdLink = null;
-		if (hyperlink.getHyperlink().startsWith("#")) {
+		if (hyperlink.getHyperlinkURI().startsWith("#")) {
 		    pdLink = createGotoLink(hyperlink);
 		} else {
 		    pdLink = CompatibilityHelper.createLink(
 			    hyperlink.getRect(), hyperlink.getColor(),
-			    hyperlink.getLinkStyle(), hyperlink.getHyperlink());
+			    hyperlink.getLinkStyle(), hyperlink.getHyperlinkURI());
 		}
 		page.getAnnotations().add(pdLink);
 	    }
@@ -123,7 +123,7 @@ public class AnnotationDrawListener implements DrawListener {
     }
 
     private PDAnnotationLink createGotoLink(Hyperlink hyperlink) {
-	String anchor = hyperlink.getHyperlink().substring(1);
+	String anchor = hyperlink.getHyperlinkURI().substring(1);
 	PageAnchor pageAnchor = anchorMap.get(anchor);
 	if (pageAnchor == null) {
 	    throw new IllegalArgumentException(String.format(
@@ -170,14 +170,14 @@ public class AnnotationDrawListener implements DrawListener {
     private static class Hyperlink {
 	private final PDRectangle rect;
 	private final Color color;
-	private final String hyperlink;
+	private final String hyperlinkUri;
 	private final LinkStyle linkStyle;
 
 	public Hyperlink(PDRectangle rect, Color color, LinkStyle linkStyle,
-		String hyperlink) {
+		String hyperlinkUri) {
 	    this.rect = rect;
 	    this.color = color;
-	    this.hyperlink = hyperlink;
+	    this.hyperlinkUri = hyperlinkUri;
 	    this.linkStyle = linkStyle;
 	}
 
@@ -189,8 +189,8 @@ public class AnnotationDrawListener implements DrawListener {
 	    return color;
 	}
 
-	public String getHyperlink() {
-	    return hyperlink;
+	public String getHyperlinkURI() {
+	    return hyperlinkUri;
 	}
 
 	public LinkStyle getLinkStyle() {
@@ -200,7 +200,7 @@ public class AnnotationDrawListener implements DrawListener {
 	@Override
 	public String toString() {
 	    return "Hyperlink [rect=" + rect + ", color=" + color
-		    + ", hyperlink=" + hyperlink + ", linkStyle=" + linkStyle
+		    + ", hyperlinkUri=" + hyperlinkUri + ", linkStyle=" + linkStyle
 		    + "]";
 	}
 

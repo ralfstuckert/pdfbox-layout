@@ -21,27 +21,27 @@ public class Annotations {
 	    none;
 	}
 	
-	private final String hyperlink;
+	private final String hyperlinkUri;
 	private final LinkStyle linkStyle;
 
 	/**
 	 * Creates a hyperlink annotation.
 	 * 
-	 * @param hyperlink
-	 *            the hyperlink.
+	 * @param hyperlinkUri
+	 *            the hyperlinkUri.
 	 * @param linkStyle
 	 *            the link style.
 	 */
-	public HyperlinkAnnotation(String hyperlink, LinkStyle linkStyle) {
-	    this.hyperlink = hyperlink;
+	public HyperlinkAnnotation(String hyperlinkUri, LinkStyle linkStyle) {
+	    this.hyperlinkUri = hyperlinkUri;
 	    this.linkStyle = linkStyle;
 	}
 
 	/**
-	 * @return the hyperlink (URL).
+	 * @return the hyperlink URI.
 	 */
-	public String getHyperlink() {
-	    return hyperlink;
+	public String getHyperlinkURI() {
+	    return hyperlinkUri;
 	}
 
 	public LinkStyle getLinkStyle() {
@@ -50,7 +50,7 @@ public class Annotations {
 
 	@Override
 	public String toString() {
-	    return "HyperlinkAnnotation [hyperlink=" + hyperlink
+	    return "HyperlinkAnnotation [hyperlinkUri=" + hyperlinkUri
 		    + ", linkStyle=" + linkStyle + "]";
 	}
 
