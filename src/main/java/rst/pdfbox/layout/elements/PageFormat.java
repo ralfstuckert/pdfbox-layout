@@ -17,6 +17,7 @@ public class PageFormat implements Element {
     private final float marginBottom;
     private final PDRectangle mediaBox;
     private final Orientation orientation;
+    private final int rotation;
 
     /**
      * Creates a PageFormat with A4 portrait without margins.
@@ -67,8 +68,34 @@ public class PageFormat implements Element {
     public PageFormat(PDRectangle mediaBox, Orientation orientation,
 	    float marginLeft, float marginRight, float marginTop,
 	    float marginBottom) {
+	this(mediaBox, orientation, 0, marginLeft, marginRight, marginTop, marginBottom);
+    }
+
+    /**
+     * Creates a Document based on the given media box and margins. By default,
+     * a {@link VerticalLayout} is used.
+     * 
+     * @param mediaBox
+     *            the media box to use.
+     * @param orientation
+     *            the orientation to use.
+     * @param rotation
+     *            the rotation to apply to the page after rendering.
+     * @param marginLeft
+     *            the left margin
+     * @param marginRight
+     *            the right margin
+     * @param marginTop
+     *            the top margin
+     * @param marginBottom
+     *            the bottom margin
+     */
+    public PageFormat(PDRectangle mediaBox, Orientation orientation,
+	    int rotation, float marginLeft, float marginRight,
+	    float marginTop, float marginBottom) {
 	this.mediaBox = mediaBox;
 	this.orientation = orientation;
+	this.rotation = rotation;
 	this.marginLeft = marginLeft;
 	this.marginRight = marginRight;
 	this.marginTop = marginTop;
@@ -86,6 +113,13 @@ public class PageFormat implements Element {
 	    return Orientation.Landscape;
 	}
 	return Orientation.Portrait;
+    }
+
+    /**
+     * @return the rotation to apply to the page after rendering.
+     */
+    public int getRotation() {
+        return rotation;
     }
 
     /**
@@ -138,22 +172,26 @@ public class PageFormat implements Element {
 	private float marginBottom;
 	private PDRectangle mediaBox = Constants.A4;
 	private Orientation orientation;
+	private int rotation;
 
 	protected PageFormatBuilder() {
 	}
 
 	/**
 	 * Actually builds the PageFormat.
+	 * 
 	 * @return the resulting PageFormat.
 	 */
 	public PageFormat build() {
-	    return new PageFormat(mediaBox, orientation, marginLeft,
+	    return new PageFormat(mediaBox, orientation, rotation, marginLeft,
 		    marginRight, marginTop, marginBottom);
 	}
 
 	/**
 	 * Sets the left margin.
-	 * @param marginLeft the left margin to use.
+	 * 
+	 * @param marginLeft
+	 *            the left margin to use.
 	 * @return the builder.
 	 */
 	public PageFormatBuilder marginLeft(float marginLeft) {
@@ -163,7 +201,9 @@ public class PageFormat implements Element {
 
 	/**
 	 * Sets the right margin.
-	 * @param marginRight the right margin to use.
+	 * 
+	 * @param marginRight
+	 *            the right margin to use.
 	 * @return the builder.
 	 */
 	public PageFormatBuilder marginRight(float marginRight) {
@@ -173,7 +213,9 @@ public class PageFormat implements Element {
 
 	/**
 	 * Sets the top margin.
-	 * @param marginTop the top margin to use.
+	 * 
+	 * @param marginTop
+	 *            the top margin to use.
 	 * @return the builder.
 	 */
 	public PageFormatBuilder marginTop(float marginTop) {
@@ -183,7 +225,9 @@ public class PageFormat implements Element {
 
 	/**
 	 * Sets the bottom margin.
-	 * @param marginBottom the bottom margin to use.
+	 * 
+	 * @param marginBottom
+	 *            the bottom margin to use.
 	 * @return the builder.
 	 */
 	public PageFormatBuilder marginBottom(float marginBottom) {
@@ -193,10 +237,15 @@ public class PageFormat implements Element {
 
 	/**
 	 * Sets the margins.
-	 * @param marginLeft the left margin to use.
-	 * @param marginRight the right margin to use.
-	 * @param marginTop the top margin to use.
-	 * @param marginBottom the bottom margin to use.
+	 * 
+	 * @param marginLeft
+	 *            the left margin to use.
+	 * @param marginRight
+	 *            the right margin to use.
+	 * @param marginTop
+	 *            the top margin to use.
+	 * @param marginBottom
+	 *            the bottom margin to use.
 	 * @return the builder.
 	 */
 	public PageFormatBuilder margins(float marginLeft, float marginRight,
@@ -210,7 +259,9 @@ public class PageFormat implements Element {
 
 	/**
 	 * Sets the media box to the given size.
-	 * @param mediaBox the media box to use.
+	 * 
+	 * @param mediaBox
+	 *            the media box to use.
 	 * @return the builder.
 	 */
 	public PageFormatBuilder mediaBox(PDRectangle mediaBox) {
@@ -219,7 +270,8 @@ public class PageFormat implements Element {
 	}
 
 	/**
-	 * Sets the media box to size  {@link Constants#A0}.
+	 * Sets the media box to size {@link Constants#A0}.
+	 * 
 	 * @return the builder.
 	 */
 	public PageFormatBuilder A0() {
@@ -228,7 +280,8 @@ public class PageFormat implements Element {
 	}
 
 	/**
-	 * Sets the media box to size  {@link Constants#A1}.
+	 * Sets the media box to size {@link Constants#A1}.
+	 * 
 	 * @return the builder.
 	 */
 	public PageFormatBuilder A1() {
@@ -237,7 +290,8 @@ public class PageFormat implements Element {
 	}
 
 	/**
-	 * Sets the media box to size  {@link Constants#A2}.
+	 * Sets the media box to size {@link Constants#A2}.
+	 * 
 	 * @return the builder.
 	 */
 	public PageFormatBuilder A2() {
@@ -246,7 +300,8 @@ public class PageFormat implements Element {
 	}
 
 	/**
-	 * Sets the media box to size  {@link Constants#A3}.
+	 * Sets the media box to size {@link Constants#A3}.
+	 * 
 	 * @return the builder.
 	 */
 	public PageFormatBuilder A3() {
@@ -255,7 +310,8 @@ public class PageFormat implements Element {
 	}
 
 	/**
-	 * Sets the media box to size  {@link Constants#A4}.
+	 * Sets the media box to size {@link Constants#A4}.
+	 * 
 	 * @return the builder.
 	 */
 	public PageFormatBuilder A4() {
@@ -264,7 +320,8 @@ public class PageFormat implements Element {
 	}
 
 	/**
-	 * Sets the media box to size  {@link Constants#A5}.
+	 * Sets the media box to size {@link Constants#A5}.
+	 * 
 	 * @return the builder.
 	 */
 	public PageFormatBuilder A5() {
@@ -273,7 +330,8 @@ public class PageFormat implements Element {
 	}
 
 	/**
-	 * Sets the media box to size  {@link Constants#A6}.
+	 * Sets the media box to size {@link Constants#A6}.
+	 * 
 	 * @return the builder.
 	 */
 	public PageFormatBuilder A6() {
@@ -282,7 +340,8 @@ public class PageFormat implements Element {
 	}
 
 	/**
-	 * Sets the media box to size  {@link Constants#Letter}.
+	 * Sets the media box to size {@link Constants#Letter}.
+	 * 
 	 * @return the builder.
 	 */
 	public PageFormatBuilder letter() {
@@ -292,7 +351,9 @@ public class PageFormat implements Element {
 
 	/**
 	 * Sets the orientation to the given one.
-	 * @param orientation the orientation to use.
+	 * 
+	 * @param orientation
+	 *            the orientation to use.
 	 * @return the builder.
 	 */
 	public PageFormatBuilder orientation(Orientation orientation) {
@@ -302,6 +363,7 @@ public class PageFormat implements Element {
 
 	/**
 	 * Sets the orientation to {@link Orientation#Portrait}.
+	 * 
 	 * @return the builder.
 	 */
 	public PageFormatBuilder portrait() {
@@ -311,6 +373,7 @@ public class PageFormat implements Element {
 
 	/**
 	 * Sets the orientation to {@link Orientation#Landscape}.
+	 * 
 	 * @return the builder.
 	 */
 	public PageFormatBuilder landscape() {
@@ -318,6 +381,15 @@ public class PageFormat implements Element {
 	    return this;
 	}
 
+	/**
+	 * Sets the rotation to apply to the page after rendering.
+	 * @param angle the angle to rotate.
+	 * @return the builder.
+	 */
+	public PageFormatBuilder rotate(int angle) {
+	    this.rotation = angle;
+	    return this;
+	}
     }
 
 }

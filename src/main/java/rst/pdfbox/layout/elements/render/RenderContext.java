@@ -381,7 +381,13 @@ public class RenderContext implements Layout, Closeable, DrawContext, DrawListen
      */
     public boolean closePage() throws IOException {
 	if (contentStream != null) {
+	    
 	    document.afterPage(this);
+	    
+	    if (getPageFormat().getRotation() != 0) {
+		int currentRotation = getCurrentPage().getRotation() != null ? getCurrentPage().getRotation() : 0;
+		getCurrentPage().setRotation(currentRotation + getPageFormat().getRotation());
+	    }
 
 	    contentStream.close();
 	    contentStream = null;
