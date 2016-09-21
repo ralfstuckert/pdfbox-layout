@@ -79,7 +79,13 @@ public class PageFormat implements Element {
      * @return the orientation to use.
      */
     public Orientation getOrientation() {
-	return orientation;
+	if (orientation != null) {
+	    return orientation;
+	}
+	if (getMediaBox().getWidth() > getMediaBox().getHeight()) {
+	    return Orientation.Landscape;
+	}
+	return Orientation.Portrait;
     }
 
     /**
@@ -131,7 +137,7 @@ public class PageFormat implements Element {
 	private float marginTop;
 	private float marginBottom;
 	private PDRectangle mediaBox = Constants.A4;
-	private Orientation orientation = Orientation.Portrait;
+	private Orientation orientation;
 
 	protected PageFormatBuilder() {
 	}
