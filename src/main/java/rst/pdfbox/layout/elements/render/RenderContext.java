@@ -385,7 +385,7 @@ public class RenderContext implements Layout, Closeable, DrawContext, DrawListen
 	    document.afterPage(this);
 	    
 	    if (getPageFormat().getRotation() != 0) {
-		int currentRotation = getCurrentPage().getRotation() != null ? getCurrentPage().getRotation() : 0;
+		int currentRotation = CompatibilityHelper.getPageRotation(getCurrentPage());
 		getCurrentPage().setRotation(currentRotation + getPageFormat().getRotation());
 	    }
 
