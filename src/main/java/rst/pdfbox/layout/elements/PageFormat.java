@@ -386,7 +386,7 @@ public class PageFormat implements Element {
 	 * @param angle the angle to rotate.
 	 * @return the builder.
 	 */
-	public PageFormatBuilder rotate(int angle) {
+	public PageFormatBuilder rotation(int angle) {
 	    this.rotation = angle;
 	    return this;
 	}
