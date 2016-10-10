@@ -132,7 +132,7 @@ public class RenderContext implements Layout, Closeable, DrawContext, DrawListen
     }
 
     /**
-     * @return the current rendering position.
+     * @return the current rendering position in pdf coord space (origin in lower left corner).
      */
     public Position getCurrentPosition() {
 	return currentPosition;
@@ -398,8 +398,8 @@ public class RenderContext implements Layout, Closeable, DrawContext, DrawListen
 
     @Override
     public void close() throws IOException {
-	annotationDrawListener.finalizeAnnotations();
 	closePage();
+	annotationDrawListener.finalizeAnnotations();
     }
 
     @Override
