@@ -6,8 +6,14 @@ import org.apache.pdfbox.pdmodel.edit.PDPageContentStream;
 
 import rst.pdfbox.layout.text.Position;
 
+/**
+ * Shapes an elipsis, or a circle if width==height.
+ */
 public class Elipsis extends RoundedRect {
 
+    /**
+     * Default constructor.
+     */
     public Elipsis() {
 	super(0);
     }

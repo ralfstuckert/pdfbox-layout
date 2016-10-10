@@ -11,6 +11,13 @@ import com.sun.javafx.geom.PathIterator;
 import rst.pdfbox.layout.text.DrawListener;
 import rst.pdfbox.layout.text.Position;
 
+/**
+ * Abstract base class for shapes which performs the
+ * {@link #fill(PDDocument, PDPageContentStream, Position, float, float, Color, DrawListener)}
+ * and (@link
+ * {@link #draw(PDDocument, PDPageContentStream, Position, float, float, Color, Stroke, DrawListener)}
+ * .
+ */
 public abstract class AbstractShape implements Shape {
 
     @Override

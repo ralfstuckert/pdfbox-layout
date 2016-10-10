@@ -7,6 +7,9 @@ import org.apache.pdfbox.pdmodel.edit.PDPageContentStream;
 
 import rst.pdfbox.layout.text.Position;
 
+/**
+ * A rectangular shape with rounded corners.
+ */
 public class RoundedRect extends AbstractShape {
 
     private final static float BEZ = 0.551915024494f;
@@ -14,10 +17,19 @@ public class RoundedRect extends AbstractShape {
     private final float cornerRadianX;
     private final float cornerRadianY;
 
+    /**
+     * Creates a rounded rect with equal radians for both x-axis and y-axis (quarter of a circle).
+     * @param cornerRadian the radian of the corner circle.
+     */
     public RoundedRect(float cornerRadian) {
 	this(cornerRadian, cornerRadian);
     }
 
+    /**
+     * Creates a rounded rect with potentially different radians for both x-axis and y-axis (quarter of an elipsis).
+     * @param cornerRadianX the radian in x-direction of the corner elipsis.
+     * @param cornerRadianY the radian in y-direction of the corner elipsis.
+     */
     public RoundedRect(float cornerRadianX, float cornerRadianY) {
 	this.cornerRadianX = cornerRadianX;
 	this.cornerRadianY = cornerRadianY;

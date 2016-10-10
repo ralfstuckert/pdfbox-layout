@@ -7,6 +7,9 @@ import org.apache.pdfbox.pdmodel.edit.PDPageContentStream;
 
 import rst.pdfbox.layout.text.Position;
 
+/**
+ * A simple rectangular shape.
+ */
 public class Rect extends AbstractShape {
 
     @Override
