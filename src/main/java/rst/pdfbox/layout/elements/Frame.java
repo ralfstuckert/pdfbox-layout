@@ -100,10 +100,12 @@ public class Frame implements Element, Drawable, WidthRespecting, Dividable {
 	other.setBorderStroke(this.getBorderStroke());
 	other.setBorderColor(this.getBorderColor());
 	other.setBackgroundColor(this.getBackgroundColor());
+	
 	other.setPaddingBottom(this.getPaddingBottom());
 	other.setPaddingLeft(this.getPaddingLeft());
 	other.setPaddingRight(this.getPaddingRight());
 	other.setPaddingTop(this.getPaddingTop());
+	
 	other.setMarginBottom(this.getMarginBottom());
 	other.setMarginLeft(this.getMarginLeft());
 	other.setMarginRight(this.getMarginRight());
@@ -296,6 +298,7 @@ public class Frame implements Element, Drawable, WidthRespecting, Dividable {
 
     @Override
     public Drawable removeLeadingEmptyVerticalSpace() throws IOException {
+	inner = inner.removeLeadingEmptyVerticalSpace();
 	return this;
     }
 
@@ -354,7 +357,7 @@ public class Frame implements Element, Drawable, WidthRespecting, Dividable {
 		+ "sed diam nonumy eirmod tempor invidunt ut labore et dolore magna "
 		+ "aliquyam erat, _sed diam_ voluptua. At vero eos et *accusam et justo* "
 		+ "sed diam nonumy eirmod tempor invidunt ut labore et dolore magna "
-		+ "aliquyam erat, _sed diam_ voluptua. At vero eos et *accusam et justo* "
+		+ "aliquyam erat, _sed diam_ voluptua. At vero eos et *accusam et justo\n\n\n\n* "
 		+ "sed diam nonumy eirmod tempor invidunt ut labore et dolore magna "
 		+ "aliquyam erat, _sed diam_ voluptua. At vero eos et *accusam et justo* "
 		+ "sed diam nonumy eirmod tempor invidunt ut labore et dolore magna "
