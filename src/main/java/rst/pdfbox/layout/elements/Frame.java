@@ -22,10 +22,15 @@ public class Frame implements Element, Drawable, WidthRespecting, Dividable {
 
     private Drawable inner;
 
-    private float leftMargin;
-    private float rightMargin;
-    private float topMargin;
-    private float bottomMargin;
+    private float paddingLeft;
+    private float paddingRight;
+    private float paddingTop;
+    private float paddingBottom;
+
+    private float marginLeft;
+    private float marginRight;
+    private float marginTop;
+    private float marginBottom;
 
     private Shape shape = new Rect();
     private Stroke borderStroke = new Stroke();
@@ -95,57 +100,102 @@ public class Frame implements Element, Drawable, WidthRespecting, Dividable {
 	other.setBorderStroke(this.getBorderStroke());
 	other.setBorderColor(this.getBorderColor());
 	other.setBackgroundColor(this.getBackgroundColor());
-	other.setBottomMargin(this.getBottomMargin());
-	other.setLeftMargin(this.getLeftMargin());
-	other.setRightMargin(this.getRightMargin());
-	other.setTopMargin(this.getTopMargin());
+	other.setPaddingBottom(this.getPaddingBottom());
+	other.setPaddingLeft(this.getPaddingLeft());
+	other.setPaddingRight(this.getPaddingRight());
+	other.setPaddingTop(this.getPaddingTop());
+	other.setMarginBottom(this.getMarginBottom());
+	other.setMarginLeft(this.getMarginLeft());
+	other.setMarginRight(this.getMarginRight());
+	other.setMarginTop(this.getMarginTop());
     }
 
-    public float getLeftMargin() {
-	return leftMargin;
+    public float getPaddingLeft() {
+	return paddingLeft;
     }
 
-    public void setLeftMargin(float leftMargin) {
-	this.leftMargin = leftMargin;
+    public void setPaddingLeft(float paddingLeft) {
+	this.paddingLeft = paddingLeft;
     }
 
-    public float getRightMargin() {
-	return rightMargin;
+    public float getPaddingRight() {
+	return paddingRight;
     }
 
-    public void setRightMargin(float rightMargin) {
-	this.rightMargin = rightMargin;
+    public void setPaddingRight(float paddingRight) {
+	this.paddingRight = paddingRight;
     }
 
-    public float getTopMargin() {
-	return topMargin;
+    public float getPaddingTop() {
+	return paddingTop;
     }
 
-    public void setTopMargin(float topMargin) {
-	this.topMargin = topMargin;
+    public void setPaddingTop(float paddingTop) {
+	this.paddingTop = paddingTop;
     }
 
-    public float getBottomMargin() {
-	return bottomMargin;
+    public float getPaddingBottom() {
+	return paddingBottom;
     }
 
-    public void setBottomMargin(float bottomMargin) {
-	this.bottomMargin = bottomMargin;
+    public void setPaddingBottom(float paddingBottom) {
+	this.paddingBottom = paddingBottom;
     }
 
-    protected float getHorizontalMarginsWithBorder() {
-	return getLeftMargin() + getRightMargin() + getBorderWidth();
+    public void setPadding(float left, float right, float top, float bottom) {
+	setPaddingLeft(left);
+	setPaddingRight(right);
+	setPaddingTop(top);
+	setPaddingBottom(bottom);
     }
 
-    protected float getVerticalMarginsWithBorder() {
-	return getTopMargin() + getBottomMargin() + getBorderWidth();
+    public float getMarginLeft() {
+	return marginLeft;
     }
 
-    public void setMargins(float left, float right, float top, float bottom) {
-	setLeftMargin(left);
-	setRightMargin(right);
-	setTopMargin(top);
-	setBottomMargin(bottom);
+    public void setMarginLeft(float marginLeft) {
+	this.marginLeft = marginLeft;
+    }
+
+    public float getMarginRight() {
+	return marginRight;
+    }
+
+    public void setMarginRight(float marginRight) {
+	this.marginRight = marginRight;
+    }
+
+    public float getMarginTop() {
+	return marginTop;
+    }
+
+    public void setMarginTop(float marginTop) {
+	this.marginTop = marginTop;
+    }
+
+    public float getMarginBottom() {
+	return marginBottom;
+    }
+
+    public void setMarginBottom(float marginBottom) {
+	this.marginBottom = marginBottom;
+    }
+
+    public void setMargin(float left, float right, float top, float bottom) {
+	setMarginLeft(left);
+	setMarginRight(right);
+	setMarginTop(top);
+	setMarginBottom(bottom);
+    }
+
+    protected float getHorizontalSpacingWithBorder() {
+	return getMarginLeft() + getMarginRight() + 2 * getBorderWidth()
+		+ getPaddingLeft() + getPaddingRight();
+    }
+
+    protected float getVerticalSpacingWithBorder() {
+	return getMarginTop() + getMarginBottom() + 2 * getBorderWidth()
+		+ getPaddingTop() + getPaddingBottom();
     }
 
     protected Float getInternalHeight() {
@@ -161,7 +211,7 @@ public class Frame implements Element, Drawable, WidthRespecting, Dividable {
 	if (getInternalWidth() != null) {
 	    return getInternalWidth();
 	}
-	return inner.getWidth() + getHorizontalMarginsWithBorder();
+	return inner.getWidth() + getHorizontalSpacingWithBorder();
     }
 
     @Override
@@ -169,7 +219,7 @@ public class Frame implements Element, Drawable, WidthRespecting, Dividable {
 	if (getInternalHeight() != null) {
 	    return getInternalHeight();
 	}
-	return inner.getHeight() + getVerticalMarginsWithBorder();
+	return inner.getHeight() + getVerticalSpacingWithBorder();
     }
 
     @Override
@@ -193,14 +243,14 @@ public class Frame implements Element, Drawable, WidthRespecting, Dividable {
 	if (inner instanceof WidthRespecting) {
 	    if (getInternalWidth() != null) {
 		((WidthRespecting) inner).setMaxWidth(getInternalWidth()
-			- getHorizontalMarginsWithBorder());
+			- getHorizontalSpacingWithBorder());
 	    } else if (maxWidth >= 0) {
 		((WidthRespecting) inner).setMaxWidth(maxWidth
-			- getHorizontalMarginsWithBorder());
+			- getHorizontalSpacingWithBorder());
 	    }
 	}
     }
-    
+
     protected void setInnerMaxWidthIfNecessary() throws IOException {
 	if (getAbsolutePosition() != null && getInternalWidth() != null) {
 	    setMaxWidth(getInternalWidth());
@@ -210,30 +260,36 @@ public class Frame implements Element, Drawable, WidthRespecting, Dividable {
     @Override
     public void draw(PDDocument pdDocument, PDPageContentStream contentStream,
 	    Position upperLeft, DrawListener drawListener) throws IOException {
-	
+
 	setInnerMaxWidthIfNecessary();
 
 	float halfBorderWidth = 0;
 	if (getBorderWidth() > 0) {
 	    halfBorderWidth = getBorderWidth() / 2f;
-	    upperLeft = upperLeft.add(halfBorderWidth, -halfBorderWidth);
 	}
+	upperLeft = upperLeft.add(getMarginLeft() + halfBorderWidth,
+		-getMarginTop() - halfBorderWidth);
 
 	if (getShape() != null) {
+	    float shapeWidth = getWidth() - getBorderWidth() - getMarginLeft()
+		    - getMarginRight();
+	    float shapeHeight = getHeight() - getBorderWidth() - getMarginTop()
+		    - getMarginBottom();
+
 	    if (getBackgroundColor() != null) {
 		getShape().fill(pdDocument, contentStream, upperLeft,
-			getWidth(), getHeight(), getBackgroundColor(),
+			shapeWidth, shapeHeight, getBackgroundColor(),
 			drawListener);
 	    }
 	    if (hasBorder()) {
 		getShape().draw(pdDocument, contentStream, upperLeft,
-			getWidth(), getHeight(), getBorderColor(),
+			shapeWidth, shapeHeight, getBorderColor(),
 			getBorderStroke(), drawListener);
 	    }
 	}
 
-	Position innerUpperLeft = upperLeft.add(getLeftMargin(),
-		-getTopMargin());
+	Position innerUpperLeft = upperLeft.add(getPaddingLeft()
+		+ halfBorderWidth, -getPaddingTop() - halfBorderWidth);
 
 	inner.draw(pdDocument, contentStream, innerUpperLeft, drawListener);
     }
@@ -255,14 +311,14 @@ public class Frame implements Element, Drawable, WidthRespecting, Dividable {
 	    innerDividable = new Cutter(inner);
 	}
 
-	if (remainingHeight - getVerticalMarginsWithBorder() <= 0) {
+	if (remainingHeight - getVerticalSpacingWithBorder() <= 0) {
 	    return new Divided(new VerticalSpacer(remainingHeight), this);
 	}
 
 	// some space left on this page for the inner element
-	float spaceLeft = remainingHeight - getVerticalMarginsWithBorder();
+	float spaceLeft = remainingHeight - getVerticalSpacingWithBorder();
 	Divided divided = innerDividable.divide(spaceLeft, nextPageHeight
-		- getVerticalMarginsWithBorder());
+		- getVerticalSpacingWithBorder());
 
 	Float firstHeight = getInternalHeight() == null ? null
 		: remainingHeight;
@@ -317,7 +373,7 @@ public class Frame implements Element, Drawable, WidthRespecting, Dividable {
 		+ "aliquyam erat, _sed diam_ voluptua. At vero eos et *accusam et justo* "
 		+ "duo dolores et ea rebum.";
 
-	Document document = new Document(Constants.A6, 50, 50, 50, 50);
+	Document document = new Document(Constants.A6);
 
 	// document.add(PositionControl.createSetPosition(50f, 100f));
 
@@ -328,9 +384,10 @@ public class Frame implements Element, Drawable, WidthRespecting, Dividable {
 	box.setShape(new RoundedRect(20));
 	box.setBorderColor(Color.blue);
 	box.setBorderStroke(new Stroke(3));
-//	 box.setAbsolutePosition(new Position(50f, 200f));
-	box.setMargins(20, 20, 30, 5);
-	box.setBackgroundColor(Color.pink);
+	// box.setAbsolutePosition(new Position(50f, 200f));
+	box.setMargin(20, 20, 30, 5);
+	box.setPadding(10,5,10,5);
+//	box.setBackgroundColor(Color.pink);
 	document.add(box);
 
 	final OutputStream outputStream = new FileOutputStream("box.pdf");
