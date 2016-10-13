@@ -14,32 +14,32 @@ public class RoundedRect extends AbstractShape {
 
     private final static float BEZ = 0.551915024494f;
 
-    private final float cornerRadianX;
-    private final float cornerRadianY;
+    private final float cornerRadiusX;
+    private final float cornerRadiusY;
 
     /**
-     * Creates a rounded rect with equal radians for both x-axis and y-axis (quarter of a circle).
-     * @param cornerRadian the radian of the corner circle.
+     * Creates a rounded rect with equal radiuss for both x-axis and y-axis (quarter of a circle).
+     * @param cornerRadius the radius of the corner circle.
      */
-    public RoundedRect(float cornerRadian) {
-	this(cornerRadian, cornerRadian);
+    public RoundedRect(float cornerRadius) {
+	this(cornerRadius, cornerRadius);
     }
 
     /**
-     * Creates a rounded rect with potentially different radians for both x-axis and y-axis (quarter of an elipsis).
-     * @param cornerRadianX the radian in x-direction of the corner elipsis.
-     * @param cornerRadianY the radian in y-direction of the corner elipsis.
+     * Creates a rounded rect with potentially different radiuss for both x-axis and y-axis (quarter of an elipsis).
+     * @param cornerRadiusX the radius in x-direction of the corner elipsis.
+     * @param cornerRadiusY the radius in y-direction of the corner elipsis.
      */
-    public RoundedRect(float cornerRadianX, float cornerRadianY) {
-	this.cornerRadianX = cornerRadianX;
-	this.cornerRadianY = cornerRadianY;
+    public RoundedRect(float cornerRadiusX, float cornerRadiusY) {
+	this.cornerRadiusX = cornerRadiusX;
+	this.cornerRadiusY = cornerRadiusY;
     }
 
     @Override
     public void add(PDDocument pdDocument, PDPageContentStream contentStream,
 	    Position upperLeft, float width, float height) throws IOException {
 	
-	addRoundRect(contentStream, upperLeft, width, height, cornerRadianX, cornerRadianY);
+	addRoundRect(contentStream, upperLeft, width, height, cornerRadiusX, cornerRadiusY);
     }
 
     /**
@@ -58,32 +58,32 @@ public class RoundedRect extends AbstractShape {
      * </pre>
      */
     protected void addRoundRect(PDPageContentStream contentStream,
-	    Position upperLeft, float width, float height, float cornerRadianX,
-	    float cornerRadianY) throws IOException {
-	float nettoWidth = width - 2 * cornerRadianX;
-	float nettoHeight = height - 2 * cornerRadianY;
+	    Position upperLeft, float width, float height, float cornerRadiusX,
+	    float cornerRadiusY) throws IOException {
+	float nettoWidth = width - 2 * cornerRadiusX;
+	float nettoHeight = height - 2 * cornerRadiusY;
 
 	// top line
-	Position a = new Position(upperLeft.getX() + cornerRadianX,
+	Position a = new Position(upperLeft.getX() + cornerRadiusX,
 		upperLeft.getY());
 	Position b = new Position(a.getX() + nettoWidth, a.getY());
 	// right line
 	Position c = new Position(upperLeft.getX() + width, upperLeft.getY()
-		- cornerRadianY);
+		- cornerRadiusY);
 	Position d = new Position(c.getX(), c.getY() - nettoHeight);
 	// bottom line
 	Position e = new Position(
-		upperLeft.getX() + width - cornerRadianX, upperLeft.getY()
+		upperLeft.getX() + width - cornerRadiusX, upperLeft.getY()
 			- height);
 	Position f = new Position(e.getX() - nettoWidth, e.getY());
 	// left line
 	Position g = new Position(upperLeft.getX(), upperLeft.getY() - height
-		+ cornerRadianY);
+		+ cornerRadiusY);
 	Position h = new Position(g.getX(), upperLeft.getY()
-		- cornerRadianY);
+		- cornerRadiusY);
 
-	float bezX = cornerRadianX * BEZ;
-	float bezY = cornerRadianY * BEZ;
+	float bezX = cornerRadiusX * BEZ;
+	float bezY = cornerRadiusY * BEZ;
 
 	contentStream.moveTo(a.getX(), a.getY());
 	addLine(contentStream, a.getX(), a.getY(), b.getX(), b.getY());
