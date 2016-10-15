@@ -5,6 +5,7 @@ import java.io.OutputStream;
 import rst.pdfbox.layout.elements.Document;
 import rst.pdfbox.layout.elements.Frame;
 import rst.pdfbox.layout.elements.Paragraph;
+import rst.pdfbox.layout.elements.PageFormat;
 import rst.pdfbox.layout.elements.render.VerticalLayoutHint;
 import rst.pdfbox.layout.shape.Elipsis;
 import rst.pdfbox.layout.shape.Rect;
@@ -35,7 +36,7 @@ public class Frames {
 		+ "eos et _accusam et *justo* duo dolores_ et ea rebum. Stet clita kasd "
 		+ "gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.\n";
 
-	Document document = new Document(Constants.A5);
+	Document document = new Document(new PageFormat(Constants.A5));
 
 	Paragraph paragraph = new Paragraph();
 	paragraph.addMarkup("Am I living in a box?", 11, BaseFont.Times);

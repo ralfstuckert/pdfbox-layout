@@ -1,19 +1,14 @@
 package rst.pdfbox.layout.elements;
 
 import java.awt.Color;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.edit.PDPageContentStream;
 
 import rst.pdfbox.layout.shape.Rect;
-import rst.pdfbox.layout.shape.RoundedRect;
 import rst.pdfbox.layout.shape.Shape;
 import rst.pdfbox.layout.shape.Stroke;
-import rst.pdfbox.layout.text.BaseFont;
-import rst.pdfbox.layout.text.Constants;
 import rst.pdfbox.layout.text.DrawListener;
 import rst.pdfbox.layout.text.Position;
 import rst.pdfbox.layout.text.WidthRespecting;
@@ -543,64 +538,5 @@ public class Frame implements Element, Drawable, WidthRespecting, Dividable {
 	return new Divided(first, tail);
     }
 
-    public static void main(String[] args) throws Exception {
-	String text1 = "{color:#ff0000}Lorem ipsum dolor sit amet, consetetur sadipscing elitr, "
-		+ "sed diam nonumy eirmod tempor invidunt ut labore et dolore magna "
-		+ "aliquyam erat, _sed diam_ voluptua. At vero eos et *accusam et justo* "
-		+ "sed diam nonumy eirmod tempor invidunt ut labore et dolore magna "
-		+ "aliquyam erat, _sed diam_ voluptua. At vero eos et *accusam et justo* "
-		+ "sed diam nonumy eirmod tempor invidunt ut labore et dolore magna "
-		+ "aliquyam erat, _sed diam_ voluptua. At vero eos et *accusam et justo* "
-		+ "sed diam nonumy eirmod tempor invidunt ut labore et dolore magna "
-		+ "aliquyam erat, _sed diam_ voluptua. At vero eos et *accusam et justo* "
-		+ "sed diam nonumy eirmod tempor invidunt ut labore et dolore magna "
-		+ "aliquyam erat, _sed diam_ voluptua. At vero eos et *accusam et justo* "
-		+ "sed diam nonumy eirmod tempor invidunt ut labore et dolore magna "
-		+ "aliquyam erat, _sed diam_ voluptua. At vero eos et *accusam et justo* "
-		+ "sed diam nonumy eirmod tempor invidunt ut labore et dolore magna "
-		+ "aliquyam erat, _sed diam_ voluptua. At vero eos et *accusam et justo* "
-		+ "sed diam nonumy eirmod tempor invidunt ut labore et dolore magna "
-		+ "aliquyam erat, _sed diam_ voluptua. At vero eos et *accusam et justo* "
-		+ "sed diam nonumy eirmod tempor invidunt ut labore et dolore magna "
-		+ "aliquyam erat, _sed diam_ voluptua. At vero eos et *accusam et justo\n\n\n\n* "
-		+ "sed diam nonumy eirmod tempor invidunt ut labore et dolore magna "
-		+ "aliquyam erat, _sed diam_ voluptua. At vero eos et *accusam et justo* "
-		+ "sed diam nonumy eirmod tempor invidunt ut labore et dolore magna "
-		+ "aliquyam erat, _sed diam_ voluptua. At vero eos et *accusam et justo* "
-		+ "sed diam nonumy eirmod tempor invidunt ut labore et dolore magna "
-		+ "aliquyam erat, _sed diam_ voluptua. At vero eos et *accusam et justo* "
-		+ "sed diam nonumy eirmod tempor invidunt ut labore et dolore magna "
-		+ "aliquyam erat, _sed diam_ voluptua. At vero eos et *accusam et justo* "
-		+ "sed diam nonumy eirmod tempor invidunt ut labore et dolore magna "
-		+ "aliquyam erat, _sed diam_ voluptua. At vero eos et *accusam et justo* "
-		+ "sed diam nonumy eirmod tempor invidunt ut labore et dolore magna "
-		+ "aliquyam erat, _sed diam_ voluptua. At vero eos et *accusam et justo* "
-		+ "sed diam nonumy eirmod tempor invidunt ut labore et dolore magna "
-		+ "aliquyam erat, _sed diam_ voluptua. At vero eos et *accusam et justo* "
-		+ "sed diam nonumy eirmod tempor invidunt ut labore et dolore magna "
-		+ "aliquyam erat, _sed diam_ voluptua. At vero eos et *accusam et justo* "
-		+ "duo dolores et ea rebum.";
-
-	Document document = new Document(Constants.A6);
-
-	// document.add(PositionControl.createSetPosition(50f, 100f));
-
-	Paragraph paragraph1 = new Paragraph();
-	paragraph1.addMarkup(text1, 11, BaseFont.Times);
-
-	Frame box = new Frame(paragraph1, null, null);
-	box.setShape(new RoundedRect(20));
-	box.setBorderColor(Color.blue);
-	box.setBorderStroke(new Stroke(3));
-	// box.setAbsolutePosition(new Position(50f, 200f));
-	box.setMargin(20, 20, 30, 5);
-	box.setPadding(10, 5, 10, 5);
-	 box.setBackgroundColor(Color.pink);
-	document.add(box);
-
-	final OutputStream outputStream = new FileOutputStream("box.pdf");
-	document.save(outputStream);
-
-    }
 
 }

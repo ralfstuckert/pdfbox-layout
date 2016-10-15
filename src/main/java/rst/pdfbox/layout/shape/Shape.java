@@ -12,7 +12,7 @@ import rst.pdfbox.layout.text.Position;
 /**
  * Shapes can be used to either
  * {@link #draw(PDDocument, PDPageContentStream, Position, float, float, Color, Stroke, DrawListener)
- * stroke] or
+ * stroke} or
  * {@link #fill(PDDocument, PDPageContentStream, Position, float, float, Color, DrawListener)
  * fill} the path of the shape, or simply
  * {@link #add(PDDocument, PDPageContentStream, Position, float, float) add the

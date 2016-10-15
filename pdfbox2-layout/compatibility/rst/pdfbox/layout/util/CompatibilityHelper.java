@@ -1,6 +1,7 @@
 package rst.pdfbox.layout.util;
 
 import java.awt.Color;
+import java.awt.geom.PathIterator;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.HashMap;
@@ -67,6 +68,18 @@ public class CompatibilityHelper {
 	    float a, float b, float c, float d, float e, float f)
 	    throws IOException {
 	contentStream.transform(new Matrix(a, b, c, d, e, f));
+    }
+
+    public static void curveTo(final PDPageContentStream contentStream, float x1, float y1, float x2, float y2, float x3, float y3) throws IOException {
+	contentStream.curveTo(x1, y1, x2, y2, x3, y3);
+    }
+    
+    public static void curveTo1(final PDPageContentStream contentStream, float x1, float y1, float x3, float y3) throws IOException {
+	contentStream.curveTo1(x1, y1, x3, y3);
+    }
+
+    public static void fillNonZero(final PDPageContentStream contentStream) throws IOException {
+	contentStream.fill();
     }
 
     public static void showText(final PDPageContentStream contentStream,

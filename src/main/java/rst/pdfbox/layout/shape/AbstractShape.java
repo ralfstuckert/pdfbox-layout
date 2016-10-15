@@ -6,10 +6,9 @@ import java.io.IOException;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.edit.PDPageContentStream;
 
-import com.sun.javafx.geom.PathIterator;
-
 import rst.pdfbox.layout.text.DrawListener;
 import rst.pdfbox.layout.text.Position;
+import rst.pdfbox.layout.util.CompatibilityHelper;
 
 /**
  * Abstract base class for shapes which performs the
@@ -51,7 +50,7 @@ public abstract class AbstractShape implements Shape {
 	if (color != null) {
 	    contentStream.setNonStrokingColor(color);
 	}
-	contentStream.fill(PathIterator.WIND_NON_ZERO);
+	CompatibilityHelper.fillNonZero(contentStream);
 
 	if (drawListener != null) {
 	    drawListener.drawn(this, upperLeft, width, height);

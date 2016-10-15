@@ -67,6 +67,18 @@ public class CompatibilityHelper {
 	    throws IOException {
 	contentStream.concatenate2CTM(a, b, c, d, e, f);
     }
+    
+    public static void curveTo(final PDPageContentStream contentStream, float x1, float y1, float x2, float y2, float x3, float y3) throws IOException {
+	contentStream.addBezier312(x1, y1, x2, y2, x3, y3);
+    }
+    
+    public static void curveTo1(final PDPageContentStream contentStream, float x1, float y1, float x3, float y3) throws IOException {
+	contentStream.addBezier31(x1, y1, x3, y3);
+    }
+
+    public static void fillNonZero(final PDPageContentStream contentStream) throws IOException {
+	contentStream.fill(PathIterator.WIND_NON_ZERO);
+    }
 
     public static void showText(final PDPageContentStream contentStream,
 	    final String text) throws IOException {

@@ -6,6 +6,7 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.edit.PDPageContentStream;
 
 import rst.pdfbox.layout.text.Position;
+import rst.pdfbox.layout.util.CompatibilityHelper;
 
 /**
  * A rectangular shape with rounded corners.
@@ -56,6 +57,14 @@ public class RoundedRect extends AbstractShape {
      *      ----------
      *     f          e
      * </pre>
+     * 
+     * @param contentStream the content stream.
+     * @param upperLeft the upper left point
+     * @param width the width
+     * @param height the height
+     * @param cornerRadiusX the corner radius in x direction
+     * @param cornerRadiusY the corner radius in y direction
+     * @throws IOException by pdfbox
      */
     protected void addRoundRect(PDPageContentStream contentStream,
 	    Position upperLeft, float width, float height, float cornerRadiusX,
@@ -87,18 +96,18 @@ public class RoundedRect extends AbstractShape {
 
 	contentStream.moveTo(a.getX(), a.getY());
 	addLine(contentStream, a.getX(), a.getY(), b.getX(), b.getY());
-	contentStream.addBezier312(b.getX() + bezX, b.getY(), c.getX(),
+	CompatibilityHelper.curveTo(contentStream,b.getX() + bezX, b.getY(), c.getX(),
 		c.getY() + bezY, c.getX(), c.getY());
 	// contentStream.addLine(c.getX(), c.getY(), d.getX(), d.getY());
 	addLine(contentStream, c.getX(), c.getY(), d.getX(), d.getY());
-	contentStream.addBezier312(d.getX(), d.getY() - bezY, e.getX() + bezX,
+	CompatibilityHelper.curveTo(contentStream,d.getX(), d.getY() - bezY, e.getX() + bezX,
 		e.getY(), e.getX(), e.getY());
 	// contentStream.addLine(e.getX(), e.getY(), f.getX(), f.getY());
 	addLine(contentStream, e.getX(), e.getY(), f.getX(), f.getY());
-	contentStream.addBezier312(f.getX() - bezX, f.getY(), g.getX(),
+	CompatibilityHelper.curveTo(contentStream,f.getX() - bezX, f.getY(), g.getX(),
 		g.getY() - bezY, g.getX(), g.getY());
 	addLine(contentStream, g.getX(), g.getY(), h.getX(), h.getY());
-	contentStream.addBezier312(h.getX(), h.getY() + bezY, a.getX() - bezX,
+	CompatibilityHelper.curveTo(contentStream, h.getX(), h.getY() + bezY, a.getX() - bezX,
 		a.getY(), a.getX(), a.getY());
     }
 
@@ -111,7 +120,7 @@ public class RoundedRect extends AbstractShape {
 	    float y1, float x2, float y2) throws IOException {
 	float xMid = (x1 + x2) / 2f;
 	float yMid = (y1 + y2) / 2f;
-	contentStream.addBezier31(xMid, yMid, x2, y2);
+	CompatibilityHelper.curveTo1(contentStream, xMid, yMid, x2, y2);
     }
 
 }
