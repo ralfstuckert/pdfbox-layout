@@ -30,7 +30,7 @@ public abstract class AbstractShape implements Shape {
 	if (stroke != null) {
 	    stroke.applyTo(contentStream);
 	}
-	if (color == null) {
+	if (color != null) {
 	    contentStream.setStrokingColor(color);
 	}
 	contentStream.stroke();

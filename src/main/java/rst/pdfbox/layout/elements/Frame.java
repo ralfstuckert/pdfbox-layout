@@ -362,30 +362,44 @@ public class Frame implements Element, Drawable, WidthRespecting, Dividable {
     }
 
     /**
+     * @return the sum of left/right padding and border width.
+     */
+    protected float getHorizontalShapeSpacing() {
+	return 2 * getBorderWidth()
+		+ getPaddingLeft() + getPaddingRight();
+    }
+
+    /**
+     * @return the sum of top/bottom  padding and border width.
+     */
+    protected float getVerticalShapeSpacing() {
+	return 2 * getBorderWidth()
+		+ getPaddingTop() + getPaddingBottom();
+    }
+
+    /**
      * @return the sum of left/right margin, padding and border width.
      */
-    protected float getHorizontalSpacingWithBorder() {
-	return getMarginLeft() + getMarginRight() + 2 * getBorderWidth()
-		+ getPaddingLeft() + getPaddingRight();
+    protected float getHorizontalSpacing() {
+	return getMarginLeft() + getMarginRight() + getHorizontalShapeSpacing();
     }
 
     /**
      * @return the sum of top/bottom margin, padding and border width.
      */
-    protected float getVerticalSpacingWithBorder() {
-	return getMarginTop() + getMarginBottom() + 2 * getBorderWidth()
-		+ getPaddingTop() + getPaddingBottom();
+    protected float getVerticalSpacing() {
+	return getMarginTop() + getMarginBottom() + getVerticalShapeSpacing();
     }
 
     /**
-     * @return the height given to constrain the size of the frame.
+     * @return the height given to constrain the size of the shape.
      */
     protected Float getGivenHeight() {
 	return height;
     }
 
     /**
-     * @return the width given to constrain the size of the frame.
+     * @return the width given to constrain the size of the shape.
      */
     protected Float getGivenWidth() {
 	return width;
@@ -394,17 +408,17 @@ public class Frame implements Element, Drawable, WidthRespecting, Dividable {
     @Override
     public float getWidth() throws IOException {
 	if (getGivenWidth() != null) {
-	    return getGivenWidth();
+	    return getGivenWidth() + getMarginLeft() + getMarginRight();
 	}
-	return inner.getWidth() + getHorizontalSpacingWithBorder();
+	return inner.getWidth() + getHorizontalSpacing();
     }
 
     @Override
     public float getHeight() throws IOException {
 	if (getGivenHeight() != null) {
-	    return getGivenHeight();
+	    return getGivenHeight() + getMarginTop() + getMarginBottom();
 	}
-	return inner.getHeight() + getVerticalSpacingWithBorder();
+	return inner.getHeight() + getVerticalSpacing();
     }
 
     @Override
@@ -434,10 +448,10 @@ public class Frame implements Element, Drawable, WidthRespecting, Dividable {
 	if (inner instanceof WidthRespecting) {
 	    if (getGivenWidth() != null) {
 		((WidthRespecting) inner).setMaxWidth(getGivenWidth()
-			- getHorizontalSpacingWithBorder());
+			- getHorizontalShapeSpacing());
 	    } else if (maxWidth >= 0) {
 		((WidthRespecting) inner).setMaxWidth(maxWidth
-			- getHorizontalSpacingWithBorder());
+			- getHorizontalSpacing());
 	    }
 	}
     }
@@ -450,7 +464,7 @@ public class Frame implements Element, Drawable, WidthRespecting, Dividable {
      */
     protected void setInnerMaxWidthIfNecessary() throws IOException {
 	if (getAbsolutePosition() == null && getGivenWidth() != null) {
-	    setMaxWidth(getGivenWidth());
+	    setMaxWidth(getGivenWidth()-getHorizontalShapeSpacing());
 	}
     }
 
@@ -468,10 +482,8 @@ public class Frame implements Element, Drawable, WidthRespecting, Dividable {
 		-getMarginTop() - halfBorderWidth);
 
 	if (getShape() != null) {
-	    float shapeWidth = getWidth() - getBorderWidth() - getMarginLeft()
-		    - getMarginRight();
-	    float shapeHeight = getHeight() - getBorderWidth() - getMarginTop()
-		    - getMarginBottom();
+	    float shapeWidth = getWidth() - getMarginLeft() - getMarginRight() - getBorderWidth();
+	    float shapeHeight = getHeight() -getMarginTop() - getMarginBottom() - getBorderWidth();
 
 	    if (getBackgroundColor() != null) {
 		getShape().fill(pdDocument, contentStream, upperLeft,
@@ -509,14 +521,14 @@ public class Frame implements Element, Drawable, WidthRespecting, Dividable {
 	    innerDividable = new Cutter(inner);
 	}
 
-	if (remainingHeight - getVerticalSpacingWithBorder() <= 0) {
+	if (remainingHeight - getVerticalSpacing() <= 0) {
 	    return new Divided(new VerticalSpacer(remainingHeight), this);
 	}
 
 	// some space left on this page for the inner element
-	float spaceLeft = remainingHeight - getVerticalSpacingWithBorder();
+	float spaceLeft = remainingHeight - getVerticalSpacing();
 	Divided divided = innerDividable.divide(spaceLeft, nextPageHeight
-		- getVerticalSpacingWithBorder());
+		- getVerticalSpacing());
 
 	Float firstHeight = getGivenHeight() == null ? null : remainingHeight;
 	Float tailHeight = getGivenHeight() == null ? null : getGivenHeight()
@@ -532,7 +544,7 @@ public class Frame implements Element, Drawable, WidthRespecting, Dividable {
     }
 
     public static void main(String[] args) throws Exception {
-	String text1 = "{color:#0000ff}Lorem ipsum dolor sit amet, consetetur sadipscing elitr, "
+	String text1 = "{color:#ff0000}Lorem ipsum dolor sit amet, consetetur sadipscing elitr, "
 		+ "sed diam nonumy eirmod tempor invidunt ut labore et dolore magna "
 		+ "aliquyam erat, _sed diam_ voluptua. At vero eos et *accusam et justo* "
 		+ "sed diam nonumy eirmod tempor invidunt ut labore et dolore magna "
@@ -583,7 +595,7 @@ public class Frame implements Element, Drawable, WidthRespecting, Dividable {
 	// box.setAbsolutePosition(new Position(50f, 200f));
 	box.setMargin(20, 20, 30, 5);
 	box.setPadding(10, 5, 10, 5);
-	// box.setBackgroundColor(Color.pink);
+	 box.setBackgroundColor(Color.pink);
 	document.add(box);
 
 	final OutputStream outputStream = new FileOutputStream("box.pdf");
