@@ -77,6 +77,7 @@ public class RenderContext implements Layout, Closeable, DrawContext, DrawListen
      */
     public void setLayout(Layout layout) {
 	this.layout = layout;
+	resetPositionToLeft();
     }
 
     /**
@@ -169,6 +170,13 @@ public class RenderContext implements Layout, Closeable, DrawContext, DrawListen
 	currentPosition = getUpperLeft();
     }
 
+    /**
+     * Resets the position to the x of {@link #getUpperLeft()} while keeping the current y.
+     */
+    public void resetPositionToLeft() {
+	currentPosition = new Position(getUpperLeft().getX(), currentPosition.getY());
+    }
+    
     /**
      * @return the orientation of the current page
      */
