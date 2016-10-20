@@ -30,9 +30,9 @@ public interface Shape {
      * @param upperLeft
      *            the upper left position to start drawing.
      * @param width
-     *            the width of the shape.
+     *            the width of the bounding box.
      * @param height
-     *            the height of the shape.
+     *            the height of the bounding box.
      * @param color
      *            the color to use.
      * @param stroke
@@ -58,9 +58,9 @@ public interface Shape {
      * @param upperLeft
      *            the upper left position to start drawing.
      * @param width
-     *            the width of the shape.
+     *            the width of the bounding box.
      * @param height
-     *            the height of the shape.
+     *            the height of the bounding box.
      * @param color
      *            the color to use.
      * @param drawListener
@@ -84,9 +84,9 @@ public interface Shape {
      * @param upperLeft
      *            the upper left position to start drawing.
      * @param width
-     *            the width of the shape.
+     *            the width of the bounding box.
      * @param height
-     *            the height of the shape.
+     *            the height of the bounding box.
      * @throws IOException
      *             by pdfbox
      */
