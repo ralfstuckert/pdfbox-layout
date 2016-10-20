@@ -11,7 +11,7 @@ import rst.pdfbox.layout.util.CompatibilityHelper;
 /**
  * A rectangular shape with rounded corners.
  */
-public class RoundedRect extends AbstractShape {
+public class RoundRect extends AbstractShape {
 
     private final static float BEZ = 0.551915024494f;
 
@@ -22,7 +22,7 @@ public class RoundedRect extends AbstractShape {
      * Creates a rounded rect with equal radiuss for both x-axis and y-axis (quarter of a circle).
      * @param cornerRadius the radius of the corner circle.
      */
-    public RoundedRect(float cornerRadius) {
+    public RoundRect(float cornerRadius) {
 	this(cornerRadius, cornerRadius);
     }
 
@@ -31,7 +31,7 @@ public class RoundedRect extends AbstractShape {
      * @param cornerRadiusX the radius in x-direction of the corner elipsis.
      * @param cornerRadiusY the radius in y-direction of the corner elipsis.
      */
-    public RoundedRect(float cornerRadiusX, float cornerRadiusY) {
+    public RoundRect(float cornerRadiusX, float cornerRadiusY) {
 	this.cornerRadiusX = cornerRadiusX;
 	this.cornerRadiusY = cornerRadiusY;
     }
