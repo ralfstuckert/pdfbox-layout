@@ -9,7 +9,7 @@ import rst.pdfbox.layout.text.Position;
 /**
  * Shapes an elipsis, or a circle if width==height.
  */
-public class Elipsis extends RoundedRect {
+public class Elipsis extends RoundRect {
 
     /**
      * Default constructor.
