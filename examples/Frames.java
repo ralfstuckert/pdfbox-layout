@@ -28,7 +28,7 @@ public class Frames {
 		+ " At vero eos et accusam* et justo duo dolores et ea rebum. Stet clita kasd "
 		+ "gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.";
 
-	String text2 = "At *vero eos et accusam* et justo duo dolores et ea rebum."
+	String text2 = "At *vero eos et accusam* et justo duo dolores et ea rebum. "
 		+ "Stet clita kasd gubergren, no sea takimata\n\n"
 		+ "sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, "
 		+ "_consetetur sadipscing elitr_, sed diam nonumy eirmod tempor invidunt "
@@ -42,8 +42,7 @@ public class Frames {
 	paragraph.addMarkup("Am I living in a box?", 11, BaseFont.Times);
 	Frame box = new Frame(paragraph);
 	box.setShape(new Rect());
-	box.setBorderColor(Color.black);
-	box.setBorderStroke(new Stroke());
+	box.setBorder(Color.black, new Stroke());
 	box.setPadding(10, 10, 5, 5);
 	box.setMargin(40, 40, 20, 10);
 	document.add(box, VerticalLayoutHint.CENTER);
@@ -62,8 +61,7 @@ public class Frames {
 	paragraph.setAlignment(Alignment.Center);
 	box = new Frame(paragraph, 300f, 100f);
 	box.setShape(new Elipsis());
-	box.setBorderColor(Color.green);
-	box.setBorderStroke(new Stroke(2));
+	box.setBorder(Color.green, new Stroke(2));
 	box.setBackgroundColor(Color.pink);
 	box.setPadding(50, 0, 35, 0);
 //	box.setMargin(30, 30, 20, 10);
@@ -77,8 +75,7 @@ public class Frames {
 	paragraph.addMarkup(text2, 11, BaseFont.Times);
 	box = new Frame(paragraph, null, null);
 	box.setShape(new RoundedRect(10));
-	box.setBorderColor(Color.magenta);
-	box.setBorderStroke(new Stroke(3));
+	box.setBorder(Color.magenta, new Stroke(3));
 	box.setBackgroundColor(new Color(255,240,180));
 	box.setPadding(20, 15, 10, 15);
 	box.setMargin(50, 50, 20, 10);
@@ -87,5 +84,6 @@ public class Frames {
 	final OutputStream outputStream = new FileOutputStream("frames.pdf");
 	document.save(outputStream);
 
+    }
     }
 }
