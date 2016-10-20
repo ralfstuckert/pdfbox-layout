@@ -144,6 +144,18 @@ public class Frame implements Element, Drawable, WidthRespecting, Dividable {
     }
 
     /**
+     * Convenience method for setting both border color and stroke.
+     * @param borderColor
+     *            the border color.
+     * @param borderStroke
+     *            the stroke to use.
+     */
+    public void setBorder(Color borderColor, Stroke borderStroke) {
+	setBorderColor(borderColor);
+	setBorderStroke(borderStroke);
+    }
+    
+    /**
      * @return the color to use to draw the background.
      */
     public Color getBackgroundColor() {
