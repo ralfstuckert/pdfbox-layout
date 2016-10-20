@@ -29,8 +29,8 @@ public class Frames {
 		+ "gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.";
 
 	String text2 = "At *vero eos et accusam* et justo duo dolores et ea rebum. "
-		+ "Stet clita kasd gubergren, no sea takimata\n\n"
-		+ "sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, "
+		+ "Stet clita kasd gubergren, no sea takimata.\n\n"
+		+ "Sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, "
 		+ "_consetetur sadipscing elitr_, sed diam nonumy eirmod tempor invidunt "
 		+ "ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero "
 		+ "eos et _accusam et *justo* duo dolores_ et ea rebum. Stet clita kasd "
