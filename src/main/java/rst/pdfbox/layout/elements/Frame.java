@@ -41,8 +41,8 @@ public class Frame implements Element, Drawable, WidthRespecting, Dividable {
 
     private float maxWidth = -1;
 
-    private Float width;
-    private Float height;
+    private Float givenWidth;
+    private Float givenHeight;
 
     private Position absolutePosition;
 
@@ -58,19 +58,20 @@ public class Frame implements Element, Drawable, WidthRespecting, Dividable {
 
     /**
      * Creates a frame containing the inner element, optionally constraint by
-     * the given dimensions.
+     * the given dimensions. These contraints target the border-box of the frame, means:
+     * the inner element plus padding plus border width, but not the margin.
      * 
      * @param inner
      *            the item to contain.
      * @param width
-     *            the width to constrain the frame to, or <code>null</code>.
+     *            the width to constrain the border-box of the frame to, or <code>null</code>.
      * @param height
-     *            the height to constrain the frame to, or <code>null</code>.
+     *            the height to constrain the border-box of the frame to, or <code>null</code>.
      */
     public Frame(final Drawable inner, final Float width, final Float height) {
 	this.inner = inner;
-	this.width = width;
-	this.height = height;
+	this.givenWidth = width;
+	this.givenHeight = height;
     }
 
     /**
@@ -390,14 +391,14 @@ public class Frame implements Element, Drawable, WidthRespecting, Dividable {
      * @return the height given to constrain the size of the shape.
      */
     protected Float getGivenHeight() {
-	return height;
+	return givenHeight;
     }
 
     /**
      * @return the width given to constrain the size of the shape.
      */
     protected Float getGivenWidth() {
-	return width;
+	return givenWidth;
     }
 
     @Override
