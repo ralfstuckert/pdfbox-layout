@@ -1,3 +1,4 @@
+import java.awt.Color;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 
@@ -6,11 +7,13 @@ import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.edit.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 
+import rst.pdfbox.layout.shape.RoundRect;
+import rst.pdfbox.layout.shape.Shape;
+import rst.pdfbox.layout.shape.Stroke;
 import rst.pdfbox.layout.text.Alignment;
 import rst.pdfbox.layout.text.BaseFont;
 import rst.pdfbox.layout.text.Constants;
 import rst.pdfbox.layout.text.Position;
-import rst.pdfbox.layout.text.StyledText;
 import rst.pdfbox.layout.text.TextFlow;
 import rst.pdfbox.layout.text.TextFlowUtil;
 import rst.pdfbox.layout.text.TextSequenceUtil;
@@ -51,7 +54,7 @@ public class LowLevelText {
 		+ "consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt "
 		+ "ut labore et dolore magna aliquyam erat, *sed diam voluptua.\n\n"
 		+ " At vero eos et accusam* et justo duo dolores et ea rebum. Stet clita kasd "
-		+ "gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.\n\n";
+		+ "gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.\n";
 
 	text = new TextFlow();
 	text.addMarkup(textBlock, 8, BaseFont.Courier);
@@ -60,6 +63,25 @@ public class LowLevelText {
 	text.drawText(contentStream, new Position(xOffset, pageHeight - 100),
 		Alignment.Center, null);
 
+	// draw a round rect box with text
+	text.setMaxWidth(350);
+	float x = 50;
+	float y = pageHeight - 300;
+	float paddingX = 20;
+	float paddingY = 15;
+	float boxWidth = text.getWidth() + 2*paddingX;
+	float boxHeight = text.getHeight() + 2*paddingY;
+
+	Shape shape = new RoundRect(20);
+	shape.fill(test, contentStream, new Position(x, y), 
+		boxWidth, boxHeight, Color.pink, null);
+	shape.draw(test, contentStream, new Position(x, y), 
+		boxWidth, boxHeight, Color.blue, new Stroke(3), null);
+	 // now the text
+	text.drawText(contentStream, new Position(x + paddingX, y - paddingY),
+		Alignment.Center, null);
+
+	
 	contentStream.close();
 
 	final OutputStream outputStream = new FileOutputStream(
