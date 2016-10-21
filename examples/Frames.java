@@ -64,7 +64,7 @@ public class Frames {
 	frame.setBorder(Color.green, new Stroke(2));
 	frame.setBackgroundColor(Color.pink);
 	frame.setPadding(50, 0, 35, 0);
-//	box.setMargin(30, 30, 20, 10);
+//	frame.setMargin(30, 30, 20, 10);
 	document.add(frame);
 
 	paragraph = new Paragraph();
