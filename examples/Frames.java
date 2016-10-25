@@ -7,7 +7,7 @@ import rst.pdfbox.layout.elements.Frame;
 import rst.pdfbox.layout.elements.Paragraph;
 import rst.pdfbox.layout.elements.PageFormat;
 import rst.pdfbox.layout.elements.render.VerticalLayoutHint;
-import rst.pdfbox.layout.shape.Elipsis;
+import rst.pdfbox.layout.shape.Ellipse;
 import rst.pdfbox.layout.shape.Rect;
 import rst.pdfbox.layout.shape.RoundRect;
 import rst.pdfbox.layout.shape.Stroke;
@@ -60,7 +60,7 @@ public class Frames {
 	paragraph.addMarkup("{color:#aa00aa}*Ain't no rectangle*", 22, BaseFont.Helvetica);
 	paragraph.setAlignment(Alignment.Center);
 	frame = new Frame(paragraph, 300f, 100f);
-	frame.setShape(new Elipsis());
+	frame.setShape(new Ellipse());
 	frame.setBorder(Color.green, new Stroke(2));
 	frame.setBackgroundColor(Color.pink);
 	frame.setPadding(50, 0, 35, 0);

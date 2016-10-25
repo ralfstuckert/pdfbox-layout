@@ -27,9 +27,9 @@ public class RoundRect extends AbstractShape {
     }
 
     /**
-     * Creates a rounded rect with potentially different radiuss for both x-axis and y-axis (quarter of an elipsis).
-     * @param cornerRadiusX the radius in x-direction of the corner elipsis.
-     * @param cornerRadiusY the radius in y-direction of the corner elipsis.
+     * Creates a rounded rect with potentially different radiuss for both x-axis and y-axis (quarter of an ellipse).
+     * @param cornerRadiusX the radius in x-direction of the corner ellipse.
+     * @param cornerRadiusY the radius in y-direction of the corner ellipse.
      */
     public RoundRect(float cornerRadiusX, float cornerRadiusY) {
 	this.cornerRadiusX = cornerRadiusX;
