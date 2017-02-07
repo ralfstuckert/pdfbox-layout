@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.pdfbox.pdmodel.font.PDFont;
 
@@ -42,6 +43,36 @@ public class TextFlowUtil {
     public static TextFlow createTextFlow(final String text,
 	    final float fontSize, final PDFont font) throws IOException {
 	final Iterable<CharSequence> parts = fromPlainText(text);
+	return createTextFlow(parts, fontSize, font, font, font, font);
+    }
+
+    public static TextFlow createTextFlowFromPreformattedText(
+	    final String text, final float fontSize, final PDFont font,
+	    final int tabWidth) throws IOException {
+	
+	Pattern pattern = Pattern.compile("^(\\h+)", Pattern.MULTILINE);
+	Matcher matcher = pattern.matcher(text);
+	StringBuffer buffer = new StringBuffer(text.length());
+	while (matcher.find()) {
+	    String group = matcher.group();
+	    int indent = 0;
+	    for (char character : group.toCharArray()) {
+		if (character == '\t') {
+		    indent += tabWidth;
+		} else {
+		    indent += 1;
+		}
+	    }
+	    matcher.appendReplacement(buffer, String.format("--{%sem}", indent));
+	}
+	matcher.appendTail(buffer);
+	CharSequence indentedText = buffer.toString();
+	
+	Iterable<CharSequence> parts = splitByControlCharacter(
+		ControlCharacters.NEWLINE_FACTORY, Collections.singleton(indentedText));
+	parts = splitByControlCharacter(IndentCharacters.INDENT_FACTORY, parts);
+	parts = unescapeBackslash(parts);
+
 	return createTextFlow(parts, fontSize, font, font, font, font);
     }
 

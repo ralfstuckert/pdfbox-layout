@@ -1,18 +1,16 @@
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 
 import rst.pdfbox.layout.elements.Document;
-import rst.pdfbox.layout.elements.Paragraph;
 import rst.pdfbox.layout.elements.ImageElement;
-import rst.pdfbox.layout.elements.Orientation;
-import rst.pdfbox.layout.elements.PageFormat;
+import rst.pdfbox.layout.elements.Paragraph;
 import rst.pdfbox.layout.elements.VerticalSpacer;
 import rst.pdfbox.layout.elements.render.VerticalLayoutHint;
 import rst.pdfbox.layout.text.Alignment;
 import rst.pdfbox.layout.text.BaseFont;
-import rst.pdfbox.layout.text.Constants;
 import rst.pdfbox.layout.text.Position;
 
 public class Letter {
@@ -22,7 +20,12 @@ public class Letter {
 	float vMargin = 50;
 	Document document = new Document(hMargin, hMargin, vMargin, vMargin);
 
-	ImageElement image = new ImageElement("arrow.png");
+	ImageElement image;
+	if (new File("arrow.png").exists()) {
+	    image = new ImageElement("arrow.png");
+	} else {
+	    image = new ImageElement(Letter.class.getResourceAsStream("/arrow.png"));
+	}
 	image.setWidth(image.getWidth()/7);
 	image.setHeight(image.getHeight()/7);
 	document.add(image, new VerticalLayoutHint(Alignment.Right, 0, 0,

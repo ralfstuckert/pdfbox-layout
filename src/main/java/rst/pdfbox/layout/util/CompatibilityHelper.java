@@ -112,6 +112,19 @@ public class CompatibilityHelper {
 	contentStream.drawXObject(cachedImage, x, y, width, height);
     }
 
+    /**
+     * Renders the given page as an RGB image.
+     * @param document the document containing the page.
+     * @param pageIndex the index of the page to render.
+     * @param resolution the image resolution.
+     * @return the rendered image
+     * @throws IOException
+     */
+    public static BufferedImage createImageFromPage(final PDDocument document, final int pageIndex, final int resolution) throws IOException {
+	final PDPage page = (PDPage) document.getDocumentCatalog().getAllPages().get(pageIndex);
+	return page.convertToImage(BufferedImage.TYPE_INT_RGB, 300);
+    }
+    
     public static int getPageRotation(final PDPage page) {
 	return page.getRotation() == null ? 0 : page.getRotation();
     }

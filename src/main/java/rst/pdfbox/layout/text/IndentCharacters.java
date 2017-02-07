@@ -41,7 +41,7 @@ public class IndentCharacters {
 	protected float indentWidth = 4;
 	protected SpaceUnit indentUnit = SpaceUnit.em;
 
-	protected IndentCharacter(final String level, final String indentWidth,
+	public IndentCharacter(final String level, final String indentWidth,
 		final String indentUnit) {
 	    super("INDENT", IndentCharacterFactory.TO_ESCAPE);
 	    try {

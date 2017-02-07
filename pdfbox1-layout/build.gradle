@@ -2,6 +2,7 @@ import org.apache.tools.ant.filters.ReplaceTokens
 
 dependencies {
   compile("org.apache.pdfbox:pdfbox:1.8.8")
+  testCompile("junit:junit:4.12")
 }
 
 gradle.projectsEvaluated {
@@ -20,10 +21,13 @@ sourceSets {
   }
   test {
     java {
-      srcDir '../src/main/java'
+      srcDir '../src/test/java'
+      srcDir '../examples'
     }
     resources {
-      srcDir '../src/main/resources'
+      srcDir '../src/test/resources'
+      srcDir '../examples'
+      srcDir './pdfbox1-examples'
     }
   }
 }

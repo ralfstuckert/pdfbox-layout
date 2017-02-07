@@ -17,14 +17,14 @@
 	</natures>
 	<linkedResources>
 		<link>
-			<name>java</name>
+			<name>examples</name>
 			<type>2</type>
-			<location>C:/Users/Ralf/git/pdfbox-layout/src/main/java</location>
+			<location>C:/Users/Ralf/git/pdfbox-layout/examples</location>
 		</link>
 		<link>
-			<name>resources</name>
+			<name>src</name>
 			<type>2</type>
-			<location>C:/Users/Ralf/git/pdfbox-layout/src/main/resources</location>
+			<location>C:/Users/Ralf/git/pdfbox-layout/src</location>
 		</link>
 	</linkedResources>
 </projectDescription>

@@ -23,6 +23,8 @@ import org.apache.pdfbox.pdmodel.interactive.action.PDActionURI;
 import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotationLink;
 import org.apache.pdfbox.pdmodel.interactive.annotation.PDBorderStyleDictionary;
 import org.apache.pdfbox.pdmodel.interactive.documentnavigation.destination.PDDestination;
+import org.apache.pdfbox.rendering.ImageType;
+import org.apache.pdfbox.rendering.PDFRenderer;
 import org.apache.pdfbox.util.Matrix;
 
 import rst.pdfbox.layout.text.Position;
@@ -119,6 +121,19 @@ public class CompatibilityHelper {
 
     public static int getPageRotation(final PDPage page) {
 	return page.getRotation();
+    }
+    
+    /**
+     * Renders the given page as an RGB image.
+     * @param document the document containing the page.
+     * @param pageIndex the index of the page to render.
+     * @param resolution the image resolution.
+     * @return the rendered image
+     * @throws IOException
+     */
+    public static BufferedImage createImageFromPage(final PDDocument document, int pageIndex, final int resolution) throws IOException {
+	PDFRenderer pdfRenderer = new PDFRenderer(document);
+	return pdfRenderer.renderImageWithDPI(pageIndex, 300, ImageType.RGB);
     }
 
     public static PDAnnotationLink createLink(PDRectangle rect, Color color,

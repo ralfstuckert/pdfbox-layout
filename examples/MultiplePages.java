@@ -70,7 +70,7 @@ public class MultiplePages {
 	document.add(paragraph2);
 
 	final OutputStream outputStream = new FileOutputStream(
-		"multiplePages.pdf");
+		"multiplepages.pdf");
 	document.save(outputStream);
 
     }
