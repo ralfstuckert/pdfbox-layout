@@ -110,7 +110,7 @@ public class ExampleTest {
 	newPdf = new File("./" + pdfName);
 
 	InputStream oldPdf = this.getClass().getResourceAsStream(
-		"/pdf/" + pdfName);
+		"/examples/pdf/" + pdfName);
 	assertNotNull(oldPdf);
 
 	comparePdfs(newPdf, oldPdf);

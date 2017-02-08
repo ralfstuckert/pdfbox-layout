@@ -26,8 +26,6 @@ sourceSets {
     }
     resources {
       srcDir '../src/test/resources'
-      srcDir '../examples'
-      srcDir './pdfbox1-examples'
     }
   }
 }
