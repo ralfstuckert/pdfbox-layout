@@ -38,10 +38,22 @@ clean{
 task prepareSources(description: 'copies and adapts the imports to the given version', dependsOn: ["clean", "copySources", "copyCompatibility", "copyExamples"] ) << {
 }
 
-task copySources(type: Copy) {
-    from '../src'
+task copySources(dependsOn: ["copyJava", "copyResources"] ) << {
+}
+
+task copyJava(type: Copy) {
+    from('../src') {
+       include '**/*.java'
+    }
     into 'src'
     filter { line -> adaptToPdfBox2(line) }
+}
+
+task copyResources(type: Copy) {
+    from('../src') {
+       exclude '**/*.java'
+    }
+    into 'src'
 }
 
 task copyCompatibility(type: Copy, dependsOn: "copySources") {
