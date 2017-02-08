@@ -133,7 +133,7 @@ public class CompatibilityHelper {
      */
     public static BufferedImage createImageFromPage(final PDDocument document, int pageIndex, final int resolution) throws IOException {
 	PDFRenderer pdfRenderer = new PDFRenderer(document);
-	return pdfRenderer.renderImageWithDPI(pageIndex, 300, ImageType.RGB);
+	return pdfRenderer.renderImageWithDPI(pageIndex, resolution, ImageType.RGB);
     }
 
     public static PDAnnotationLink createLink(PDRectangle rect, Color color,

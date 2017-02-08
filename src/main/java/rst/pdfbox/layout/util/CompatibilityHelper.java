@@ -122,7 +122,7 @@ public class CompatibilityHelper {
      */
     public static BufferedImage createImageFromPage(final PDDocument document, final int pageIndex, final int resolution) throws IOException {
 	final PDPage page = (PDPage) document.getDocumentCatalog().getAllPages().get(pageIndex);
-	return page.convertToImage(BufferedImage.TYPE_INT_RGB, 300);
+	return page.convertToImage(BufferedImage.TYPE_INT_RGB, resolution);
     }
     
     public static int getPageRotation(final PDPage page) {
