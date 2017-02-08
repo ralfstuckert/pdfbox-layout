@@ -98,7 +98,7 @@ public class TextSequenceUtil {
 
     /**
      * Word-wraps the given text sequence in order to fit the max width.
-     * 
+     *
      * @param text
      *            the text to word-wrap.
      * @param maxWidth
@@ -113,8 +113,10 @@ public class TextSequenceUtil {
 	float indentation = 0;
 	TextFlow result = new TextFlow();
 	float lineLength = indentation;
+	boolean isWrappedLine = false;
 	for (TextFragment fragment : text) {
 	    if (fragment instanceof NewLine) {
+		isWrappedLine = fragment instanceof WrappingNewLine;
 		result.add(fragment);
 		lineLength = indentation;
 		if (indentation > 0) {
@@ -134,7 +136,8 @@ public class TextSequenceUtil {
 		for (TextFragment word : words) {
 
 		    if (lineLength == indentation) {
-			TextFragment[] replaceLeadingBlanks = replaceLeadingBlanks(word);
+			TextFragment[] replaceLeadingBlanks = isWrappedLine ? replaceLeadingBlanks(word)
+				: new TextFragment[] { word };
 			word = replaceLeadingBlanks[0];
 			if (replaceLeadingBlanks.length > 1) {
 			    result.add(replaceLeadingBlanks[1]);
@@ -148,6 +151,7 @@ public class TextSequenceUtil {
 			    && lineLength + length > maxWidth) {
 			// word exceeds max width, so create new line
 			result.add(new WrappingNewLine(fontDescriptor));
+			isWrappedLine = true;
 			if (indentation > 0) {
 			    result.add(new Indent(indentation).toStyledText());
 			}
@@ -155,7 +159,8 @@ public class TextSequenceUtil {
 		    }
 
 		    if (lineLength == indentation) {
-			TextFragment[] replaceLeadingBlanks = replaceLeadingBlanks(word);
+			TextFragment[] replaceLeadingBlanks = isWrappedLine ? replaceLeadingBlanks(word)
+				: new TextFragment[] { word };
 			word = replaceLeadingBlanks[0];
 			length = word.getWidth();
 			if (replaceLeadingBlanks.length > 1) {
@@ -311,8 +316,8 @@ public class TextSequenceUtil {
      *            the position of the start of the first line.
      * @param drawListener
      *            the listener to
-     *            {@link DrawListener#drawn(Object, Position, float, float) notify} on
-     *            drawn objects.
+     *            {@link DrawListener#drawn(Object, Position, float, float)
+     *            notify} on drawn objects.
      * @param alignment
      *            how to align the text lines.
      * @param maxWidth

@@ -5,20 +5,16 @@ import org.apache.pdfbox.pdmodel.font.PDType1Font;
 
 import rst.pdfbox.layout.elements.Document;
 import rst.pdfbox.layout.elements.Paragraph;
-import rst.pdfbox.layout.elements.Orientation;
-import rst.pdfbox.layout.elements.PageFormat;
-import rst.pdfbox.layout.elements.render.VerticalLayoutHint;
 import rst.pdfbox.layout.text.Alignment;
 import rst.pdfbox.layout.text.BaseFont;
-import rst.pdfbox.layout.text.Constants;
 import rst.pdfbox.layout.text.Indent;
 import rst.pdfbox.layout.text.SpaceUnit;
 import rst.pdfbox.layout.util.CompatibilityHelper;
-import rst.pdfbox.layout.util.Enumerators.RomanEnumerator;
-import rst.pdfbox.layout.util.Enumerators.LowerCaseRomanEnumerator;
 import rst.pdfbox.layout.util.Enumerators.AlphabeticEnumerator;
-import rst.pdfbox.layout.util.Enumerators.LowerCaseAlphabeticEnumerator;
 import rst.pdfbox.layout.util.Enumerators.ArabicEnumerator;
+import rst.pdfbox.layout.util.Enumerators.LowerCaseAlphabeticEnumerator;
+import rst.pdfbox.layout.util.Enumerators.LowerCaseRomanEnumerator;
+import rst.pdfbox.layout.util.Enumerators.RomanEnumerator;
 
 public class Indentation {
 

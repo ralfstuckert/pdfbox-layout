@@ -1,18 +1,15 @@
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 
-import rst.pdfbox.layout.elements.Document;
 import rst.pdfbox.layout.elements.ControlElement;
-import rst.pdfbox.layout.elements.Paragraph;
-import rst.pdfbox.layout.elements.Orientation;
+import rst.pdfbox.layout.elements.Document;
 import rst.pdfbox.layout.elements.PageFormat;
+import rst.pdfbox.layout.elements.Paragraph;
 import rst.pdfbox.layout.elements.VerticalSpacer;
 import rst.pdfbox.layout.elements.render.ColumnLayout;
-import rst.pdfbox.layout.elements.render.ColumnLayoutHint;
 import rst.pdfbox.layout.elements.render.VerticalLayout;
 import rst.pdfbox.layout.elements.render.VerticalLayoutHint;
 import rst.pdfbox.layout.text.BaseFont;
-import rst.pdfbox.layout.text.Constants;
 
 public class Rotation {
 

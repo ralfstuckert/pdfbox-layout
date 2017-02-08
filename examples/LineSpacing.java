@@ -3,13 +3,8 @@ import java.io.OutputStream;
 
 import rst.pdfbox.layout.elements.Document;
 import rst.pdfbox.layout.elements.Paragraph;
-import rst.pdfbox.layout.elements.ControlElement;
-import rst.pdfbox.layout.elements.Orientation;
-import rst.pdfbox.layout.elements.PageFormat;
 import rst.pdfbox.layout.elements.render.ColumnLayout;
 import rst.pdfbox.layout.text.BaseFont;
-import rst.pdfbox.layout.text.Constants;
-import rst.pdfbox.layout.text.Alignment;
 
 public class LineSpacing {
 

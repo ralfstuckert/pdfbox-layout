@@ -3,10 +3,7 @@ import java.io.OutputStream;
 
 import rst.pdfbox.layout.elements.Document;
 import rst.pdfbox.layout.elements.Paragraph;
-import rst.pdfbox.layout.elements.Orientation;
-import rst.pdfbox.layout.elements.PageFormat;
 import rst.pdfbox.layout.text.BaseFont;
-import rst.pdfbox.layout.text.Constants;
 
 public class MultiplePages {
 
