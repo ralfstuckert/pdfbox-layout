@@ -119,7 +119,7 @@ public class ExampleTest {
     public static BufferedImage toImage(final PDDocument document,
 	    final int pageIndex) throws IOException {
 	return CompatibilityHelper
-		.createImageFromPage(document, pageIndex, 300);
+		.createImageFromPage(document, pageIndex, 200);
     }
 
     protected static void comparePdfs(final File newPdf, InputStream toCompareTo)
