@@ -17,11 +17,6 @@
 	</natures>
 	<linkedResources>
 		<link>
-			<name>examples</name>
-			<type>2</type>
-			<location>C:/Users/Ralf/git/pdfbox-layout/examples</location>
-		</link>
-		<link>
 			<name>src</name>
 			<type>2</type>
 			<location>C:/Users/Ralf/git/pdfbox-layout/src</location>
