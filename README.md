@@ -60,7 +60,7 @@ As of 0.2.0 pdfbox-layout is available from [jitpack.io](https://jitpack.io/#ral
 
 #### Download:
 
-artifact | pdfbox version
+pdfbox**1**-layout | pdfbox**2**-layout
 ---------- | -------------
 [pdfbox1-layout-0.8.1.jar](https://jitpack.io/com/github/ralfstuckert/pdfbox-layout/pdfbox1-layout/0.8.1/pdfbox1-layout-0.8.1.jar) | [pdfbox2-layout-0.8.1.jar](https://jitpack.io/com/github/ralfstuckert/pdfbox-layout/pdfbox2-layout/0.8.1/pdfbox2-layout-0.8.1.jar)
 [pdfbox1-layout-0.8.1-sources.jar](https://jitpack.io/com/github/ralfstuckert/pdfbox-layout/pdfbox1-layout/0.8.1/pdfbox1-layout-0.8.1-sources.jar) | [pdfbox2-layout-0.8.1-sources.jar](https://jitpack.io/com/github/ralfstuckert/pdfbox-layout/pdfbox2-layout/0.8.1/pdfbox2-layout-0.8.1-sources.jar)
