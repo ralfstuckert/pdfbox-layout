@@ -142,7 +142,7 @@ public class TextSequenceUtil {
 		    do {
 			context = wordWrap(context, maxWidth, result);
 		    } while (context.isMoreToWrap());
-		    
+
 		    indentation = context.getIndentation();
 		    lineLength = context.getLineLength();
 		    isWrappedLine = context.isWrappedLine();
@@ -192,15 +192,24 @@ public class TextSequenceUtil {
 
 	    } else {
 		moreToWrap = word;
+		if (result.getLast() != null) {
+		    // since the current word is not used, take 
+		    // font descriptor of last line. Otherwise
+		    // the line break might be to high
+		    fontDescriptor = result.getLast().getFontDescriptor();
+		}
 	    }
 
-	    // and terminate it with a new line
-	    result.add(new WrappingNewLine(fontDescriptor));
-	    isWrappedLine = true;
-	    if (indentation > 0) {
-		result.add(new Indent(indentation).toStyledText());
+	    // wrap line only if not empty
+	    if (lineLength > indentation) {
+		// and terminate it with a new line
+		result.add(new WrappingNewLine(fontDescriptor));
+		isWrappedLine = true;
+		if (indentation > 0) {
+		    result.add(new Indent(indentation).toStyledText());
+		}
+		lineLength = indentation;
 	    }
-	    lineLength = indentation;
 
 	} else {
 	    result.add(word);
@@ -423,8 +432,6 @@ public class TextSequenceUtil {
 			fontDescriptor) < maxWidth) {
 		    breakIndex = currentIndex;
 		} else {
-		    System.out.println("too big: "
-			    + word.substring(0, currentIndex));
 		    maxWidthExceeded = true;
 		}
 	    }
@@ -510,6 +517,7 @@ public class TextSequenceUtil {
 	    position = new Position(upperLeft.getX() + offset, position.getY());
 	    textLine.drawText(contentStream, position, alignment, drawListener);
 	}
+
     }
 
     /**
