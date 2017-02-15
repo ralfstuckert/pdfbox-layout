@@ -10,7 +10,8 @@ import org.apache.pdfbox.pdmodel.edit.PDPageContentStream;
 
 import rst.pdfbox.layout.elements.Dividable.Divided;
 import rst.pdfbox.layout.elements.Paragraph;
-import rst.pdfbox.layout.util.Tuple;
+import rst.pdfbox.layout.util.Pair;
+import rst.pdfbox.layout.util.WordBreakerFactory;
 
 /**
  * Utility methods for dealing with text sequences.
@@ -160,10 +161,9 @@ public class TextSequenceUtil {
 	float lineLength = context.getLineLength();
 	boolean isWrappedLine = context.isWrappedLine();
 
-	if (lineLength == indentation) {
-	    // start of line
-	    TextFragment[] replaceLeadingBlanks = isWrappedLine ? replaceLeadingBlanks(word)
-		    : new TextFragment[] { word };
+	if (isWrappedLine && lineLength == indentation) {
+	    // start of line, replace leading blanks if
+	    TextFragment[] replaceLeadingBlanks = replaceLeadingBlanks(word);
 	    word = replaceLeadingBlanks[0];
 	    if (replaceLeadingBlanks.length > 1) {
 		result.add(replaceLeadingBlanks[1]);
@@ -173,12 +173,11 @@ public class TextSequenceUtil {
 	FontDescriptor fontDescriptor = word.getFontDescriptor();
 	float length = word.getWidth();
 
-	if (maxWidth > 0 // && lineLength > indentation
-		&& lineLength + length > maxWidth) {
+	if (maxWidth > 0 && lineLength + length > maxWidth) {
 	    // word exceeds max width, so create new line
 
-	    boolean breakHard = indentation + length > maxWidth;
-	    Tuple<TextFragment> brokenWord = breakWord(word, length, maxWidth
+	    boolean breakHard = isBreakHardAllowed() && indentation + length > maxWidth;
+	    Pair<TextFragment> brokenWord = breakWord(word, length, maxWidth
 		    - lineLength, maxWidth - indentation, breakHard);
 	    if (brokenWord != null) {
 		word = brokenWord.getFirst();
@@ -191,12 +190,25 @@ public class TextSequenceUtil {
 		}
 
 	    } else {
-		moreToWrap = word;
-		if (result.getLast() != null) {
-		    // since the current word is not used, take 
-		    // font descriptor of last line. Otherwise
-		    // the line break might be to high
-		    fontDescriptor = result.getLast().getFontDescriptor();
+		if (lineLength == indentation) {
+		    // Begin of line and word could now be broke...
+		    // Well, so we have to use it as it is,
+		    // it won't get any better in the next line
+		    result.add(word);
+		    if (length > 0) {
+			lineLength += length;
+		    }
+
+		} else {
+		    // give it another try in a new line, there 
+		    // will be more space.
+		    moreToWrap = word;
+		    if (result.getLast() != null) {
+			// since the current word is not used, take
+			// font descriptor of last line. Otherwise
+			// the line break might be to high
+			fontDescriptor = result.getLast().getFontDescriptor();
+		    }
 		}
 	    }
 
@@ -340,6 +352,20 @@ public class TextSequenceUtil {
 	return result;
     }
 
+    /**
+     * Derive a new TextFragment from an existing one, means use attributes like
+     * font, color etc.
+     * 
+     * @param toDeriveFrom
+     *            the fragment to derive from.
+     * @param text
+     *            the new text.
+     * @param leftMargin
+     *            the new left margin.
+     * @param rightMargin
+     *            the new right margin.
+     * @return the derived text fragment.
+     */
     protected static TextFragment deriveFromExisting(
 	    final TextFragment toDeriveFrom, final String text,
 	    final float leftMargin, final float rightMargin) {
@@ -351,26 +377,7 @@ public class TextSequenceUtil {
 		toDeriveFrom.getColor(), leftMargin, rightMargin);
     }
 
-    // public static TextFlow breakWord(final TextFragment text,
-    // final float remainingLineWidth, final float maxWidth)
-    // throws IOException {
-    // TextFlow result = new TextFlow();
-    // TextFragment current = text;
-    // float width = current.getWidth();
-    // float max = remainingLineWidth;
-    // float remaining = remainingLineWidth;
-    // while (width > max) {
-    // current = breakWord(current, width, remaining, max, result);
-    // width = current.getWidth();
-    // max = maxWidth;
-    // remaining = 0;
-    // }
-    // result.add(current);
-    //
-    // return result;
-    // }
-
-    private static Tuple<TextFragment> breakWord(TextFragment word,
+    private static Pair<TextFragment> breakWord(TextFragment word,
 	    float wordWidth, final float remainingLineWidth, float maxWidth,
 	    boolean breakHard) throws IOException {
 
@@ -382,87 +389,37 @@ public class TextSequenceUtil {
 	    rightMargin = styledText.getRightMargin();
 	}
 
-	int breakIndex = calculateSoftBreakIndex(word.getText(),
-		word.getFontDescriptor(), remainingLineWidth - leftMargin);
-	if (breakIndex == -1) {
-	    // soft break is not possible
-	    if (!breakHard) {
-		// nothing we can do about it, so return null
-		return null;
-	    }
-	    breakIndex = calculateBreakIndex(word.getText(),
-		    word.getFontDescriptor(), maxWidth - leftMargin);
+	Pair<String> brokenWord = WordBreakerFactory.getWorkBreaker()
+		.breakWord(word.getText(), word.getFontDescriptor(),
+			remainingLineWidth - leftMargin, breakHard);
+	if (brokenWord == null) {
+	    return null;
 	}
+
 	// break at calculated index
 	TextFragment head = deriveFromExisting(word,
-		word.getText().substring(0, breakIndex), leftMargin, 0);
+		brokenWord.getFirst(), leftMargin, 0);
 	TextFragment tail = deriveFromExisting(word,
-		word.getText().substring(breakIndex), 0, rightMargin);
+		brokenWord.getSecond(), 0, rightMargin);
 
-	return new Tuple<TextFragment>(head, tail);
+	return new Pair<TextFragment>(head, tail);
     }
 
-    public static int calculateBreakIndex(final String word,
-	    final FontDescriptor fontDescriptor, final float maxWidth)
-	    throws IOException {
-	int cutIndex = (int) (maxWidth / getEmWidth(fontDescriptor));
-	float currentWidth = 0;
-	do {
-	    currentWidth = getStringWidth(word.substring(0, cutIndex),
-		    fontDescriptor);
-	    --cutIndex;
-	} while (currentWidth > maxWidth);
-
-	return ++cutIndex;
-    }
-
-    public static int calculateSoftBreakIndex(final String word,
-	    final FontDescriptor fontDescriptor, final float maxWidth)
-	    throws IOException {
-
-	String alpha = "[A-Za-z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u00FF]";
-	Pattern pattern = Pattern.compile(alpha + "([\\-\\.\\,/])");
-	Matcher matcher = pattern.matcher(word);
-	int breakIndex = -1;
-	boolean maxWidthExceeded = false;
-	while (!maxWidthExceeded && matcher.find()) {
-	    int currentIndex = matcher.end();
-	    if (currentIndex < word.length() - 1) {
-		if (getStringWidth(word.substring(0, currentIndex),
-			fontDescriptor) < maxWidth) {
-		    breakIndex = currentIndex;
-		} else {
-		    maxWidthExceeded = true;
-		}
-	    }
+    public final static String WORD_HARD_BREAK_ALLOWED_PROPERTY = "pdfbox.layout.word.hard.break.allowed";
+    private static Boolean hardWordBreakAllowed;
+    private static boolean isBreakHardAllowed() {
+	if (hardWordBreakAllowed == null) {
+	    hardWordBreakAllowed = Boolean.getBoolean(WORD_HARD_BREAK_ALLOWED_PROPERTY);
 	}
-
-	return breakIndex;
+	return hardWordBreakAllowed;
     }
 
-    public static void main(String[] args) {
-	Matcher matcher = softWordBreakMatcher("dsüüöä/dsf.79879");
-	System.out.println(matcher.find());
-	System.out.println(matcher.start());
-	System.out.println(matcher.end());
-	System.out.println(matcher.find());
-	System.out.println(matcher.start());
-	System.out.println(softWordBreakMatcher("dsf_dsf").find());
-	System.out.println(softWordBreakMatcher("dsf_dsf").start());
-    }
-
-    private static Matcher softWordBreakMatcher(String text) {
-	String alpha = "[A-Za-z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u00FF]";
-	Pattern pattern = Pattern.compile(alpha + "[\\-\\.\\,/]");
-	return pattern.matcher(text);
-    }
-
-    private static float getEmWidth(final FontDescriptor fontDescriptor)
+    public static float getEmWidth(final FontDescriptor fontDescriptor)
 	    throws IOException {
 	return getStringWidth("M", fontDescriptor);
     }
 
-    private static float getStringWidth(final String text,
+    public static float getStringWidth(final String text,
 	    final FontDescriptor fontDescriptor) throws IOException {
 	return fontDescriptor.getSize()
 		* fontDescriptor.getFont().getStringWidth(text) / 1000;

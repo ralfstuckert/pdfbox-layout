@@ -1,11 +1,16 @@
 package rst.pdfbox.layout.util;
 
-public class Tuple<T> {
+/**
+ * Generic container for a pair of objects.
+ *
+ * @param <T>
+ */
+public class Pair<T> {
 
     private T first;
     private T second;
 
-    public Tuple(T first, T second) {
+    public Pair(T first, T second) {
 	super();
 	this.first = first;
 	this.second = second;
@@ -41,7 +46,8 @@ public class Tuple<T> {
 	    return false;
 	if (getClass() != obj.getClass())
 	    return false;
-	Tuple other = (Tuple) obj;
+	@SuppressWarnings("rawtypes")
+	Pair other = (Pair) obj;
 	if (first == null) {
 	    if (other.first != null)
 		return false;

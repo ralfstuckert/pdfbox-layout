@@ -1,28 +1,34 @@
 package rst.pdfbox.layout.util;
 
+import static rst.pdfbox.layout.text.TextSequenceUtil.getEmWidth;
+import static rst.pdfbox.layout.text.TextSequenceUtil.getStringWidth;
+
 import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import rst.pdfbox.layout.text.FontDescriptor;
 
 public class WordBreakers {
 
-    /**
-     * Dummy implementation that always returns 0. This might be used to achieve
-     * the legacy behavior of not breaking words at all.
-     */
-    public static class LegacyDummyWordBreaker implements WordBreaker {
+    public static abstract class AbstractWordBreaker implements WordBreaker {
 
-	@Override
-	public int calculateBreakIndex(String word,
-		FontDescriptor fontDescriptor, float maxWidth)
-		throws IOException {
-	    return -1;
+	public Pair<String> breakWord(final String word,
+		final FontDescriptor fontDescriptor, final float maxWidth,
+		final boolean breakHardIfNecessary) throws IOException {
+
+	    Pair<String> brokenWord = breakWordSoft(word, fontDescriptor, maxWidth);
+	    if (brokenWord == null && breakHardIfNecessary) {
+		brokenWord = breakWordHard(word, fontDescriptor, maxWidth);
+	    }
+	    return brokenWord;
 	}
-    }
 
-    public static class DefaultWordBreaker implements WordBreaker {
-	
-	public int calculateBreakIndex(final String word,
+	abstract protected Pair<String> breakWordSoft(final String word,
+		final FontDescriptor fontDescriptor, final float maxWidth)
+		throws IOException;
+
+	protected Pair<String> breakWordHard(final String word,
 		final FontDescriptor fontDescriptor, final float maxWidth)
 		throws IOException {
 	    int cutIndex = (int) (maxWidth / getEmWidth(fontDescriptor));
@@ -33,18 +39,45 @@ public class WordBreakers {
 		--cutIndex;
 	    } while (currentWidth > maxWidth);
 
-	    return ++cutIndex;
+	    ++cutIndex;
+	    return new Pair<String>(word.substring(0, cutIndex),
+		    word.substring(cutIndex));
 	}
 
-	private float getEmWidth(final FontDescriptor fontDescriptor)
+    }
+
+    public static class DefaultWordBreaker extends AbstractWordBreaker {
+
+	/**
+	 * A letter followed by either <code>-</code>, <code>.</code>,
+	 * <code>,</code> or <code>/</code>.
+	 */
+	private final Pattern breakPattern = Pattern
+		.compile("[A-Za-z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u00FF]([\\-\\.\\,/])");
+
+	protected Pair<String> breakWordSoft(final String word,
+		final FontDescriptor fontDescriptor, final float maxWidth)
 		throws IOException {
-	    return getStringWidth("M", fontDescriptor);
-	}
+	    Matcher matcher = breakPattern.matcher(word);
+	    int breakIndex = -1;
+	    boolean maxWidthExceeded = false;
+	    while (!maxWidthExceeded && matcher.find()) {
+		int currentIndex = matcher.end();
+		if (currentIndex < word.length() - 1) {
+		    if (getStringWidth(word.substring(0, currentIndex),
+			    fontDescriptor) < maxWidth) {
+			breakIndex = currentIndex;
+		    } else {
+			maxWidthExceeded = true;
+		    }
+		}
+	    }
 
-	private float getStringWidth(final String text,
-		final FontDescriptor fontDescriptor) throws IOException {
-	    return fontDescriptor.getSize()
-		    * fontDescriptor.getFont().getStringWidth(text) / 1000;
+	    if (breakIndex < 0) {
+		return null;
+	    }
+	    return new Pair<String>(word.substring(0, breakIndex),
+		    word.substring(breakIndex));
 	}
 
     }

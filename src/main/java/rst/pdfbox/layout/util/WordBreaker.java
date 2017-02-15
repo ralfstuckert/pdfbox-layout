@@ -11,8 +11,7 @@ import rst.pdfbox.layout.text.FontDescriptor;
 public interface WordBreaker {
 
     /**
-     * Calculates the index at which to break the given word, where the word
-     * from character 0 to index (inclusive) must fit the given max width.
+     * Breaks the word in order to fit the given maximum width.
      * 
      * @param word
      *            the word to break.
@@ -20,11 +19,15 @@ public interface WordBreaker {
      *            describing the font's type and size.
      * @param maxWidth
      *            the maximum width to obey.
-     * @return the break index, where <code>-1</code> indicates that the word cannot be broke.
+     * @param breakHardIfNecessary
+     *            indicates if the word should be broken hard to fit the width,
+     *            in case there is no suitable position for breaking it
+     *            adequately.
+     * @return the broken word, or <code>null</code> if it cannot be broken.
      * @throws IOException
      */
-    int calculateBreakIndex(final String word,
-	    final FontDescriptor fontDescriptor, final float maxWidth)
-	    throws IOException;
+    Pair<String> breakWord(final String word,
+	    final FontDescriptor fontDescriptor, final float maxWidth,
+	    final boolean breakHardIfNecessary) throws IOException;
 
 }
