@@ -411,7 +411,7 @@ public class TextSequenceUtil {
      * Returns the width of the character <code>M</code> in the given font.
      * @param fontDescriptor font and size.
      * @return the width of <code>M</code>.
-     * @throws IOException
+     * @throws IOException by pdfbox
      */
     public static float getEmWidth(final FontDescriptor fontDescriptor)
 	    throws IOException {
@@ -423,7 +423,7 @@ public class TextSequenceUtil {
      * @param text the text to measure.
      * @param fontDescriptor font and size.
      * @return the width of given text.
-     * @throws IOException
+     * @throws IOException by pdfbox
      */
     public static float getStringWidth(final String text,
 	    final FontDescriptor fontDescriptor) throws IOException {

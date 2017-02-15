@@ -24,7 +24,7 @@ public interface WordBreaker {
      *            in case there is no suitable position for breaking it
      *            adequately.
      * @return the broken word, or <code>null</code> if it cannot be broken.
-     * @throws IOException
+     * @throws IOException by pdfbox
      */
     Pair<String> breakWord(final String word,
 	    final FontDescriptor fontDescriptor, final float maxWidth,

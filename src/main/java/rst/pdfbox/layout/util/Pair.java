@@ -3,7 +3,7 @@ package rst.pdfbox.layout.util;
 /**
  * Generic container for a pair of objects.
  *
- * @param <T>
+ * @param <T> the generic parameter.
  */
 public class Pair<T> {
 

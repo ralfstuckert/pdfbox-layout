@@ -29,16 +29,14 @@ public class WordBreakers {
     }
 
     /**
-     * Abstract base class for implementing (custom) word breakers.
+     * Abstract base class for implementing (custom) word breakers. Tries to
+     * break the word {@link #breakWordSoft(String, FontDescriptor, float)
+     * softly}, or - if this is not possible -
+     * {@link #breakWordHard(String, FontDescriptor, float) hard}.
      */
     public static abstract class AbstractWordBreaker implements WordBreaker {
 
-	/**
-	 * Tries to break the word
-	 * {@link #breakWordSoft(String, FontDescriptor, float) softly}, or - if
-	 * this is not possible -
-	 * {@link #breakWordHard(String, FontDescriptor, float) hard}.
-	 */
+	@Override
 	public Pair<String> breakWord(final String word,
 		final FontDescriptor fontDescriptor, final float maxWidth,
 		final boolean breakHardIfNecessary) throws IOException {
@@ -54,6 +52,16 @@ public class WordBreakers {
 	/**
 	 * To be implemented by subclasses. Give your best to break the word
 	 * softly using your strategy, otherwise return <code>null</code>.
+	 * 
+	 * @param word
+	 *            the word to break.
+	 * @param fontDescriptor
+	 *            describing the font's type and size.
+	 * @param maxWidth
+	 *            the maximum width to obey.
+	 * @return the broken word, or <code>null</code> if it cannot be broken.
+	 * @throws IOException
+	 *             by pdfbox
 	 */
 	abstract protected Pair<String> breakWordSoft(final String word,
 		final FontDescriptor fontDescriptor, final float maxWidth)
@@ -62,6 +70,16 @@ public class WordBreakers {
 	/**
 	 * Breaks the word hard at the outermost position that fits the given
 	 * max width.
+	 * 
+	 * @param word
+	 *            the word to break.
+	 * @param fontDescriptor
+	 *            describing the font's type and size.
+	 * @param maxWidth
+	 *            the maximum width to obey.
+	 * @return the broken word, or <code>null</code> if it cannot be broken.
+	 * @throws IOException
+	 *             by pdfbox
 	 */
 	protected Pair<String> breakWordHard(final String word,
 		final FontDescriptor fontDescriptor, final float maxWidth)
@@ -100,6 +118,7 @@ public class WordBreakers {
 	private final Pattern breakPattern = Pattern
 		.compile("[A-Za-z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u00FF]([\\-\\.\\,/])");
 
+	@Override
 	protected Pair<String> breakWordSoft(final String word,
 		final FontDescriptor fontDescriptor, final float maxWidth)
 		throws IOException {

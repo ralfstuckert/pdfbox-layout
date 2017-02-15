@@ -129,7 +129,7 @@ public class CompatibilityHelper {
      * @param pageIndex the index of the page to render.
      * @param resolution the image resolution.
      * @return the rendered image
-     * @throws IOException
+     * @throws IOException by pdfbox
      */
     public static BufferedImage createImageFromPage(final PDDocument document, int pageIndex, final int resolution) throws IOException {
 	PDFRenderer pdfRenderer = new PDFRenderer(document);
