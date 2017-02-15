@@ -4,6 +4,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import rst.pdfbox.layout.util.WordBreakers.DefaultWordBreaker;
+import rst.pdfbox.layout.util.WordBreakers.NonBreakingWordBreaker;
 
 /**
  * Factory for creating a {@link WordBreaker}. This may be used to define a custom strategy for
@@ -12,6 +13,12 @@ import rst.pdfbox.layout.util.WordBreakers.DefaultWordBreaker;
 public class WordBreakerFactory {
 
     public final static String WORD_BREAKER_CLASS_PROPERTY = "pdfbox.layout.word.breaker";
+
+    public final static String DEFAULT_WORD_BREAKER_CLASS_NAME = DefaultWordBreaker.class.getName();
+    public final static String LEGACY_WORD_BREAKER_CLASS_NAME = NonBreakingWordBreaker.class.getName();
+
+    
+    
     
     private final static WordBreaker DEFAULT_WORD_BREAKER = new DefaultWordBreaker();
     private final static Map<String, WordBreaker> WORD_BREAKERS = new ConcurrentHashMap<String, WordBreaker>();

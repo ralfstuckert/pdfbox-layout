@@ -3,8 +3,6 @@ package rst.pdfbox.layout.text;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.apache.pdfbox.pdmodel.edit.PDPageContentStream;
 
@@ -176,10 +174,13 @@ public class TextSequenceUtil {
 	if (maxWidth > 0 && lineLength + length > maxWidth) {
 	    // word exceeds max width, so create new line
 
-	    boolean breakHard = isBreakHardAllowed() && indentation + length > maxWidth;
+	    // break hard, if the text does not fit in a full (next) line
+	    boolean breakHard = indentation + length > maxWidth;
+	    
 	    Pair<TextFragment> brokenWord = breakWord(word, length, maxWidth
 		    - lineLength, maxWidth - indentation, breakHard);
 	    if (brokenWord != null) {
+		// word is broken
 		word = brokenWord.getFirst();
 		length = word.getWidth();
 		moreToWrap = brokenWord.getSecond();
@@ -224,6 +225,7 @@ public class TextSequenceUtil {
 	    }
 
 	} else {
+	    // word fits, so just add it
 	    result.add(word);
 	    if (length > 0) {
 		lineLength += length;
@@ -405,20 +407,24 @@ public class TextSequenceUtil {
 	return new Pair<TextFragment>(head, tail);
     }
 
-    public final static String WORD_HARD_BREAK_ALLOWED_PROPERTY = "pdfbox.layout.word.hard.break.allowed";
-    private static Boolean hardWordBreakAllowed;
-    private static boolean isBreakHardAllowed() {
-	if (hardWordBreakAllowed == null) {
-	    hardWordBreakAllowed = Boolean.getBoolean(WORD_HARD_BREAK_ALLOWED_PROPERTY);
-	}
-	return hardWordBreakAllowed;
-    }
-
+    /**
+     * Returns the width of the character <code>M</code> in the given font.
+     * @param fontDescriptor font and size.
+     * @return the width of <code>M</code>.
+     * @throws IOException
+     */
     public static float getEmWidth(final FontDescriptor fontDescriptor)
 	    throws IOException {
 	return getStringWidth("M", fontDescriptor);
     }
 
+    /**
+     * Returns the width of the given text in the given font.
+     * @param text the text to measure.
+     * @param fontDescriptor font and size.
+     * @return the width of given text.
+     * @throws IOException
+     */
     public static float getStringWidth(final String text,
 	    final FontDescriptor fontDescriptor) throws IOException {
 	return fontDescriptor.getSize()

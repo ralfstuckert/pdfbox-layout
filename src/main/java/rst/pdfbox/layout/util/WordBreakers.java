@@ -10,7 +10,24 @@ import java.util.regex.Pattern;
 import rst.pdfbox.layout.text.FontDescriptor;
 
 public class WordBreakers {
+    
+    /**
+     * May by used for legacy compatibility.
+     */
+    public static class NonBreakingWordBreaker implements WordBreaker {
 
+	@Override
+	public Pair<String> breakWord(String word,
+		FontDescriptor fontDescriptor, float maxWidth,
+		boolean breakHardIfNecessary) throws IOException {
+	    return null;
+	}
+	
+    }
+
+    /**
+     * Abstract base class for implementing (custom) word breakers.
+     */
     public static abstract class AbstractWordBreaker implements WordBreaker {
 
 	public Pair<String> breakWord(final String word,
@@ -46,6 +63,15 @@ public class WordBreakers {
 
     }
 
+    /**
+     * Breaks a word if one of the following characters is found after a non-digit letter:
+     * <ul>
+     * <li>.</li>
+     * <li>,</li>
+     * <li>-</li>
+     * <li>/</li>
+     * </ul>
+     */
     public static class DefaultWordBreaker extends AbstractWordBreaker {
 
 	/**
