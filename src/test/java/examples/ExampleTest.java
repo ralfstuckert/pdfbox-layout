@@ -24,7 +24,7 @@ public class ExampleTest {
     @After
     public void tearDown() throws Exception {
 	if (newPdf != null && newPdf.exists()) {
-//	    newPdf.deleteOnExit();
+	    newPdf.deleteOnExit();
 	}
     }
 
