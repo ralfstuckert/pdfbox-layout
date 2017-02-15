@@ -9,10 +9,13 @@ import java.util.regex.Pattern;
 
 import rst.pdfbox.layout.text.FontDescriptor;
 
+/**
+ * Container class for the default word breakers.
+ */
 public class WordBreakers {
-    
+
     /**
-     * May by used for legacy compatibility.
+     * May by used for legacy compatibility, does not break at all.
      */
     public static class NonBreakingWordBreaker implements WordBreaker {
 
@@ -22,7 +25,7 @@ public class WordBreakers {
 		boolean breakHardIfNecessary) throws IOException {
 	    return null;
 	}
-	
+
     }
 
     /**
@@ -30,21 +33,36 @@ public class WordBreakers {
      */
     public static abstract class AbstractWordBreaker implements WordBreaker {
 
+	/**
+	 * Tries to break the word
+	 * {@link #breakWordSoft(String, FontDescriptor, float) softly}, or - if
+	 * this is not possible -
+	 * {@link #breakWordHard(String, FontDescriptor, float) hard}.
+	 */
 	public Pair<String> breakWord(final String word,
 		final FontDescriptor fontDescriptor, final float maxWidth,
 		final boolean breakHardIfNecessary) throws IOException {
 
-	    Pair<String> brokenWord = breakWordSoft(word, fontDescriptor, maxWidth);
+	    Pair<String> brokenWord = breakWordSoft(word, fontDescriptor,
+		    maxWidth);
 	    if (brokenWord == null && breakHardIfNecessary) {
 		brokenWord = breakWordHard(word, fontDescriptor, maxWidth);
 	    }
 	    return brokenWord;
 	}
 
+	/**
+	 * To be implemented by subclasses. Give your best to break the word
+	 * softly using your strategy, otherwise return <code>null</code>.
+	 */
 	abstract protected Pair<String> breakWordSoft(final String word,
 		final FontDescriptor fontDescriptor, final float maxWidth)
 		throws IOException;
 
+	/**
+	 * Breaks the word hard at the outermost position that fits the given
+	 * max width.
+	 */
 	protected Pair<String> breakWordHard(final String word,
 		final FontDescriptor fontDescriptor, final float maxWidth)
 		throws IOException {
@@ -64,7 +82,8 @@ public class WordBreakers {
     }
 
     /**
-     * Breaks a word if one of the following characters is found after a non-digit letter:
+     * Breaks a word if one of the following characters is found after a
+     * non-digit letter:
      * <ul>
      * <li>.</li>
      * <li>,</li>
