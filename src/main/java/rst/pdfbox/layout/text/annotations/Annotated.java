@@ -1,5 +1,6 @@
 package rst.pdfbox.layout.text.annotations;
 
+
 /**
  * Marker interface for annotated objects.
  */
@@ -15,4 +16,5 @@ public interface Annotated extends Iterable<Annotation> {
      *            the annotation type.
      */
     <T extends Annotation> Iterable<T> getAnnotationsOfType(Class<T> type);
+
 }

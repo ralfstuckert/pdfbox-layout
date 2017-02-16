@@ -407,7 +407,7 @@ public class RenderContext implements Layout, Closeable, DrawContext, DrawListen
     @Override
     public void close() throws IOException {
 	closePage();
-	annotationDrawListener.finalizeAnnotations();
+	annotationDrawListener.afterRender();
     }
 
     @Override
