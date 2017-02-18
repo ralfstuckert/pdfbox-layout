@@ -1,6 +1,7 @@
 package rst.pdfbox.layout.util;
 
 import java.awt.Color;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.PathIterator;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -19,12 +20,13 @@ import org.apache.pdfbox.pdmodel.graphics.xobject.PDPixelMap;
 import org.apache.pdfbox.pdmodel.graphics.xobject.PDXObjectImage;
 import org.apache.pdfbox.pdmodel.interactive.action.type.PDActionGoTo;
 import org.apache.pdfbox.pdmodel.interactive.action.type.PDActionURI;
+import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotation;
 import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotationLink;
 import org.apache.pdfbox.pdmodel.interactive.annotation.PDBorderStyleDictionary;
 import org.apache.pdfbox.pdmodel.interactive.documentnavigation.destination.PDDestination;
 
-import rst.pdfbox.layout.text.annotations.Annotations.HyperlinkAnnotation.LinkStyle;
 import rst.pdfbox.layout.text.Position;
+import rst.pdfbox.layout.text.annotations.Annotations.HyperlinkAnnotation.LinkStyle;
 
 /**
  * Provide compatible methods for API changes from pdfbox 1x to 2x.
@@ -67,16 +69,20 @@ public class CompatibilityHelper {
 	    throws IOException {
 	contentStream.concatenate2CTM(a, b, c, d, e, f);
     }
-    
-    public static void curveTo(final PDPageContentStream contentStream, float x1, float y1, float x2, float y2, float x3, float y3) throws IOException {
+
+    public static void curveTo(final PDPageContentStream contentStream,
+	    float x1, float y1, float x2, float y2, float x3, float y3)
+	    throws IOException {
 	contentStream.addBezier312(x1, y1, x2, y2, x3, y3);
     }
-    
-    public static void curveTo1(final PDPageContentStream contentStream, float x1, float y1, float x3, float y3) throws IOException {
+
+    public static void curveTo1(final PDPageContentStream contentStream,
+	    float x1, float y1, float x3, float y3) throws IOException {
 	contentStream.addBezier31(x1, y1, x3, y3);
     }
 
-    public static void fillNonZero(final PDPageContentStream contentStream) throws IOException {
+    public static void fillNonZero(final PDPageContentStream contentStream)
+	    throws IOException {
 	contentStream.fill(PathIterator.WIND_NON_ZERO);
     }
 
@@ -114,24 +120,31 @@ public class CompatibilityHelper {
 
     /**
      * Renders the given page as an RGB image.
-     * @param document the document containing the page.
-     * @param pageIndex the index of the page to render.
-     * @param resolution the image resolution.
+     * 
+     * @param document
+     *            the document containing the page.
+     * @param pageIndex
+     *            the index of the page to render.
+     * @param resolution
+     *            the image resolution.
      * @return the rendered image
-     * @throws IOException by pdfbox
+     * @throws IOException
+     *             by pdfbox
      */
-    public static BufferedImage createImageFromPage(final PDDocument document, final int pageIndex, final int resolution) throws IOException {
-	final PDPage page = (PDPage) document.getDocumentCatalog().getAllPages().get(pageIndex);
+    public static BufferedImage createImageFromPage(final PDDocument document,
+	    final int pageIndex, final int resolution) throws IOException {
+	final PDPage page = (PDPage) document.getDocumentCatalog()
+		.getAllPages().get(pageIndex);
 	return page.convertToImage(BufferedImage.TYPE_INT_RGB, resolution);
     }
-    
+
     public static int getPageRotation(final PDPage page) {
 	return page.getRotation() == null ? 0 : page.getRotation();
     }
 
-    public static PDAnnotationLink createLink(PDRectangle rect, Color color,
+    public static PDAnnotationLink createLink(PDPage page, PDRectangle rect, Color color,
 	    LinkStyle linkStyle, final String uri) {
-	PDAnnotationLink pdLink = createLink(rect, color, linkStyle);
+	PDAnnotationLink pdLink = createLink(page, rect, color, linkStyle);
 
 	PDActionURI actionUri = new PDActionURI();
 	actionUri.setURI(uri);
@@ -139,9 +152,9 @@ public class CompatibilityHelper {
 	return pdLink;
     }
 
-    public static PDAnnotationLink createLink(PDRectangle rect, Color color,
+    public static PDAnnotationLink createLink(PDPage page, PDRectangle rect, Color color,
 	    LinkStyle linkStyle, final PDDestination destination) {
-	PDAnnotationLink pdLink = createLink(rect, color, linkStyle);
+	PDAnnotationLink pdLink = createLink(page, rect, color, linkStyle);
 
 	PDActionGoTo gotoAction = new PDActionGoTo();
 	gotoAction.setDestination(destination);
@@ -149,12 +162,12 @@ public class CompatibilityHelper {
 	return pdLink;
     }
 
-    private static PDAnnotationLink createLink(PDRectangle rect, Color color,
+    private static PDAnnotationLink createLink(PDPage page, PDRectangle rect, Color color,
 	    LinkStyle linkStyle) {
 	PDAnnotationLink pdLink = new PDAnnotationLink();
 	pdLink.setBorderStyle(toBorderStyle(linkStyle));
 	pdLink.setRectangle(rect);
-	pdLink.setColour(toPDGamma(color));
+	setAnnotationColor(pdLink, color);
 	return pdLink;
     }
 
@@ -168,12 +181,86 @@ public class CompatibilityHelper {
 	return borderStyle;
     }
 
+    /**
+     * Sets the color in the annotation.
+     * 
+     * @param annotation
+     *            the annotation.
+     * @param color
+     *            the color to set.
+     */
+    public static void setAnnotationColor(final PDAnnotation annotation,
+	    Color color) {
+	annotation.setColour(toPDGamma(color));
+    }
+
     private static PDGamma toPDGamma(final Color color) {
 	COSArray values = new COSArray();
 	values.add(new COSFloat(color.getRed() / 255f));
 	values.add(new COSFloat(color.getGreen() / 255f));
 	values.add(new COSFloat(color.getBlue() / 255f));
 	return new PDGamma(values);
+    }
+
+    /**
+     * Return the quad points representation of the given rect.
+     * 
+     * @param rect
+     *            the rectangle.
+     * @return the quad points.
+     */
+    public static float[] toQuadPoints(final PDRectangle rect) {
+	return toQuadPoints(rect, 0, 0);
+    }
+
+    /**
+     * Return the quad points representation of the given rect.
+     * 
+     * @param rect
+     *            the rectangle.
+     * @param xOffset
+     *            the offset in x-direction to add.
+     * @param yOffset
+     *            the offset in y-direction to add.
+     * @return the quad points.
+     */
+    public static float[] toQuadPoints(final PDRectangle rect, float xOffset,
+	    float yOffset) {
+	float[] quads = new float[8];
+	quads[0] = rect.getLowerLeftX() + xOffset; // x1
+	quads[1] = rect.getUpperRightY() + yOffset; // y1
+	quads[2] = rect.getUpperRightX() + xOffset; // x2
+	quads[3] = quads[1]; // y2
+	quads[4] = quads[0]; // x3
+	quads[5] = rect.getLowerLeftY() + yOffset; // y3
+	quads[6] = quads[2]; // x4
+	quads[7] = quads[5]; // y5
+	return quads;
+    }
+
+    /**
+     * Transform the quad points in order to match the page rotation
+     * @param quadPoints the quad points.
+     * @param page the page.
+     * @return the transformed quad points.
+     */
+    public static float[] transformQuadPointToPageRotation(
+	    final float[] quadPoints, final PDPage page) {
+	int pageRotation = getPageRotation(page);
+	if (pageRotation == 0) {
+	    return quadPoints;
+	}
+
+	float pageWidth = page.getMediaBox().getHeight();
+	float pageHeight = page.getMediaBox().getWidth();
+	float[] rotatedPoints = new float[quadPoints.length];
+	AffineTransform transform = new AffineTransform();
+	transform.rotate(pageRotation * Math.PI / 180, pageHeight / 2,
+		pageWidth / 2);
+	double offset = Math.abs(pageHeight - pageWidth) / 2;
+	transform.translate(-offset, offset);
+	transform.transform(quadPoints, 0, rotatedPoints, 0, 4);
+	return rotatedPoints;
     }
 
     private static PDBorderStyleDictionary getNoBorder() {

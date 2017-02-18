@@ -40,7 +40,9 @@ public class AnnotatedStyledText extends StyledText implements Annotated {
 	    final float leftMargin, final float rightMargin,
 	    Collection<? extends Annotation> annotations) {
 	super(text, fontDescriptor, color, leftMargin, rightMargin);
-	this.annotations.addAll(annotations);
+	if (annotations != null) {
+	    this.annotations.addAll(annotations);
+	}
     }
 
     /**

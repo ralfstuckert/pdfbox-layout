@@ -5,6 +5,8 @@ import java.io.IOException;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 
+import rst.pdfbox.layout.elements.render.RenderContext;
+import rst.pdfbox.layout.elements.render.RenderListener;
 import rst.pdfbox.layout.text.Alignment;
 import rst.pdfbox.layout.text.DrawContext;
 import rst.pdfbox.layout.text.DrawListener;
@@ -20,7 +22,7 @@ import rst.pdfbox.layout.text.Position;
  * is used by the the rendering API, but you may also use it with the low-level
  * text API.
  */
-public class AnnotationDrawListener implements DrawListener {
+public class AnnotationDrawListener implements DrawListener, RenderListener {
 
     private final DrawContext drawContext;
     private final Iterable<AnnotationProcessor> annotationProcessors;
@@ -65,6 +67,30 @@ public class AnnotationDrawListener implements DrawListener {
 	afterRender();
     }
     
+    @Override
+    public void beforePage(RenderContext renderContext) throws IOException {
+	for (AnnotationProcessor annotationProcessor : annotationProcessors) {
+	    try {
+		annotationProcessor.beforePage(drawContext);
+	    } catch (IOException e) {
+		throw new RuntimeException(
+			"exception on annotation processing", e);
+	    }
+	}
+    }
+
+    @Override
+    public void afterPage(RenderContext renderContext) throws IOException {
+	for (AnnotationProcessor annotationProcessor : annotationProcessors) {
+	    try {
+		annotationProcessor.afterPage(drawContext);
+	    } catch (IOException e) {
+		throw new RuntimeException(
+			"exception on annotation processing", e);
+	    }
+	}
+    }
+
 
     public void afterRender() throws IOException {
 	for (AnnotationProcessor annotationProcessor : annotationProcessors) {

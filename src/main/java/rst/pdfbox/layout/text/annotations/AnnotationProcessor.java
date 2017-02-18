@@ -35,6 +35,26 @@ public interface AnnotationProcessor {
 	    float height) throws IOException;
 
     /**
+     * Called before a page is drawn.
+     * 
+     * @param drawContext
+     *            the drawing context.
+     * @throws IOException
+     *             by pdfbox.
+     */
+    void beforePage(final DrawContext drawContext) throws IOException;
+
+    /**
+     * Called after a page is drawn.
+     * 
+     * @param drawContext
+     *            the drawing context.
+     * @throws IOException
+     *             by pdfbox.
+     */
+    void afterPage(final DrawContext drawContext) throws IOException;
+
+    /**
      * Called after all rendering has been performed.
      * 
      * @param document

@@ -1,6 +1,7 @@
 package rst.pdfbox.layout.util;
 
 import java.awt.Color;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.PathIterator;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -20,6 +21,7 @@ import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.apache.pdfbox.pdmodel.graphics.image.LosslessFactory;
 import org.apache.pdfbox.pdmodel.interactive.action.PDActionGoTo;
 import org.apache.pdfbox.pdmodel.interactive.action.PDActionURI;
+import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotation;
 import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotationLink;
 import org.apache.pdfbox.pdmodel.interactive.annotation.PDBorderStyleDictionary;
 import org.apache.pdfbox.pdmodel.interactive.documentnavigation.destination.PDDestination;
@@ -156,12 +158,22 @@ public class CompatibilityHelper {
 	return pdLink;
     }
 
+    /**
+     * Sets the color in the annotation.
+     * @param annotation the annotation.
+     * @param color the color to set.
+     */
+    public static void setAnnotationColor(final PDAnnotation annotation, Color color) {
+	annotation.setColor(toPDColor(color));
+    }
+    
+
     private static PDAnnotationLink createLink(PDRectangle rect, Color color,
 	    LinkStyle linkStyle) {
 	PDAnnotationLink pdLink = new PDAnnotationLink();
 	pdLink.setBorderStyle(toBorderStyle(linkStyle));
 	pdLink.setRectangle(rect);
-	pdLink.setColor(toPDColor(color));
+	setAnnotationColor(pdLink, color);
 	return pdLink;
     }
 
@@ -180,6 +192,68 @@ public class CompatibilityHelper {
                 color.getRed() / 255f, color.getGreen() / 255f, color.getBlue() / 255f };
 	return new PDColor(components, PDDeviceRGB.INSTANCE);
     }
+    
+    /**
+     * Return the quad points representation of the given rect.
+     * 
+     * @param rect
+     *            the rectangle.
+     * @return the quad points.
+     */
+    public static float[] toQuadPoints(final PDRectangle rect) {
+	return toQuadPoints(rect, 0, 0);
+    }
+
+    /**
+     * Return the quad points representation of the given rect.
+     * 
+     * @param rect
+     *            the rectangle.
+     * @param xOffset
+     *            the offset in x-direction to add.
+     * @param yOffset
+     *            the offset in y-direction to add.
+     * @return the quad points.
+     */
+    public static float[] toQuadPoints(final PDRectangle rect, float xOffset,
+	    float yOffset) {
+	float[] quads = new float[8];
+	quads[0] = rect.getLowerLeftX() + xOffset; // x1
+	quads[1] = rect.getUpperRightY() + yOffset; // y1
+	quads[2] = rect.getUpperRightX() + xOffset; // x2
+	quads[3] = quads[1]; // y2
+	quads[4] = quads[0]; // x3
+	quads[5] = rect.getLowerLeftY() + yOffset; // y3
+	quads[6] = quads[2]; // x4
+	quads[7] = quads[5]; // y5
+	return quads;
+    }
+
+    /**
+     * Transform the quad points in order to match the page rotation
+     * @param quadPoints the quad points.
+     * @param page the page.
+     * @return the transformed quad points.
+     */
+    public static float[] transformQuadPointToPageRotation(
+	    final float[] quadPoints, final PDPage page) {
+	int pageRotation = getPageRotation(page);
+	if (pageRotation == 0) {
+	    return quadPoints;
+	}
+
+	float pageWidth = page.getMediaBox().getHeight();
+	float pageHeight = page.getMediaBox().getWidth();
+	float[] rotatedPoints = new float[quadPoints.length];
+	AffineTransform transform = new AffineTransform();
+	transform.rotate(pageRotation * Math.PI / 180, pageHeight / 2,
+		pageWidth / 2);
+	double offset = Math.abs(pageHeight - pageWidth) / 2;
+	transform.translate(-offset, offset);
+	transform.transform(quadPoints, 0, rotatedPoints, 0, 4);
+	return rotatedPoints;
+    }
+
 
     private static PDBorderStyleDictionary getNoBorder() {
 	if (noBorder == null) {

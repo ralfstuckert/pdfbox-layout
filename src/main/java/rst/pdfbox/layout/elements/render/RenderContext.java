@@ -262,6 +262,11 @@ public class RenderContext implements Layout, Closeable, DrawContext, DrawListen
 	return page;
     }
 
+    @Override
+    public PDPageContentStream getCurrentPageContentStream() {
+        return getContentStream();
+    }
+    
     /**
      * @return the current PDPage.
      */
@@ -378,6 +383,7 @@ public class RenderContext implements Layout, Closeable, DrawContext, DrawListen
 
 	resetPositionToUpperLeft();
 	document.beforePage(this);
+	annotationDrawListener.beforePage(this);
     }
 
     /**
@@ -390,6 +396,7 @@ public class RenderContext implements Layout, Closeable, DrawContext, DrawListen
     public boolean closePage() throws IOException {
 	if (contentStream != null) {
 	    
+	    annotationDrawListener.afterPage(this);
 	    document.afterPage(this);
 	    
 	    if (getPageFormat().getRotation() != 0) {

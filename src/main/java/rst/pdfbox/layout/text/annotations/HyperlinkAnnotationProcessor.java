@@ -22,8 +22,9 @@ import rst.pdfbox.layout.text.annotations.Annotations.HyperlinkAnnotation.LinkSt
 import rst.pdfbox.layout.util.CompatibilityHelper;
 
 /**
- * This annotation processor handles both {@link HyperlinkAnnotation}s and {@link AnchorAnnotation}s,
- * and adds the needed hyperlink metadata to the PDF document.
+ * This annotation processor handles both {@link HyperlinkAnnotation}s and
+ * {@link AnchorAnnotation}s, and adds the needed hyperlink metadata to the PDF
+ * document.
  */
 public class HyperlinkAnnotationProcessor implements AnnotationProcessor {
 
@@ -39,7 +40,8 @@ public class HyperlinkAnnotationProcessor implements AnnotationProcessor {
 	    return;
 	}
 	AnnotatedStyledText annotatedText = (AnnotatedStyledText) drawnObject;
-	handleHyperlinkAnnotations(annotatedText, drawContext, upperLeft, width, height);
+	handleHyperlinkAnnotations(annotatedText, drawContext, upperLeft,
+		width, height);
 	handleAnchorAnnotations(annotatedText, drawContext, upperLeft);
     }
 
@@ -79,6 +81,16 @@ public class HyperlinkAnnotationProcessor implements AnnotationProcessor {
     }
 
     @Override
+    public void beforePage(DrawContext drawContext) {
+	// nothing to do here
+    }
+
+    @Override
+    public void afterPage(DrawContext drawContext) {
+	// nothing to do here
+    }
+
+    @Override
     public void afterRender(PDDocument document) throws IOException {
 	for (Entry<PDPage, List<Hyperlink>> entry : linkMap.entrySet()) {
 	    PDPage page = entry.getKey();
@@ -88,7 +100,7 @@ public class HyperlinkAnnotationProcessor implements AnnotationProcessor {
 		if (hyperlink.getHyperlinkURI().startsWith("#")) {
 		    pdLink = createGotoLink(hyperlink);
 		} else {
-		    pdLink = CompatibilityHelper.createLink(
+		    pdLink = CompatibilityHelper.createLink(page, 
 			    hyperlink.getRect(), hyperlink.getColor(),
 			    hyperlink.getLinkStyle(),
 			    hyperlink.getHyperlinkURI());
@@ -110,7 +122,7 @@ public class HyperlinkAnnotationProcessor implements AnnotationProcessor {
 	xyzDestination.setPage(pageAnchor.getPage());
 	xyzDestination.setLeft((int) pageAnchor.getX());
 	xyzDestination.setTop((int) pageAnchor.getY());
-	return CompatibilityHelper.createLink(hyperlink.getRect(),
+	return CompatibilityHelper.createLink(pageAnchor.getPage(), hyperlink.getRect(),
 		hyperlink.getColor(), hyperlink.getLinkStyle(), xyzDestination);
     }
 
