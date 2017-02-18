@@ -138,9 +138,9 @@ public class CompatibilityHelper {
 	return pdfRenderer.renderImageWithDPI(pageIndex, resolution, ImageType.RGB);
     }
 
-    public static PDAnnotationLink createLink(PDRectangle rect, Color color,
+    public static PDAnnotationLink createLink(PDPage page, PDRectangle rect, Color color,
 	    LinkStyle linkStyle, final String uri) {
-	PDAnnotationLink pdLink = createLink(rect, color, linkStyle);
+	PDAnnotationLink pdLink = createLink(page, rect, color, linkStyle);
 
 	PDActionURI actionUri = new PDActionURI();
 	actionUri.setURI(uri);
@@ -148,9 +148,9 @@ public class CompatibilityHelper {
 	return pdLink;
     }
 
-    public static PDAnnotationLink createLink(PDRectangle rect, Color color,
+    public static PDAnnotationLink createLink(PDPage page, PDRectangle rect, Color color,
 	    LinkStyle linkStyle, final PDDestination destination) {
-	PDAnnotationLink pdLink = createLink(rect, color, linkStyle);
+	PDAnnotationLink pdLink = createLink(page, rect, color, linkStyle);
 
 	PDActionGoTo gotoAction = new PDActionGoTo();
 	gotoAction.setDestination(destination);
@@ -168,7 +168,7 @@ public class CompatibilityHelper {
     }
     
 
-    private static PDAnnotationLink createLink(PDRectangle rect, Color color,
+    private static PDAnnotationLink createLink(PDPage page, PDRectangle rect, Color color,
 	    LinkStyle linkStyle) {
 	PDAnnotationLink pdLink = new PDAnnotationLink();
 	pdLink.setBorderStyle(toBorderStyle(linkStyle));

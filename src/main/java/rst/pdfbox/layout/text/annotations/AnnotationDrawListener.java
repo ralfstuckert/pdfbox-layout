@@ -60,7 +60,7 @@ public class AnnotationDrawListener implements DrawListener, RenderListener {
 
     /**
      * @deprecated user {@link #afterRender()} instead.
-     * @throws IOException
+     * @throws IOException by pdfbox.
      */
     @Deprecated
     public void finalizeAnnotations() throws IOException {
