@@ -166,7 +166,8 @@ public class CompatibilityHelper {
 	    LinkStyle linkStyle) {
 	PDAnnotationLink pdLink = new PDAnnotationLink();
 	pdLink.setBorderStyle(toBorderStyle(linkStyle));
-	pdLink.setRectangle(rect);
+	PDRectangle rotatedRect = transformToPageRotation(rect, page);
+	pdLink.setRectangle(rotatedRect);
 	setAnnotationColor(pdLink, color);
 	return pdLink;
     }
@@ -244,23 +245,53 @@ public class CompatibilityHelper {
      * @param page the page.
      * @return the transformed quad points.
      */
-    public static float[] transformQuadPointToPageRotation(
+    public static float[] transformToPageRotation(
 	    final float[] quadPoints, final PDPage page) {
-	int pageRotation = getPageRotation(page);
-	if (pageRotation == 0) {
+	AffineTransform transform = transformToPageRotation(page);
+	if (transform == null) {
 	    return quadPoints;
 	}
-
+	float[] rotatedPoints = new float[quadPoints.length];
+	transform.transform(quadPoints, 0, rotatedPoints, 0, 4);
+	return rotatedPoints;
+    }
+    
+    /**
+     * Transform the rectangle in order to match the page rotation
+     * @param rect the rectangle.
+     * @param page the page.
+     * @return the transformed rectangle.
+     */
+    public static PDRectangle transformToPageRotation(
+	    final PDRectangle rect, final PDPage page) {
+	AffineTransform transform = transformToPageRotation(page);
+	if (transform == null) {
+	    return rect;
+	}
+	float[] points = new float[] {rect.getLowerLeftX(), rect.getLowerLeftY(), rect.getUpperRightX(), rect.getUpperRightY()};
+	float[] rotatedPoints = new float[4]; 
+	transform.transform(points, 0, rotatedPoints, 0, 2);
+	PDRectangle rotated = new PDRectangle();
+	rotated.setLowerLeftX(rotatedPoints[0]);
+	rotated.setLowerLeftY(rotatedPoints[1]);
+	rotated.setUpperRightX(rotatedPoints[2]);
+	rotated.setUpperRightY(rotatedPoints[3]);
+	return rotated;
+    }
+    
+    private static AffineTransform transformToPageRotation(final PDPage page) {
+	int pageRotation = getPageRotation(page);
+	if (pageRotation == 0) {
+	    return null;
+	}
 	float pageWidth = page.getMediaBox().getHeight();
 	float pageHeight = page.getMediaBox().getWidth();
-	float[] rotatedPoints = new float[quadPoints.length];
 	AffineTransform transform = new AffineTransform();
 	transform.rotate(pageRotation * Math.PI / 180, pageHeight / 2,
 		pageWidth / 2);
 	double offset = Math.abs(pageHeight - pageWidth) / 2;
 	transform.translate(-offset, offset);
-	transform.transform(quadPoints, 0, rotatedPoints, 0, 4);
-	return rotatedPoints;
+	return transform;
     }
 
     private static PDBorderStyleDictionary getNoBorder() {
