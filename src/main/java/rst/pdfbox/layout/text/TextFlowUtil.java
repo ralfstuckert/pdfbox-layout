@@ -46,36 +46,6 @@ public class TextFlowUtil {
 	return createTextFlow(parts, fontSize, font, font, font, font);
     }
 
-    public static TextFlow createTextFlowFromPreformattedText(
-	    final String text, final float fontSize, final PDFont font,
-	    final int tabWidth) throws IOException {
-	
-	Pattern pattern = Pattern.compile("^(\\h+)", Pattern.MULTILINE);
-	Matcher matcher = pattern.matcher(text);
-	StringBuffer buffer = new StringBuffer(text.length());
-	while (matcher.find()) {
-	    String group = matcher.group();
-	    int indent = 0;
-	    for (char character : group.toCharArray()) {
-		if (character == '\t') {
-		    indent += tabWidth;
-		} else {
-		    indent += 1;
-		}
-	    }
-	    matcher.appendReplacement(buffer, String.format("--{%sem}", indent));
-	}
-	matcher.appendTail(buffer);
-	CharSequence indentedText = buffer.toString();
-	
-	Iterable<CharSequence> parts = splitByControlCharacter(
-		ControlCharacters.NEWLINE_FACTORY, Collections.singleton(indentedText));
-	parts = splitByControlCharacter(IndentCharacters.INDENT_FACTORY, parts);
-	parts = unescapeBackslash(parts);
-
-	return createTextFlow(parts, fontSize, font, font, font, font);
-    }
-
     /**
      * Convenience alternative to
      * {@link #createTextFlowFromMarkup(String, float, PDFont, PDFont, PDFont, PDFont)}
