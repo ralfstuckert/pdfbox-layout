@@ -24,7 +24,7 @@ subprojects {
   apply plugin: 'org.dm.bundle'  
 
   group = 'com.github.ralfstuckert.pdfbox-layout'
-  version = '0.8.1'
+  version = '0.8.5'
 
   repositories {
       mavenCentral()
