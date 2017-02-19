@@ -85,14 +85,24 @@ public class WordBreakers {
 		final FontDescriptor fontDescriptor, final float maxWidth)
 		throws IOException {
 	    int cutIndex = (int) (maxWidth / getEmWidth(fontDescriptor));
-	    float currentWidth = 0;
-	    do {
-		currentWidth = getStringWidth(word.substring(0, cutIndex),
-			fontDescriptor);
+	    float currentWidth = getStringWidth(word.substring(0, cutIndex),
+		    fontDescriptor);
+	    if (currentWidth > maxWidth) {
+		while (currentWidth > maxWidth) {
+		    --cutIndex;
+		    currentWidth = getStringWidth(word.substring(0, cutIndex),
+			    fontDescriptor);
+		}
+		++cutIndex;
+	    } else if (currentWidth < maxWidth) {
+		while (currentWidth < maxWidth) {
+		    ++cutIndex;
+		    currentWidth = getStringWidth(word.substring(0, cutIndex),
+			    fontDescriptor);
+		}
 		--cutIndex;
-	    } while (currentWidth > maxWidth);
+	    }
 
-	    ++cutIndex;
 	    return new Pair<String>(word.substring(0, cutIndex),
 		    word.substring(cutIndex));
 	}
