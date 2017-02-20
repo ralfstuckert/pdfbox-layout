@@ -88,14 +88,17 @@ public class ExampleTest {
 	checkExample("Margin");
     }
 
+    @Test
     public void testMarkup() throws Exception {
 	checkExample("Markup");
     }
 
+    @Test
     public void testMultiplePages() throws Exception {
 	checkExample("MultiplePages");
     }
 
+    @Test
     public void testRotation() throws Exception {
 	checkExample("Rotation");
     }
