@@ -2,12 +2,14 @@ import java.awt.Color;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
+import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotationTextMarkup;
 
 import rst.pdfbox.layout.elements.Document;
@@ -18,6 +20,7 @@ import rst.pdfbox.layout.text.DrawContext;
 import rst.pdfbox.layout.text.Position;
 import rst.pdfbox.layout.text.StyledText;
 import rst.pdfbox.layout.text.annotations.Annotated;
+import rst.pdfbox.layout.text.annotations.AnnotatedStyledText;
 import rst.pdfbox.layout.text.annotations.Annotation;
 import rst.pdfbox.layout.text.annotations.AnnotationCharacters;
 import rst.pdfbox.layout.text.annotations.AnnotationCharacters.AnnotationControlCharacter;
@@ -31,10 +34,6 @@ public class CustomAnnotation {
     public static class HighlightAnnotation implements Annotation {
 
 	private Color color;
-
-	public HighlightAnnotation() {
-	    this(null);
-	}
 
 	public HighlightAnnotation(Color color) {
 	    this.color = color;
@@ -166,19 +165,41 @@ public class CustomAnnotation {
 
     public static void main(String[] args) throws Exception {
 
+	// register our custom highlight annotation processor
 	AnnotationProcessorFactory.register(HighlightAnnotationProcessor.class);
-	AnnotationCharacters.register(new HighlightControlCharacterFactory());
 
 	Document document = new Document(PageFormat.with().A4()
 		.margins(40, 60, 40, 60).portrait().build());
 
 	Paragraph paragraph = new Paragraph();
+	paragraph.addText("Hello there, here is ", 10, PDType1Font.HELVETICA);
+	HighlightAnnotation annotation = new HighlightAnnotation(Color.red);
+
+	// now add some annotated text using our custom highlight annotation
+	AnnotatedStyledText highlightedText = new AnnotatedStyledText(
+		"highlighted text", 10, PDType1Font.HELVETICA, Color.black,
+		Collections.singleton(annotation));
+	paragraph.add(highlightedText);
+
+	paragraph.addText(
+		". Do whatever you want here...strike, highlight, whatsoever\n\n",
+		10, PDType1Font.HELVETICA);
+	paragraph.setMaxWidth(150);
+	document.add(paragraph);
+
+	///////////////////////////////////////
+	// and now a bit shorter using markup
+	///////////////////////////////////////
+	
+	// register markup processing for the highlight annotation
+	AnnotationCharacters.register(new HighlightControlCharacterFactory());
+	
+	paragraph = new Paragraph();
 	paragraph
 		.addMarkup(
 			"Hello there, here is {hl:#ffff00}highlighted text{hl}. "
-				+ "Do whatever you want here...strike, highlight, whatsoever",
+				+ "Do whatever you want here...strike, highlight, whatsoever\n\n",
 			10, BaseFont.Helvetica);
-
 	paragraph.setMaxWidth(150);
 	document.add(paragraph);
 
