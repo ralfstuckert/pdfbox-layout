@@ -13,11 +13,11 @@ public class Markup {
 	String text1 = "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, "
 		+ "sed diam nonumy eirmod tempor invidunt ut labore et dolore magna "
 		+ "aliquyam erat, _sed diam_ voluptua. At vero eos et *accusam et justo* "
-		+ "duo dolores et ea rebum.\n Stet clita kasd gubergren, no sea takimata "
+		+ "duo dolores et ea rebum.\nStet clita kasd gubergren, no sea takimata "
 		+ "sanctus est *Lorem ipsum _dolor* sit_ amet. Lorem ipsum dolor sit amet, "
 		+ "consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt "
 		+ "ut labore et dolore magna aliquyam erat, *sed diam voluptua.\n"
-		+ " At vero eos et accusam* et justo duo dolores et ea rebum. Stet clita kasd "
+		+ "At vero eos et accusam* et justo duo dolores et ea rebum. Stet clita kasd "
 		+ "gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.\n\n";
 
 	Document document = new Document(40, 60, 40, 60);
@@ -30,9 +30,11 @@ public class Markup {
 		.addMarkup(
 			"Markup supports *bold*, _italic_, and *even _mixed* markup_.\n",
 			11, BaseFont.Times);
-	    paragraph.addMarkup(
-	            "And now also {color:#ff0000}c{color:#00ff00}o{color:#0000ff}l{color:#00cccc}o{color:#cc00cc}r{color:#000000}.\n\n",
-	            11, BaseFont.Times);
+	paragraph
+		.addMarkup(
+			"And now also {color:#ff0000}c{color:#00ff00}o{color:#0000ff}l{color:#00cccc}o{color:#cc00cc}r{color:#000000}",
+			11, BaseFont.Times);
+	paragraph.addMarkup(" and __underline__.\n\n", 11, BaseFont.Times);
 	paragraph.addMarkup(
 		"Escape \\* with \\\\\\* and \\_ with \\\\\\_ in markup.\n\n",
 		11, BaseFont.Times);
@@ -59,7 +61,6 @@ public class Markup {
 		+ "-#{I ->:5}And yet another one\n\n";
 	paragraph.addMarkup(text1, 11, BaseFont.Times);
 	document.add(paragraph);
-
 
 	final OutputStream outputStream = new FileOutputStream("markup.pdf");
 	document.save(outputStream);

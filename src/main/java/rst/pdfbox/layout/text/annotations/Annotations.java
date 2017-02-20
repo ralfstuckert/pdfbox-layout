@@ -6,6 +6,17 @@ package rst.pdfbox.layout.text.annotations;
 public class Annotations {
 
     /**
+     * Represents a underline annotation
+     */
+    public static class UnderlineAnnotation implements Annotation {
+	@Override
+	public String toString() {
+	    return "UnderlineAnnotation";
+	}
+    }
+    
+    
+    /**
      * Represents a hyperlink annotation
      */
     public static class HyperlinkAnnotation implements Annotation {

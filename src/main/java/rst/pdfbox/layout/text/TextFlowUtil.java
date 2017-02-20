@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.apache.pdfbox.pdmodel.font.PDFont;
 
@@ -23,6 +22,7 @@ import rst.pdfbox.layout.text.annotations.AnnotatedStyledText;
 import rst.pdfbox.layout.text.annotations.Annotation;
 import rst.pdfbox.layout.text.annotations.AnnotationCharacters;
 import rst.pdfbox.layout.text.annotations.AnnotationCharacters.AnnotationControlCharacter;
+import rst.pdfbox.layout.text.annotations.AnnotationCharacters.AnnotationControlCharacterFactory;
 
 public class TextFlowUtil {
 
@@ -169,7 +169,7 @@ public class TextFlowUtil {
 		}
 		if (fragment instanceof AnnotationControlCharacter) {
 		    AnnotationControlCharacter<?> annotationControlCharacter = (AnnotationControlCharacter<?>) fragment;
-		    if (annotationControlCharacter.getAnnotation() == null) {
+		    if (annotationMap.containsKey(annotationControlCharacter.getAnnotationType())) {
 			annotationMap.remove(annotationControlCharacter
 				.getAnnotationType());
 		    } else {
@@ -288,13 +288,17 @@ public class TextFlowUtil {
 	text = splitByControlCharacter(ControlCharacters.BOLD_FACTORY, text);
 	text = splitByControlCharacter(ControlCharacters.ITALIC_FACTORY, text);
 	text = splitByControlCharacter(ControlCharacters.COLOR_FACTORY, text);
-	text = splitByControlCharacter(AnnotationCharacters.HYPERLINK_FACTORY,
-		text);
-	text = splitByControlCharacter(AnnotationCharacters.ANCHOR_FACTORY,
-		text);
+	
+	for (AnnotationControlCharacterFactory<?> annotationControlCharacterFactory : AnnotationCharacters
+		.getFactories()) {
+	    text = splitByControlCharacter(annotationControlCharacterFactory,
+		    text);
+	}
+	
 	text = splitByControlCharacter(IndentCharacters.INDENT_FACTORY, text);
 
 	text = unescapeBackslash(text);
+
 	return text;
     }
 

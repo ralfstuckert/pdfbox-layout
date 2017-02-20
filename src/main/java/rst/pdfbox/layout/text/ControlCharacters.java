@@ -102,7 +102,7 @@ public class ControlCharacters {
      */
     public static class ItalicControlCharacter extends ControlCharacter {
 	private static Pattern PATTERN = Pattern
-		.compile("(?<!\\\\)(\\\\\\\\)*_");
+		.compile("(?<!\\\\)(\\\\\\\\)*(?<!_)_(?!_)");
 
 	protected ItalicControlCharacter() {
 	    super("ITALIC", "_");

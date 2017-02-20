@@ -15,6 +15,7 @@ public class AnnotationProcessorFactory {
 
     static {
 	register(HyperlinkAnnotationProcessor.class);
+	register(UnderlineAnnotationProcessor.class);
     }
 
     /**
