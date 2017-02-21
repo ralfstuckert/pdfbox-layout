@@ -63,7 +63,7 @@ public class CustomAnnotation {
 	    Iterable<HighlightAnnotation> HighlightAnnotations = drawnObject
 		    .getAnnotationsOfType(HighlightAnnotation.class);
 
-	    for (HighlightAnnotation HighlightAnnotation : HighlightAnnotations) {
+	    for (HighlightAnnotation highlightAnnotation : HighlightAnnotations) {
 
 		// use PDF text markup to implement the highlight
 		PDAnnotationTextMarkup markup = new PDAnnotationTextMarkup(
@@ -82,15 +82,9 @@ public class CustomAnnotation {
 			quadPoints, drawContext.getCurrentPage());
 		markup.setQuadPoints(quadPoints);
 
-		// use the given color, or else the color of the drawn text
-		Color color = HighlightAnnotation.getColor();
-		if (color == null) {
-		    if (drawnObject instanceof StyledText) {
-			color = ((StyledText) drawnObject).getColor();
-		    }
-		}
-		if (color != null) {
-		    CompatibilityHelper.setAnnotationColor(markup, color);
+		// set the highlight color if given
+		if (highlightAnnotation.getColor() != null) {
+		    CompatibilityHelper.setAnnotationColor(markup, highlightAnnotation.getColor());
 		}
 
 		// finally add the markup to the PDF
@@ -198,9 +192,9 @@ public class CustomAnnotation {
 
 	Paragraph paragraph = new Paragraph();
 	paragraph.addText("Hello there, here is ", 10, PDType1Font.HELVETICA);
-	HighlightAnnotation annotation = new HighlightAnnotation(Color.red);
 
 	// now add some annotated text using our custom highlight annotation
+	HighlightAnnotation annotation = new HighlightAnnotation(Color.red);
 	AnnotatedStyledText highlightedText = new AnnotatedStyledText(
 		"highlighted text", 10, PDType1Font.HELVETICA, Color.black,
 		Collections.singleton(annotation));
