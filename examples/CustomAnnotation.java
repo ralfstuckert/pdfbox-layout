@@ -18,7 +18,6 @@ import rst.pdfbox.layout.elements.Paragraph;
 import rst.pdfbox.layout.text.BaseFont;
 import rst.pdfbox.layout.text.DrawContext;
 import rst.pdfbox.layout.text.Position;
-import rst.pdfbox.layout.text.StyledText;
 import rst.pdfbox.layout.text.annotations.Annotated;
 import rst.pdfbox.layout.text.annotations.AnnotatedStyledText;
 import rst.pdfbox.layout.text.annotations.Annotation;
@@ -194,7 +193,7 @@ public class CustomAnnotation {
 	paragraph.addText("Hello there, here is ", 10, PDType1Font.HELVETICA);
 
 	// now add some annotated text using our custom highlight annotation
-	HighlightAnnotation annotation = new HighlightAnnotation(Color.red);
+	HighlightAnnotation annotation = new HighlightAnnotation(Color.green);
 	AnnotatedStyledText highlightedText = new AnnotatedStyledText(
 		"highlighted text", 10, PDType1Font.HELVETICA, Color.black,
 		Collections.singleton(annotation));
