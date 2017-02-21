@@ -17,8 +17,6 @@ public interface AnnotationProcessor {
      * 
      * @param drawnObject
      *            the drawn object.
-     * @param annotation
-     *            the annotation.
      * @param drawContext
      *            the drawing context.
      * @param upperLeft
