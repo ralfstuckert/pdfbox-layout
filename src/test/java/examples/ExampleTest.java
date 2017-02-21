@@ -13,13 +13,21 @@ import javax.imageio.ImageIO;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import rst.pdfbox.layout.util.CompatibilityHelper;
+import rst.pdfbox.layout.util.WordBreakerFactory;
 
 public class ExampleTest {
 
     private File newPdf;
+
+    @Before
+    public void setUp() throws Exception {
+	// reset test situation
+	System.clearProperty(WordBreakerFactory.WORD_BREAKER_CLASS_PROPERTY);
+    }
 
     @After
     public void tearDown() throws Exception {
@@ -36,6 +44,11 @@ public class ExampleTest {
     @Test
     public void testColumns() throws Exception {
 	checkExample("Columns");
+    }
+
+    @Test
+    public void testCustomAnnotation() throws Exception {
+	checkExample("CustomAnnotation");
     }
 
     @Test

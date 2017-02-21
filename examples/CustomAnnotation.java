@@ -31,6 +31,10 @@ import rst.pdfbox.layout.util.CompatibilityHelper;
 
 public class CustomAnnotation {
 
+    /**
+     * Represents a highlight annotation that might be added to a
+     * {@link AnnotatedStyledText}.
+     */
     public static class HighlightAnnotation implements Annotation {
 
 	private Color color;
@@ -44,6 +48,10 @@ public class CustomAnnotation {
 	}
     }
 
+    /**
+     * Processes {@link HighlightAnnotation}s by adding a colored highlight to
+     * the pdf.
+     */
     public static class HighlightAnnotationProcessor implements
 	    AnnotationProcessor {
 
@@ -57,9 +65,12 @@ public class CustomAnnotation {
 
 	    for (HighlightAnnotation HighlightAnnotation : HighlightAnnotations) {
 
+		// use PDF text markup to implement the highlight
 		PDAnnotationTextMarkup markup = new PDAnnotationTextMarkup(
 			PDAnnotationTextMarkup.SUB_TYPE_HIGHLIGHT);
 
+		// use the bounding box of the drawn object to position the
+		// highlight
 		PDRectangle bounds = new PDRectangle();
 		bounds.setLowerLeftX(upperLeft.getX());
 		bounds.setLowerLeftY(upperLeft.getY() - height);
@@ -71,6 +82,7 @@ public class CustomAnnotation {
 			quadPoints, drawContext.getCurrentPage());
 		markup.setQuadPoints(quadPoints);
 
+		// use the given color, or else the color of the drawn text
 		Color color = HighlightAnnotation.getColor();
 		if (color == null) {
 		    if (drawnObject instanceof StyledText) {
@@ -81,6 +93,7 @@ public class CustomAnnotation {
 		    CompatibilityHelper.setAnnotationColor(markup, color);
 		}
 
+		// finally add the markup to the PDF
 		drawContext.getCurrentPage().getAnnotations().add(markup);
 	    }
 	}
@@ -102,6 +115,11 @@ public class CustomAnnotation {
 
     }
 
+    /**
+     * The control character is a representation of the parsed markup. It
+     * contains any information passed by the markup necessary for rendering, in
+     * our case here it is just the color for the highlight.
+     */
     public static class HighlightControlCharacter extends
 	    AnnotationControlCharacter<HighlightAnnotation> {
 
@@ -123,6 +141,13 @@ public class CustomAnnotation {
 	}
     }
 
+    /**
+     * Provides a regex pattern to match the highlight markup, and creates an
+     * appropriate control character. In our case here the markup syntax is
+     * either <code>{hl}</code> or with optional color information
+     * <code>{hl:#ee22aa}</code>, where the color is given as hex RGB code
+     * (ee22aa in this case). It can be escaped with a backslash ('\').
+     */
     private static class HighlightControlCharacterFactory implements
 	    AnnotationControlCharacterFactory<HighlightControlCharacter> {
 
@@ -181,24 +206,25 @@ public class CustomAnnotation {
 		Collections.singleton(annotation));
 	paragraph.add(highlightedText);
 
-	paragraph.addText(
-		". Do whatever you want here...strike, highlight, whatsoever\n\n",
-		10, PDType1Font.HELVETICA);
+	paragraph
+		.addText(
+			". Do whatever you want here...strike, squiggle, whatsoever\n\n",
+			10, PDType1Font.HELVETICA);
 	paragraph.setMaxWidth(150);
 	document.add(paragraph);
 
-	///////////////////////////////////////
+	// /////////////////////////////////////
 	// and now a bit shorter using markup
-	///////////////////////////////////////
-	
+	// /////////////////////////////////////
+
 	// register markup processing for the highlight annotation
 	AnnotationCharacters.register(new HighlightControlCharacterFactory());
-	
+
 	paragraph = new Paragraph();
 	paragraph
 		.addMarkup(
 			"Hello there, here is {hl:#ffff00}highlighted text{hl}. "
-				+ "Do whatever you want here...strike, highlight, whatsoever\n\n",
+				+ "Do whatever you want here...strike, squiggle, whatsoever\n\n",
 			10, BaseFont.Helvetica);
 	paragraph.setMaxWidth(150);
 	document.add(paragraph);
