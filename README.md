@@ -9,7 +9,7 @@ A tiny layout library on top of pdfbox. Main features are
 * paragraphs 
 * pagination
 
-See the [Wiki](https://github.com/ralfstuckert/pdfbox-layout/wiki) for more information on the usage, or browse the [javadoc](https://jitpack.io/com/github/ralfstuckert/pdfbox-layout/pdfbox2-layout/0.8.6/javadoc/).
+See the [Wiki](https://github.com/ralfstuckert/pdfbox-layout/wiki) for more information on the usage, or browse the [javadoc](https://jitpack.io/com/github/ralfstuckert/pdfbox-layout/pdfbox2-layout/0.9.0/javadoc/).
 
 These articles may also be useful as a short introduction:
 * [PDF text layout made easy with PDFBox-Layout](https://hardmockcafe.blogspot.de/2016/04/pdf-text-layout-made-easy-with-pdfbox_17.html)
@@ -42,7 +42,7 @@ As of 0.2.0 pdfbox-layout is available from [jitpack.io](https://jitpack.io/#ral
     <dependency>
         <groupId>com.github.ralfstuckert.pdfbox-layout</groupId>
         <artifactId>pdfbox2-layout</artifactId>
-        <version>0.8.6</version>
+        <version>0.9.0</version>
     </dependency>
 ```
 
@@ -54,7 +54,7 @@ As of 0.2.0 pdfbox-layout is available from [jitpack.io](https://jitpack.io/#ral
         maven { url "https://jitpack.io" }
    }
    dependencies {
-         compile 'com.github.ralfstuckert.pdfbox-layout:pdfbox2-layout:0.8.6'
+         compile 'com.github.ralfstuckert.pdfbox-layout:pdfbox2-layout:0.9.0'
    }
 ```
 
@@ -62,10 +62,10 @@ As of 0.2.0 pdfbox-layout is available from [jitpack.io](https://jitpack.io/#ral
 
  | pdfbox**1**-layout | pdfbox**2**-layout
 :--- | :--- | :---
-**binary** | [pdfbox1-layout-0.8.6.jar](https://jitpack.io/com/github/ralfstuckert/pdfbox-layout/pdfbox1-layout/0.8.6/pdfbox1-layout-0.8.6.jar) | [pdfbox2-layout-0.8.6.jar](https://jitpack.io/com/github/ralfstuckert/pdfbox-layout/pdfbox2-layout/0.8.6/pdfbox2-layout-0.8.6.jar)
-**sources** | [pdfbox1-layout-0.8.6-sources.jar](https://jitpack.io/com/github/ralfstuckert/pdfbox-layout/pdfbox1-layout/0.8.6/pdfbox1-layout-0.8.6-sources.jar) | [pdfbox2-layout-0.8.6-sources.jar](https://jitpack.io/com/github/ralfstuckert/pdfbox-layout/pdfbox2-layout/0.8.6/pdfbox2-layout-0.8.6-sources.jar)
-**javadoc** | [pdfbox1-layout-0.8.6-javadoc.jar](https://jitpack.io/com/github/ralfstuckert/pdfbox-layout/pdfbox1-layout/0.8.6/pdfbox1-layout-0.8.6-javadoc.jar) | [pdfbox2-layout-0.8.6-javadoc.jar](https://jitpack.io/com/github/ralfstuckert/pdfbox-layout/pdfbox2-layout/0.8.6/pdfbox2-layout-0.8.6-javadoc.jar)
-**examples** | [pdfbox1-layout-0.8.6-examples.jar](https://jitpack.io/com/github/ralfstuckert/pdfbox-layout/pdfbox1-layout/0.8.6/pdfbox1-layout-0.8.6-examples.jar) | [pdfbox2-layout-0.8.6-examples.jar](https://jitpack.io/com/github/ralfstuckert/pdfbox-layout/pdfbox2-layout/0.8.6/pdfbox2-layout-0.8.6-examples.jar)
+**binary** | [pdfbox1-layout-0.9.0.jar](https://jitpack.io/com/github/ralfstuckert/pdfbox-layout/pdfbox1-layout/0.9.0/pdfbox1-layout-0.9.0.jar) | [pdfbox2-layout-0.9.0.jar](https://jitpack.io/com/github/ralfstuckert/pdfbox-layout/pdfbox2-layout/0.9.0/pdfbox2-layout-0.9.0.jar)
+**sources** | [pdfbox1-layout-0.9.0-sources.jar](https://jitpack.io/com/github/ralfstuckert/pdfbox-layout/pdfbox1-layout/0.9.0/pdfbox1-layout-0.9.0-sources.jar) | [pdfbox2-layout-0.9.0-sources.jar](https://jitpack.io/com/github/ralfstuckert/pdfbox-layout/pdfbox2-layout/0.9.0/pdfbox2-layout-0.9.0-sources.jar)
+**javadoc** | [pdfbox1-layout-0.9.0-javadoc.jar](https://jitpack.io/com/github/ralfstuckert/pdfbox-layout/pdfbox1-layout/0.9.0/pdfbox1-layout-0.9.0-javadoc.jar) | [pdfbox2-layout-0.9.0-javadoc.jar](https://jitpack.io/com/github/ralfstuckert/pdfbox-layout/pdfbox2-layout/0.9.0/pdfbox2-layout-0.9.0-javadoc.jar)
+**examples** | [pdfbox1-layout-0.9.0-examples.jar](https://jitpack.io/com/github/ralfstuckert/pdfbox-layout/pdfbox1-layout/0.9.0/pdfbox1-layout-0.9.0-examples.jar) | [pdfbox2-layout-0.9.0-examples.jar](https://jitpack.io/com/github/ralfstuckert/pdfbox-layout/pdfbox2-layout/0.9.0/pdfbox2-layout-0.9.0-examples.jar)
 
 
 
