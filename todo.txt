@@ -1,1 +1,1 @@
-Links
+Avoid recalculating (rewrapping) by caching the wrapping result
