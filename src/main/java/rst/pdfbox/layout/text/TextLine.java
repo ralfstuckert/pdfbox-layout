@@ -19,6 +19,14 @@ import rst.pdfbox.layout.util.CompatibilityHelper;
  */
 public class TextLine implements TextSequence {
     
+    public static class AlignmentContext {
+	private float targetWidth;
+	private float maxLineWidth;
+	private Alignment alignment;
+	// TODO use context to align and/or justify correctly
+	// watch all alignment in column example
+    }
+    
     /**
      * The font ascent.
      */
