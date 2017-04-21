@@ -463,7 +463,7 @@ public class TextSequenceUtil {
 	    final float lineSpacing, final boolean applyLineSpacingToFirstLine)
 	    throws IOException {
 	List<TextLine> lines = wordWrapToLines(text, maxWidth);
-	float maxLineWidth = getMaxWidth(lines);
+	float maxLineWidth = Math.max(maxWidth, getMaxWidth(lines));
 	Position position = upperLeft;
 	float lastLineHeight = 0;
 	for (int i = 0; i < lines.size(); i++) {
