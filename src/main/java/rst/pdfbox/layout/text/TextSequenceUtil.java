@@ -74,6 +74,13 @@ public class TextSequenceUtil {
 	    tail.setMaxWidth(flow.getMaxWidth());
 	    tail.setLineSpacing(flow.getLineSpacing());
 	}
+	if (text instanceof Paragraph) {
+	    Paragraph paragraph = (Paragraph) text;
+	    first.setAlignment(paragraph.getAlignment());
+	    first.setApplyLineSpacingToFirstLine(paragraph.isApplyLineSpacingToFirstLine());
+	    tail.setAlignment(paragraph.getAlignment());
+	    tail.setApplyLineSpacingToFirstLine(paragraph.isApplyLineSpacingToFirstLine());
+	}	
 
 	int index = 0;
 	do {
