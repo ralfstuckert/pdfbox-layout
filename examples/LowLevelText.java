@@ -79,7 +79,7 @@ public class LowLevelText {
 		boxWidth, boxHeight, Color.blue, new Stroke(3), null);
 	 // now the text
 	text.drawText(contentStream, new Position(x + paddingX, y - paddingY),
-		Alignment.Center, null);
+		Alignment.Justify, null);
 
 	
 	contentStream.close();
