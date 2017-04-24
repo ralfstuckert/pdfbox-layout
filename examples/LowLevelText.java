@@ -61,7 +61,7 @@ public class LowLevelText {
 	text.setMaxWidth(200);
 	xOffset = TextSequenceUtil.getOffset(text, pageWidth, Alignment.Center);
 	text.drawText(contentStream, new Position(xOffset, pageHeight - 100),
-		Alignment.Center, null);
+		Alignment.Justify, null);
 
 	// draw a round rect box with text
 	text.setMaxWidth(350);
