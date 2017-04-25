@@ -27,7 +27,7 @@ import rst.pdfbox.layout.util.CompatibilityHelper;
  * The render context is a container providing all state of the current
  * rendering process.
  */
-public class RenderContext implements Layout, Closeable, DrawContext, DrawListener {
+public class RenderContext implements Renderer, Closeable, DrawContext, DrawListener {
 
     private final Document document;
     private final PDDocument pdDocument;
