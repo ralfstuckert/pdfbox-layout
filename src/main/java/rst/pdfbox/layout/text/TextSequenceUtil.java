@@ -483,7 +483,7 @@ public class TextSequenceUtil {
 	    }
 	    lastLineHeight = currentLineHeight;
 	    position = position.add(0, -lead);
-	    textLine.drawLine(contentStream, position, alignment, maxLineWidth, drawListener);
+	    textLine.drawAligned(contentStream, position, alignment, maxLineWidth, drawListener);
 	}
 
     }

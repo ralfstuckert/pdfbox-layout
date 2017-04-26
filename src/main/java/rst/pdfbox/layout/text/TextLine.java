@@ -159,10 +159,10 @@ public class TextLine implements TextSequence {
     @Override
     public void drawText(PDPageContentStream contentStream, Position upperLeft,
 	    Alignment alignment, DrawListener drawListener) throws IOException {
-	drawLine(contentStream, upperLeft, alignment, 0f, drawListener);
+	drawAligned(contentStream, upperLeft, alignment, getWidth(), drawListener);
     }
 
-    public void drawLine(PDPageContentStream contentStream, Position upperLeft,
+    public void drawAligned(PDPageContentStream contentStream, Position upperLeft,
 	    Alignment alignment, float availableLineWidth,
 	    DrawListener drawListener) throws IOException {
 	contentStream.saveGraphicsState();
