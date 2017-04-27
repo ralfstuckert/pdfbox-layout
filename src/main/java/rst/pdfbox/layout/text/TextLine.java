@@ -179,6 +179,7 @@ public class TextLine implements TextSequence {
 	}
 	
 	FontDescriptor lastFontDesc = null;
+	float lastBaselineOffset = 0;
 	Color lastColor = null;
 	float gap = 0;
 	for (StyledText styledText : styledTextList) {
@@ -194,8 +195,12 @@ public class TextLine implements TextSequence {
 	    if (styledText.getLeftMargin() > 0) {
 		gap += styledText.getLeftMargin();
 	    }
-	    if (gap > 0) {
-		CompatibilityHelper.moveTextPosition(contentStream, gap, 0);
+
+	    boolean moveBaseline = styledText.getBaselineOffset() != lastBaselineOffset;
+	    if (moveBaseline || gap > 0) {
+		float baselineDelta = lastBaselineOffset - styledText.getBaselineOffset();
+		lastBaselineOffset = styledText.getBaselineOffset();
+		CompatibilityHelper.moveTextPosition(contentStream, gap, baselineDelta);
 		x += gap;
 	    }
 	    if (styledText.getText().length() > 0) {

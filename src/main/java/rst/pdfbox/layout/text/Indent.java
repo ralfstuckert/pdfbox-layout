@@ -165,7 +165,7 @@ public class Indent extends ControlFragment {
 	    }
 	}
 	styledText = new StyledText(label, getFontDescriptor(), getColor(),
-		marginLeft, marginRight);
+		marginLeft, marginRight, 0);
     }
 
     /**
@@ -177,7 +177,7 @@ public class Indent extends ControlFragment {
     public Indent(final float indentPt) {
 	super("", DEFAULT_FONT_DESCRIPTOR);
 	styledText = new StyledText("", getFontDescriptor(), getColor(),
-		indentPt, 0);
+		indentPt, 0, 0);
     }
 
     private float calculateIndent(final float indentWidth,

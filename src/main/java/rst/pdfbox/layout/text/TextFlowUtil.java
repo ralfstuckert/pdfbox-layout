@@ -204,13 +204,20 @@ public class TextFlowUtil {
 	    } else {
 		PDFont font = getFont(bold, italic, plainFont, boldFont,
 			italicFont, boldItalicFont);
+		float baselineOffset = 0;
+		if (bold) {
+		    baselineOffset = 5;
+		}
+		if (italic) {
+		    baselineOffset = -5;
+		}
 		if (annotationMap.isEmpty()) {
 		    StyledText styledText = new StyledText(fragment.toString(),
-			    fontSize, font, color);
+			    fontSize, font, color, baselineOffset);
 		    result.add(styledText);
 		} else {
 		    AnnotatedStyledText styledText = new AnnotatedStyledText(
-			    fragment.toString(), fontSize, font, color,
+			    fragment.toString(), fontSize, font, color, baselineOffset,
 			    annotationMap.values());
 		    result.add(styledText);
 		}

@@ -383,7 +383,7 @@ public class TextSequenceUtil {
 		    leftMargin, rightMargin);
 	}
 	return new StyledText(text, toDeriveFrom.getFontDescriptor(),
-		toDeriveFrom.getColor(), leftMargin, rightMargin);
+		toDeriveFrom.getColor(), leftMargin, rightMargin, 0);
     }
 
     private static Pair<TextFragment> breakWord(TextFragment word,
