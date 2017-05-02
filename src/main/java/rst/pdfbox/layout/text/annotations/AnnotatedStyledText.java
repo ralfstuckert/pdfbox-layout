@@ -28,12 +28,12 @@ public class AnnotatedStyledText extends StyledText implements Annotated {
      *            the font to use.
      * @param color
      *            the color to use.
+     * @param baselineOffset
+     *            the offset of the baseline.
      * @param leftMargin
      *            the margin left to the text.
      * @param rightMargin
      *            the margin right to the text.
-     * @param baselineOffset
-     *            the offset of the baseline.
      * @param annotations
      *            the annotations associated with the text.
      */
@@ -42,8 +42,8 @@ public class AnnotatedStyledText extends StyledText implements Annotated {
 	    final float leftMargin, final float rightMargin,
 	    final float baselineOffset,
 	    Collection<? extends Annotation> annotations) {
-	super(text, fontDescriptor, color, leftMargin, rightMargin,
-		baselineOffset);
+	super(text, fontDescriptor, color, baselineOffset, leftMargin,
+		rightMargin);
 	if (annotations != null) {
 	    this.annotations.addAll(annotations);
 	}
@@ -66,8 +66,10 @@ public class AnnotatedStyledText extends StyledText implements Annotated {
      *            the annotations associated with the text.
      */
     public AnnotatedStyledText(String text, float size, PDFont font,
-	    Color color, final float baselineOffset, Collection<? extends Annotation> annotations) {
-	this(text, new FontDescriptor(font, size), color, 0, 0, baselineOffset, annotations);
+	    Color color, final float baselineOffset,
+	    Collection<? extends Annotation> annotations) {
+	this(text, new FontDescriptor(font, size), color, baselineOffset, 0, 0,
+		annotations);
     }
 
     @Override
@@ -118,6 +120,6 @@ public class AnnotatedStyledText extends StyledText implements Annotated {
     public AnnotatedStyledText inheritAttributes(String text, float leftMargin,
 	    float rightMargin) {
 	return new AnnotatedStyledText(text, getFontDescriptor(), getColor(),
-		leftMargin, rightMargin, getBaselineOffset(), annotations);
+		getBaselineOffset(), leftMargin, rightMargin, annotations);
     }
 }

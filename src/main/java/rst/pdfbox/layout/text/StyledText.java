@@ -69,7 +69,7 @@ public class StyledText implements TextFragment {
      */
     public StyledText(final String text, final float size, final PDFont font,
 	    final Color color, final float baselineOffset) {
-	this(text, new FontDescriptor(font, size), color, 0, 0, baselineOffset);
+	this(text, new FontDescriptor(font, size), color, baselineOffset, 0, 0);
     }
 
     /**
@@ -108,16 +108,16 @@ public class StyledText implements TextFragment {
      *            the font to use.
      * @param color
      *            the color to use.
+     * @param baselineOffset
+     *            the offset of the baseline.
      * @param leftMargin
      *            the margin left to the text.
      * @param rightMargin
      *            the margin right to the text.
-     * @param baselineOffset
-     *            the offset of the baseline.
      */
     public StyledText(final String text, final FontDescriptor fontDescriptor,
-	    final Color color, final float leftMargin, final float rightMargin,
-	    final float baselineOffset) {
+	    final Color color, final float baselineOffset,
+	    final float leftMargin, final float rightMargin) {
 	if (text.contains("\n")) {
 	    throw new IllegalArgumentException(
 		    "StyledText must not contain line breaks, use TextFragment.LINEBREAK for that");
@@ -217,7 +217,7 @@ public class StyledText implements TextFragment {
     public StyledText inheritAttributes(String text, float leftMargin,
 	    float rightMargin) {
 	return new StyledText(text, getFontDescriptor(), getColor(),
-		leftMargin, rightMargin, getBaselineOffset());
+		getBaselineOffset(), leftMargin, rightMargin);
     }
 
     @Override
