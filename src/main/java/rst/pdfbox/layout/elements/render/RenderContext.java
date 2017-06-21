@@ -27,7 +27,8 @@ import rst.pdfbox.layout.util.CompatibilityHelper;
  * The render context is a container providing all state of the current
  * rendering process.
  */
-public class RenderContext implements Layout, Closeable, DrawContext, DrawListener {
+public class RenderContext implements Layout, Closeable, DrawContext,
+	DrawListener {
 
     private final Document document;
     private final PDDocument pdDocument;
@@ -36,13 +37,14 @@ public class RenderContext implements Layout, Closeable, DrawContext, DrawListen
     private PDPageContentStream contentStream;
     private Position currentPosition;
     private Position markedPosition;
+    private Position maxPositionOnPage;
     private Layout layout = new VerticalLayout();
 
     private PageFormat nextPageFormat;
     private PageFormat pageFormat;
 
     private AnnotationDrawListener annotationDrawListener;
-    
+
     /**
      * Creates a render context.
      * 
@@ -77,7 +79,7 @@ public class RenderContext implements Layout, Closeable, DrawContext, DrawListen
      */
     public void setLayout(Layout layout) {
 	this.layout = layout;
-	resetPositionToLeft();
+	resetPositionToLeftEndOfPage();
     }
 
     /**
@@ -133,7 +135,8 @@ public class RenderContext implements Layout, Closeable, DrawContext, DrawListen
     }
 
     /**
-     * @return the current rendering position in pdf coord space (origin in lower left corner).
+     * @return the current rendering position in pdf coord space (origin in
+     *         lower left corner).
      */
     public Position getCurrentPosition() {
 	return currentPosition;
@@ -171,10 +174,21 @@ public class RenderContext implements Layout, Closeable, DrawContext, DrawListen
     }
 
     /**
-     * Resets the position to the x of {@link #getUpperLeft()} while keeping the current y.
+     * Resets the position to the x of {@link #getUpperLeft()} while keeping the
+     * current y.
      */
     public void resetPositionToLeft() {
-	currentPosition = new Position(getUpperLeft().getX(), currentPosition.getY());
+	currentPosition = new Position(getUpperLeft().getX(),
+		currentPosition.getY());
+    }
+
+    /**
+     * Resets the position to the x of {@link #getUpperLeft()} and the
+     * y of {@link #getMaxPositionOnPage()}.
+     */
+    protected void resetPositionToLeftEndOfPage() {
+	currentPosition = new Position(getUpperLeft().getX(),
+		getMaxPositionOnPage().getY());
     }
     
     /**
@@ -264,9 +278,9 @@ public class RenderContext implements Layout, Closeable, DrawContext, DrawListen
 
     @Override
     public PDPageContentStream getCurrentPageContentStream() {
-        return getContentStream();
+	return getContentStream();
     }
-    
+
     /**
      * @return the current PDPage.
      */
@@ -382,6 +396,7 @@ public class RenderContext implements Layout, Closeable, DrawContext, DrawListen
 	}
 
 	resetPositionToUpperLeft();
+	resetMaxPositionOnPage();
 	document.beforePage(this);
 	annotationDrawListener.beforePage(this);
     }
@@ -395,13 +410,15 @@ public class RenderContext implements Layout, Closeable, DrawContext, DrawListen
      */
     public boolean closePage() throws IOException {
 	if (contentStream != null) {
-	    
+
 	    annotationDrawListener.afterPage(this);
 	    document.afterPage(this);
-	    
+
 	    if (getPageFormat().getRotation() != 0) {
-		int currentRotation = CompatibilityHelper.getPageRotation(getCurrentPage());
-		getCurrentPage().setRotation(currentRotation + getPageFormat().getRotation());
+		int currentRotation = CompatibilityHelper
+			.getPageRotation(getCurrentPage());
+		getCurrentPage().setRotation(
+			currentRotation + getPageFormat().getRotation());
 	    }
 
 	    contentStream.close();
@@ -420,7 +437,36 @@ public class RenderContext implements Layout, Closeable, DrawContext, DrawListen
     @Override
     public void drawn(Object drawnObject, Position upperLeft, float width,
 	    float height) {
+	updateMaxPositionOnPage(upperLeft, width, height);
 	annotationDrawListener.drawn(drawnObject, upperLeft, width, height);
+    }
+
+    /**
+     * Updates the maximum right resp. bottom position on the page.
+     * @param upperLeft
+     * @param width
+     * @param height
+     */
+    protected void updateMaxPositionOnPage(Position upperLeft, float width,
+	    float height) {
+	maxPositionOnPage = new Position(Math.max(maxPositionOnPage.getX(),
+		upperLeft.getX() + width), Math.min(maxPositionOnPage.getY(),
+		upperLeft.getY() - height));
+    }
+
+    /**
+     * Resets the maximumn position to upper left.
+     */
+    protected void resetMaxPositionOnPage() {
+	maxPositionOnPage = getUpperLeft();
+    }
+    
+    /**
+     * @return the maximum right and bottom position of all
+     * objects rendered on this page so far.
+     */
+    protected Position getMaxPositionOnPage() {
+	return maxPositionOnPage;
     }
 
 }
