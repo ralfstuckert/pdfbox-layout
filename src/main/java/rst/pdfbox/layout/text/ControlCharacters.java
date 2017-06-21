@@ -218,13 +218,13 @@ public class ControlCharacters {
 
     public static class MetricsControlCharacter extends ControlCharacter {
 	private float fontScale;
-	private float baselineOffset;
+	private float baselineOffsetScale;
 
 	protected MetricsControlCharacter(String name, final String fontScale,
 		final String baselineOffset) {
 	    super(name, MetricsControlCharacterFactory.TO_ESCAPE);
 	    this.fontScale = parse(fontScale, 1);
-	    this.baselineOffset = parse(baselineOffset, 0);
+	    this.baselineOffsetScale = parse(baselineOffset, 0);
 	}
 
 	private static float parse(final String text, final float defaultValue) {
@@ -238,8 +238,8 @@ public class ControlCharacters {
 	    return fontScale;
 	}
 
-	public float getBaselineOffset() {
-	    return baselineOffset;
+	public float getBaselineOffsetScale() {
+	    return baselineOffsetScale;
 	}
 
     }

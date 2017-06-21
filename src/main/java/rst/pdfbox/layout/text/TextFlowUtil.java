@@ -217,7 +217,7 @@ public class TextFlowUtil {
 		float baselineOffset = 0;
 		float currentFontSize = fontSize;
 		if (metricsControl != null) {
-		     baselineOffset = metricsControl.getBaselineOffset() * fontSize;
+		     baselineOffset = metricsControl.getBaselineOffsetScale() * fontSize;
 		     currentFontSize *= metricsControl.getFontScale();
 		}
 		if (annotationMap.isEmpty()) {
