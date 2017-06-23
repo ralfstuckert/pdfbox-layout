@@ -2,16 +2,17 @@ package rst.pdfbox.layout.text.annotations;
 
 import java.awt.Color;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.pdmodel.common.PDRectangle;
-import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotationTextMarkup;
+import org.apache.pdfbox.pdmodel.edit.PDPageContentStream;
 
+import rst.pdfbox.layout.shape.Stroke;
 import rst.pdfbox.layout.text.DrawContext;
 import rst.pdfbox.layout.text.Position;
 import rst.pdfbox.layout.text.StyledText;
 import rst.pdfbox.layout.text.annotations.Annotations.UnderlineAnnotation;
-import rst.pdfbox.layout.util.CompatibilityHelper;
 
 /**
  * This annotation processor handles the {@link UnderlineAnnotation}s, and adds
@@ -19,52 +20,81 @@ import rst.pdfbox.layout.util.CompatibilityHelper;
  */
 public class UnderlineAnnotationProcessor implements AnnotationProcessor {
 
+    private List<Line> linesOnPage = new ArrayList<Line>();
+
     @Override
     public void annotatedObjectDrawn(Annotated drawnObject,
 	    DrawContext drawContext, Position upperLeft, float width,
 	    float height) throws IOException {
 
-	Iterable<UnderlineAnnotation> underlineAnnotations = drawnObject
-		.getAnnotationsOfType(UnderlineAnnotation.class);
+	if (!(drawnObject instanceof StyledText)) {
+	    return;
+	}
 
-	if (underlineAnnotations.iterator().hasNext()) {
+	StyledText drawnText = (StyledText) drawnObject;
+	for (UnderlineAnnotation underlineAnnotation : drawnObject
+		.getAnnotationsOfType(UnderlineAnnotation.class)) {
+	    float fontSize = drawnText.getFontDescriptor().getSize();
+	    float ascent = fontSize
+		    * drawnText.getFontDescriptor().getFont()
+			    .getFontDescriptor().getAscent() / 1000;
 
-	    PDAnnotationTextMarkup markup = new PDAnnotationTextMarkup(
-		    PDAnnotationTextMarkup.SUB_TYPE_UNDERLINE);
-
-	    PDRectangle bounds = new PDRectangle();
-	    bounds.setLowerLeftX(upperLeft.getX());
-	    bounds.setLowerLeftY(upperLeft.getY() - height);
-	    bounds.setUpperRightX(upperLeft.getX() + width);
-	    bounds.setUpperRightY(upperLeft.getY());
-	    markup.setRectangle(bounds);
-	    float[] quadPoints = CompatibilityHelper.toQuadPoints(bounds);
-	    quadPoints = CompatibilityHelper.transformToPageRotation(
-		    quadPoints, drawContext.getCurrentPage());
-	    markup.setQuadPoints(quadPoints);
-
-	    if (drawnObject instanceof StyledText) {
-		Color color = ((StyledText) drawnObject).getColor();
-		CompatibilityHelper.setAnnotationColor(markup, color);
-	    }
-
-	    drawContext.getCurrentPage().getAnnotations().add(markup);
+	    float baselineOffset = fontSize * underlineAnnotation.getBaselineOffsetScale();
+	    float thickness = (0.01f + fontSize * 0.05f)
+		    * underlineAnnotation.getLineWeight();
+	    
+	    Position start = new Position(upperLeft.getX(), upperLeft.getY()
+		    - ascent + baselineOffset);
+	    Position end = new Position(start.getX() + width, start.getY());
+	    Stroke stroke = Stroke.builder().lineWidth(thickness).build();
+	    Line line = new Line(start, end, stroke, drawnText.getColor());
+	    linesOnPage.add(line);
 	}
     }
 
     @Override
     public void beforePage(DrawContext drawContext) throws IOException {
-	// nothing to do here for us
+	linesOnPage.clear();
     }
 
     @Override
     public void afterPage(DrawContext drawContext) throws IOException {
-	// nothing to do here for us
+	for (Line line : linesOnPage) {
+	    line.draw(drawContext.getCurrentPageContentStream());
+	}
+	linesOnPage.clear();
     }
 
     @Override
     public void afterRender(PDDocument document) throws IOException {
-	// nothing to do here for us
+	linesOnPage.clear();
     }
 
+    private static class Line {
+
+	private Position start;
+	private Position end;
+	private Stroke stroke;
+	private Color color;
+
+	public Line(Position start, Position end, Stroke stroke, Color color) {
+	    super();
+	    this.start = start;
+	    this.end = end;
+	    this.stroke = stroke;
+	    this.color = color;
+	}
+
+	public void draw(PDPageContentStream contentStream) throws IOException {
+	    if (color != null) {
+		contentStream.setStrokingColor(color);
+	    }
+	    if (stroke != null) {
+		stroke.applyTo(contentStream);
+	    }
+	    contentStream.drawLine(start.getX(), start.getY(), end.getX(),
+		    end.getY());
+	}
+
+    }
 }

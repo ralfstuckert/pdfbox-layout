@@ -114,14 +114,15 @@ public class AnnotationCharacters {
 	    AnnotationControlCharacterFactory<UnderlineControlCharacter> {
 
 	private static Pattern PATTERN = Pattern
-		.compile("(?<!\\\\)(\\\\\\\\)*__");
+		.compile("(?<!\\\\)(\\\\\\\\)*(__(\\{(-?\\d+(\\.\\d*)?)?\\:(-?\\d+(\\.\\d*)?)?\\})?)");
 
 	private final static String TO_ESCAPE = "__";
-
+	
 	@Override
 	public UnderlineControlCharacter createControlCharacter(String text,
 		Matcher matcher, final List<CharSequence> charactersSoFar) {
-	    return new UnderlineControlCharacter();
+	    return new UnderlineControlCharacter(matcher.group(4),
+		    matcher.group(6));
 	}
 
 	@Override
@@ -210,21 +211,41 @@ public class AnnotationCharacters {
     public static class UnderlineControlCharacter extends
 	    AnnotationControlCharacter<UnderlineAnnotation> {
 
-	private UnderlineAnnotation underline;
+	private UnderlineAnnotation line;
 
 	protected UnderlineControlCharacter() {
-	    super("UNDERLINE", "__");
-	    underline = new UnderlineAnnotation();
+	    this(null, null);
+	}
+
+	protected UnderlineControlCharacter(String baselineOffsetScaleValue,
+		String lineWeightValue) {
+	    super("UNDERLINE", UnderlineControlCharacterFactory.TO_ESCAPE);
+
+	    float baselineOffsetScale = parseFloat(baselineOffsetScaleValue,
+		    -0.1f);
+	    float lineWeight = parseFloat(lineWeightValue, 1f);
+	    line = new UnderlineAnnotation(baselineOffsetScale, lineWeight);
 	}
 
 	@Override
 	public UnderlineAnnotation getAnnotation() {
-	    return underline;
+	    return line;
 	}
 
 	@Override
 	public Class<UnderlineAnnotation> getAnnotationType() {
 	    return UnderlineAnnotation.class;
+	}
+
+	private static float parseFloat(String text, float defaultValue) {
+	    if (text == null) {
+		return defaultValue;
+	    }
+	    try {
+		return Float.parseFloat(text);
+	    } catch (NumberFormatException e) {
+		return defaultValue;
+	    }
 	}
 
     }
@@ -266,9 +287,9 @@ public class AnnotationCharacters {
     }
 
     public static void main(String[] args) {
-	Pattern PATTERN = Pattern//
-		.compile("(?<!\\\\)(\\\\\\\\)*\\{anchor(:((\\w+)))?\\}");
-	Matcher matcher = PATTERN.matcher("{anchor}");
+	Pattern PATTERN = Pattern
+		.compile("(?<!\\\\)(\\\\\\\\)*(__(\\{(-?\\d+(\\.\\d*)?)?\\:(-?\\d+(\\.\\d*)?)?\\})?)");
+	Matcher matcher = PATTERN.matcher("__");
 	System.out.println("matches: " + matcher.find());
 	if (!matcher.matches()) {
 	    System.err.println("exit");

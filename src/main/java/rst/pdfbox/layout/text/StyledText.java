@@ -141,10 +141,20 @@ public class StyledText implements TextFragment {
     public float getWidthWithoutMargin() throws IOException {
 	return getWidth() - leftMargin - rightMargin;
     }
-    
+
     @Override
     public float getHeight() throws IOException {
 	return getFontDescriptor().getSize();
+    }
+
+    /**
+     * @return the ascent of the associated font.
+     * @throws IOException by pdfbox.
+     */
+    public float getAsent() throws IOException {
+	return getFontDescriptor().getSize()
+		* getFontDescriptor().getFont().getFontDescriptor().getAscent()
+		/ 1000;
     }
 
     @Override
@@ -185,11 +195,13 @@ public class StyledText implements TextFragment {
     public StyledText inheritAttributes(String text) {
 	return inheritAttributes(text, getLeftMargin(), getRightMargin());
     }
-    
-    public StyledText inheritAttributes(String text, float leftMargin, float rightMargin) {
-	return new StyledText(text, getFontDescriptor(), getColor(), leftMargin, rightMargin);
+
+    public StyledText inheritAttributes(String text, float leftMargin,
+	    float rightMargin) {
+	return new StyledText(text, getFontDescriptor(), getColor(),
+		leftMargin, rightMargin);
     }
-    
+
     @Override
     public String toString() {
 	return "StyledText [text=" + text + ", fontDescriptor="

@@ -9,18 +9,36 @@ public class Annotations {
      * Represents a underline annotation
      */
     public static class UnderlineAnnotation implements Annotation {
+
+	private float baselineOffsetScale = 0f;
+	private float lineWeight = 1f;
+
+	public UnderlineAnnotation(float baselineOffsetScale, float lineWeight) {
+	    this.baselineOffsetScale = baselineOffsetScale;
+	    this.lineWeight = lineWeight;
+	}
+
+	public float getBaselineOffsetScale() {
+	    return baselineOffsetScale;
+	}
+
+	public float getLineWeight() {
+	    return lineWeight;
+	}
+
 	@Override
 	public String toString() {
-	    return "UnderlineAnnotation";
+	    return "UnderlineAnnotation [baselineOffsetScale="
+		    + baselineOffsetScale + ", lineWeight=" + lineWeight + "]";
 	}
+
     }
-    
-    
+
     /**
      * Represents a hyperlink annotation
      */
     public static class HyperlinkAnnotation implements Annotation {
-	
+
 	public static enum LinkStyle {
 	    /**
 	     * Underline.
@@ -31,7 +49,7 @@ public class Annotations {
 	     */
 	    none;
 	}
-	
+
 	private final String hyperlinkUri;
 	private final LinkStyle linkStyle;
 
