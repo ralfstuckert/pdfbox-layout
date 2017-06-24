@@ -16,6 +16,7 @@ import rst.pdfbox.layout.text.ControlCharacters.BoldControlCharacter;
 import rst.pdfbox.layout.text.ControlCharacters.ColorControlCharacter;
 import rst.pdfbox.layout.text.ControlCharacters.ControlCharacterFactory;
 import rst.pdfbox.layout.text.ControlCharacters.ItalicControlCharacter;
+import rst.pdfbox.layout.text.ControlCharacters.MetricsControlCharacter;
 import rst.pdfbox.layout.text.ControlCharacters.NewLineControlCharacter;
 import rst.pdfbox.layout.text.IndentCharacters.IndentCharacter;
 import rst.pdfbox.layout.text.annotations.AnnotatedStyledText;
@@ -150,6 +151,7 @@ public class TextFlowUtil {
 	boolean bold = false;
 	boolean italic = false;
 	Color color = Color.black;
+	MetricsControlCharacter metricsControl = null;
 	Map<Class<? extends Annotation>, Annotation> annotationMap = new HashMap<Class<? extends Annotation>, Annotation>();
 	Stack<IndentCharacter> indentStack = new Stack<IndentCharacter>();
 	for (final CharSequence fragment : parts) {
@@ -178,6 +180,14 @@ public class TextFlowUtil {
 				annotationControlCharacter.getAnnotation());
 		    }
 		}
+		if (fragment instanceof MetricsControlCharacter) {
+		    if (metricsControl != null && metricsControl.toString().equals(fragment.toString())) {
+			// end marker
+			metricsControl = null;
+		    } else {
+			metricsControl = (MetricsControlCharacter)fragment;
+		    }
+		}
 		if (fragment instanceof IndentCharacter) {
 		    IndentCharacter currentIndent = (IndentCharacter) fragment;
 		    if (currentIndent.getLevel() == 0) {
@@ -204,13 +214,19 @@ public class TextFlowUtil {
 	    } else {
 		PDFont font = getFont(bold, italic, plainFont, boldFont,
 			italicFont, boldItalicFont);
+		float baselineOffset = 0;
+		float currentFontSize = fontSize;
+		if (metricsControl != null) {
+		     baselineOffset = metricsControl.getBaselineOffsetScale() * fontSize;
+		     currentFontSize *= metricsControl.getFontScale();
+		}
 		if (annotationMap.isEmpty()) {
 		    StyledText styledText = new StyledText(fragment.toString(),
-			    fontSize, font, color);
+			    currentFontSize, font, color, baselineOffset);
 		    result.add(styledText);
 		} else {
 		    AnnotatedStyledText styledText = new AnnotatedStyledText(
-			    fragment.toString(), fontSize, font, color,
+			    fragment.toString(), currentFontSize, font, color, baselineOffset,
 			    annotationMap.values());
 		    result.add(styledText);
 		}
@@ -285,6 +301,7 @@ public class TextFlowUtil {
 	    final Iterable<CharSequence> markup) {
 	Iterable<CharSequence> text = markup;
 	text = splitByControlCharacter(ControlCharacters.NEWLINE_FACTORY, text);
+	text = splitByControlCharacter(ControlCharacters.METRICS_FACTORY, text);
 	text = splitByControlCharacter(ControlCharacters.BOLD_FACTORY, text);
 	text = splitByControlCharacter(ControlCharacters.ITALIC_FACTORY, text);
 	text = splitByControlCharacter(ControlCharacters.COLOR_FACTORY, text);

@@ -39,7 +39,8 @@ public class ControlCharacters {
 	 *            the characters created so far.
 	 * @return the created character.
 	 */
-	ControlCharacter createControlCharacter(final String text, final Matcher matcher, final List<CharSequence> charactersSoFar);
+	ControlCharacter createControlCharacter(final String text,
+		final Matcher matcher, final List<CharSequence> charactersSoFar);
 
 	/**
 	 * @return the pattern used to match the control character.
@@ -48,10 +49,12 @@ public class ControlCharacters {
 
 	/**
 	 * Indicates if the pattern should be applied to the begin of line only.
-	 * @return <code>true</code> if the pattern is to be applied at the begin of a line.
+	 * 
+	 * @return <code>true</code> if the pattern is to be applied at the
+	 *         begin of a line.
 	 */
 	boolean patternMatchesBeginOfLine();
-	
+
 	/**
 	 * Unescapes the pattern.
 	 * 
@@ -60,7 +63,7 @@ public class ControlCharacters {
 	 * @return the unescaped text.
 	 */
 	String unescape(final String text);
-	
+
     }
 
     /**
@@ -82,6 +85,11 @@ public class ControlCharacters {
      * The factory for color control characters.
      */
     public static ControlCharacterFactory COLOR_FACTORY = new ColorControlCharacterFactory();
+
+    /**
+     * The factory for metrics control characters.
+     */
+    public static MetricsControlCharacterFactory METRICS_FACTORY = new MetricsControlCharacterFactory();
 
     /**
      * An asterisk ('*') indicates switching of bold font mode in markup. It can
@@ -141,20 +149,21 @@ public class ControlCharacters {
 	}
     }
 
-    private static class StaticControlCharacterFactory
-	    implements ControlCharacterFactory {
+    private static class StaticControlCharacterFactory implements
+	    ControlCharacterFactory {
 
 	private ControlCharacter controlCharacter;
 	private Pattern pattern;
 
-	public StaticControlCharacterFactory(final ControlCharacter controlCharacter,
-		final Pattern pattern) {
+	public StaticControlCharacterFactory(
+		final ControlCharacter controlCharacter, final Pattern pattern) {
 	    this.controlCharacter = controlCharacter;
 	    this.pattern = pattern;
 	}
 
 	@Override
-	public ControlCharacter createControlCharacter(String text, Matcher matcher, final List<CharSequence> charactersSoFar) {
+	public ControlCharacter createControlCharacter(String text,
+		Matcher matcher, final List<CharSequence> charactersSoFar) {
 	    return controlCharacter;
 	}
 
@@ -172,7 +181,7 @@ public class ControlCharacters {
 	public boolean patternMatchesBeginOfLine() {
 	    return false;
 	}
-	
+
     }
 
     private static class ColorControlCharacterFactory implements
@@ -188,7 +197,77 @@ public class ControlCharacters {
 		Matcher matcher, final List<CharSequence> charactersSoFar) {
 	    return new ColorControlCharacter(matcher.group(2));
 	}
-	
+
+	@Override
+	public Pattern getPattern() {
+	    return PATTERN;
+	}
+
+	@Override
+	public String unescape(String text) {
+	    return text
+		    .replaceAll("\\\\" + Pattern.quote(TO_ESCAPE), TO_ESCAPE);
+	}
+
+	@Override
+	public boolean patternMatchesBeginOfLine() {
+	    return false;
+	}
+
+    }
+
+    public static class MetricsControlCharacter extends ControlCharacter {
+	private float fontScale;
+	private float baselineOffsetScale;
+
+	protected MetricsControlCharacter(String name, final String fontScale,
+		final String baselineOffset) {
+	    super(name, MetricsControlCharacterFactory.TO_ESCAPE);
+	    this.fontScale = parse(fontScale, 1);
+	    this.baselineOffsetScale = parse(baselineOffset, 0);
+	}
+
+	private static float parse(final String text, final float defaultValue) {
+	    if (text == null || text.trim().isEmpty()) {
+		return defaultValue;
+	    }
+	    return Float.parseFloat(text);
+	}
+
+	public float getFontScale() {
+	    return fontScale;
+	}
+
+	public float getBaselineOffsetScale() {
+	    return baselineOffsetScale;
+	}
+
+    }
+
+    private static class MetricsControlCharacterFactory implements
+	    ControlCharacterFactory {
+
+	private final static Pattern PATTERN = Pattern
+		.compile("(?<!\\\\)(\\\\\\\\)*\\{(_|\\^)(:(-?\\d+(\\.\\d*)?)\\|(-?\\d+(\\.\\d*)?))?}");
+
+	private final static String TO_ESCAPE = "{";
+
+	@Override
+	public ControlCharacter createControlCharacter(String text,
+		Matcher matcher, final List<CharSequence> charactersSoFar) {
+	    boolean isSuperscript = "^".equals(matcher.group(2));
+	    String name = isSuperscript ? "SUPERSCRIPT" : "SUBSCRIPT";
+	    String baselineOffsetScale = isSuperscript ? "-0.4" : "0.15";
+	    if (matcher.groupCount() > 6 && matcher.group(6) != null) {
+		baselineOffsetScale = matcher.group(6);
+	    }
+	    String fontScale = "0.61";
+	    if (matcher.groupCount() > 4 && matcher.group(4) != null) {
+		fontScale = matcher.group(4);
+	    }
+	    return new MetricsControlCharacter(name, fontScale, baselineOffsetScale);
+	}
+
 	@Override
 	public Pattern getPattern() {
 	    return PATTERN;
