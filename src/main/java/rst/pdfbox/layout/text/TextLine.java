@@ -169,7 +169,7 @@ public class TextLine implements TextSequence {
 	contentStream.beginText();
 
 	float x = upperLeft.getX();
-	float y = upperLeft.getY() - getAscent();
+	float y = upperLeft.getY() - getAscent(); // the baseline
 	float offset = TextSequenceUtil.getOffset(this, availableLineWidth, alignment);
 	x += offset;
 	CompatibilityHelper.setTextTranslation(contentStream, x, y);
@@ -204,8 +204,9 @@ public class TextLine implements TextSequence {
 	    }
 
 	    if (drawListener != null) {
+		float currentUpperLeft = y + styledText.getAsent();
 		drawListener.drawn(styledText,
-			new Position(x, upperLeft.getY()),
+			new Position(x, currentUpperLeft),
 			styledText.getWidthWithoutMargin(),
 			styledText.getHeight());
 	    }
