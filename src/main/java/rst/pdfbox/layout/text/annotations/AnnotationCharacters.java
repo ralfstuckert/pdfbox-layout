@@ -117,7 +117,7 @@ public class AnnotationCharacters {
 		.compile("(?<!\\\\)(\\\\\\\\)*(__(\\{(-?\\d+(\\.\\d*)?)?\\:(-?\\d+(\\.\\d*)?)?\\})?)");
 
 	private final static String TO_ESCAPE = "__";
-	
+
 	@Override
 	public UnderlineControlCharacter createControlCharacter(String text,
 		Matcher matcher, final List<CharSequence> charactersSoFar) {
@@ -211,6 +211,13 @@ public class AnnotationCharacters {
     public static class UnderlineControlCharacter extends
 	    AnnotationControlCharacter<UnderlineAnnotation> {
 
+	/**
+	 * constant for the system property
+	 * <code>pdfbox.layout.underline.baseline.offset.scale.default</code>.
+	 */
+	public final static String UNDERLINE_DEFAULT_BASELINE_OFFSET_SCALE_PROPERTY = "pdfbox.layout.underline.baseline.offset.scale.default";
+
+	private static Float defaultBaselineOffsetScale;
 	private UnderlineAnnotation line;
 
 	protected UnderlineControlCharacter() {
@@ -222,7 +229,7 @@ public class AnnotationCharacters {
 	    super("UNDERLINE", UnderlineControlCharacterFactory.TO_ESCAPE);
 
 	    float baselineOffsetScale = parseFloat(baselineOffsetScaleValue,
-		    -0.1f);
+		    getdefaultBaselineOffsetScale());
 	    float lineWeight = parseFloat(lineWeightValue, 1f);
 	    line = new UnderlineAnnotation(baselineOffsetScale, lineWeight);
 	}
@@ -246,6 +253,17 @@ public class AnnotationCharacters {
 	    } catch (NumberFormatException e) {
 		return defaultValue;
 	    }
+	}
+
+	private static float getdefaultBaselineOffsetScale() {
+	    if (defaultBaselineOffsetScale == null) {
+		defaultBaselineOffsetScale = Float
+			.parseFloat(System
+				.getProperty(
+					UNDERLINE_DEFAULT_BASELINE_OFFSET_SCALE_PROPERTY,
+					"-0.1"));
+	    }
+	    return defaultBaselineOffsetScale;
 	}
 
     }
