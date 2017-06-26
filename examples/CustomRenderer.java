@@ -75,10 +75,9 @@ public class CustomRenderer {
 	public boolean render(RenderContext renderContext, Element element,
 		LayoutHint layoutHint) throws IOException {
 	    if (element instanceof Section) {
-		System.out.println(renderContext.getPageIndex());
+
 		if (renderContext.getPageIndex() > 0) {
 		    // no new page on first page ;-)
-		    System.err.println("new page");
 		    renderContext.newPage();
 		}
 		sectionNumber = ((Section)element).getNumber();
