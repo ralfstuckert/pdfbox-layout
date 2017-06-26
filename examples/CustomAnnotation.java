@@ -195,7 +195,7 @@ public class CustomAnnotation {
 	// now add some annotated text using our custom highlight annotation
 	HighlightAnnotation annotation = new HighlightAnnotation(Color.green);
 	AnnotatedStyledText highlightedText = new AnnotatedStyledText(
-		"highlighted text", 10, PDType1Font.HELVETICA, Color.black,
+		"highlighted text", 10, PDType1Font.HELVETICA, Color.black, 0f,
 		Collections.singleton(annotation));
 	paragraph.add(highlightedText);
 

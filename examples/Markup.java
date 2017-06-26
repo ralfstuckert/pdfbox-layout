@@ -30,18 +30,23 @@ public class Markup {
 		.addMarkup(
 			"Markup supports *bold*, _italic_, and *even _mixed* markup_.\n\n",
 			11, BaseFont.Times);
+	paragraph.addMarkup(
+		"Escape \\* with \\\\\\* and \\_ with \\\\\\_ in markup.\n\n",
+		11, BaseFont.Times);
+
 	paragraph
 		.addMarkup(
 			"And now also {color:#ff0000}c{color:#00ff00}o{color:#0000ff}l{color:#00cccc}o{color:#cc00cc}r{color:#000000}",
 			11, BaseFont.Times);
+	paragraph.addMarkup(" , {_}subscript{_} and {^}superscript{^}.\n\n",
+		11, BaseFont.Times);
+
 	paragraph
 		.addMarkup(
-			" and __underline__. You can alternate the position and thickness, "
-			+ "so you may also use this to __{0.25:}strike through__ or blacken __{0.25:20}things__ out\n\n",
+			"You can alternate the position and thickness of an __underline__, "
+				+ "so you may also use this to __{0.25:}strike through__ or blacken __{0.25:20}things__ out\n\n",
 			11, BaseFont.Times);
-	paragraph.addMarkup(
-		"Escape \\* with \\\\\\* and \\_ with \\\\\\_ in markup.\n\n",
-		11, BaseFont.Times);
+
 	document.add(paragraph, new VerticalLayoutHint(Alignment.Left, 0, 0,
 		30, 0));
 
