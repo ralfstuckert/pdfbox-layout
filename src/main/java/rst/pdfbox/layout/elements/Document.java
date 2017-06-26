@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -17,6 +18,7 @@ import rst.pdfbox.layout.elements.render.Layout;
 import rst.pdfbox.layout.elements.render.LayoutHint;
 import rst.pdfbox.layout.elements.render.RenderContext;
 import rst.pdfbox.layout.elements.render.RenderListener;
+import rst.pdfbox.layout.elements.render.Renderer;
 import rst.pdfbox.layout.elements.render.VerticalLayout;
 import rst.pdfbox.layout.elements.render.VerticalLayoutHint;
 
@@ -31,6 +33,7 @@ public class Document implements RenderListener {
     public final static PageFormat DEFAULT_PAGE_FORMAT = new PageFormat();
 
     private final List<Entry<Element, LayoutHint>> elements = new ArrayList<>();
+    private final List<Renderer> customRenderer = new CopyOnWriteArrayList<Renderer>();
     private final List<RenderListener> renderListener = new CopyOnWriteArrayList<RenderListener>();
 
     private PDDocument pdDocument;
@@ -244,6 +247,31 @@ public class Document implements RenderListener {
     }
 
     /**
+     * Adds a (custom) {@link Renderer} that may handle the rendering of an
+     * element. All renderers will be asked to render the current element in the
+     * order they have been added. If no renderer is capable, the default
+     * renderer will be asked.
+     * 
+     * @param renderer
+     *            the renderer to add.
+     */
+    public void addRenderer(final Renderer renderer) {
+	if (renderer != null) {
+	    customRenderer.add(renderer);
+	}
+    }
+
+    /**
+     * Removes a {@link Renderer} .
+     * 
+     * @param renderer
+     *            the renderer to remove.
+     */
+    public void removeRenderer(final Renderer renderer) {
+	customRenderer.remove(renderer);
+    }
+
+    /**
      * Renders all elements and returns the resulting {@link PDDocument}.
      * 
      * @return the resulting {@link PDDocument}
@@ -256,8 +284,22 @@ public class Document implements RenderListener {
 	for (Entry<Element, LayoutHint> entry : elements) {
 	    Element element = entry.getKey();
 	    LayoutHint layoutHint = entry.getValue();
-	    boolean success = renderContext.render(renderContext, element,
-		    layoutHint);
+	    boolean success = false;
+
+	    // first ask custom renderer to render the element
+	    Iterator<Renderer> customRendererIterator = customRenderer
+		    .iterator();
+	    while (!success && customRendererIterator.hasNext()) {
+		success = customRendererIterator.next().render(renderContext,
+			element, layoutHint);
+	    }
+	    
+	    // if none of them felt responsible, let the default renderer do the job.
+	    if (!success) {
+		success = renderContext.render(renderContext, element,
+			layoutHint);
+	    }
+	    
 	    if (!success) {
 		throw new IllegalArgumentException(
 			String.format(
