@@ -1,3 +1,4 @@
+import java.awt.Color;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -6,11 +7,15 @@ import org.apache.pdfbox.pdmodel.font.PDType1Font;
 
 import rst.pdfbox.layout.elements.Document;
 import rst.pdfbox.layout.elements.Element;
+import rst.pdfbox.layout.elements.HorizontalRuler;
 import rst.pdfbox.layout.elements.Paragraph;
 import rst.pdfbox.layout.elements.render.LayoutHint;
 import rst.pdfbox.layout.elements.render.RenderContext;
 import rst.pdfbox.layout.elements.render.RenderListener;
 import rst.pdfbox.layout.elements.render.Renderer;
+import rst.pdfbox.layout.elements.render.VerticalLayoutHint;
+import rst.pdfbox.layout.shape.Stroke;
+import rst.pdfbox.layout.shape.Stroke.CapStyle;
 import rst.pdfbox.layout.text.Alignment;
 import rst.pdfbox.layout.text.BaseFont;
 import rst.pdfbox.layout.text.Position;
@@ -81,8 +86,13 @@ public class CustomRenderer {
 		}
 		sectionNumber = ((Section)element).getNumber();
 		
-		// delegate rendering of the paragraph to the original renderer
-		// by returning false either way
+		renderContext.render(renderContext, element, layoutHint);
+
+		Element ruler = new HorizontalRuler(Stroke.builder().lineWidth(2)
+			.capStyle(CapStyle.RoundCap).build(), Color.black);
+		renderContext.render(renderContext, ruler, VerticalLayoutHint.builder().marginBottom(10).build());
+		
+		return true;
 	    }
 	    return false;
 	}
