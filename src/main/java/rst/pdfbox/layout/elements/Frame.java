@@ -2,6 +2,9 @@ package rst.pdfbox.layout.elements;
 
 import java.awt.Color;
 import java.io.IOException;
+import java.util.Collection;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.edit.PDPageContentStream;
@@ -22,7 +25,7 @@ import rst.pdfbox.layout.text.WidthRespecting;
  */
 public class Frame implements Element, Drawable, WidthRespecting, Dividable {
 
-    private Drawable inner;
+    private List<Drawable> innerList = new CopyOnWriteArrayList<Drawable>();
 
     private float paddingLeft;
     private float paddingRight;
@@ -47,6 +50,13 @@ public class Frame implements Element, Drawable, WidthRespecting, Dividable {
     private Position absolutePosition;
 
     /**
+     * Creates an empty frame.
+     */
+    public Frame() {
+	this(null, null);
+    }
+
+    /**
      * Creates a frame containing the inner element.
      * 
      * @param inner
@@ -58,20 +68,51 @@ public class Frame implements Element, Drawable, WidthRespecting, Dividable {
 
     /**
      * Creates a frame containing the inner element, optionally constraint by
-     * the given dimensions. These contraints target the border-box of the frame, means:
-     * the inner element plus padding plus border width, but not the margin.
+     * the given dimensions. These contraints target the border-box of the
+     * frame, means: the inner element plus padding plus border width, but not
+     * the margin.
      * 
      * @param inner
      *            the item to contain.
      * @param width
-     *            the width to constrain the border-box of the frame to, or <code>null</code>.
+     *            the width to constrain the border-box of the frame to, or
+     *            <code>null</code>.
      * @param height
-     *            the height to constrain the border-box of the frame to, or <code>null</code>.
+     *            the height to constrain the border-box of the frame to, or
+     *            <code>null</code>.
      */
     public Frame(final Drawable inner, final Float width, final Float height) {
-	this.inner = inner;
+	this(width, height);
+	add(inner);
+    }
+
+    /**
+     * Creates a frame constraint by the given dimensions. These contraints
+     * target the border-box of the frame, means: the inner element plus padding
+     * plus border width, but not the margin.
+     * 
+     * @param width
+     *            the width to constrain the border-box of the frame to, or
+     *            <code>null</code>.
+     * @param height
+     *            the height to constrain the border-box of the frame to, or
+     *            <code>null</code>.
+     */
+    public Frame(final Float width, final Float height) {
 	this.givenWidth = width;
 	this.givenHeight = height;
+    }
+
+    /**
+     * Adds a drawable to the frame.
+     * @param drawable
+     */
+    public void add(final Drawable drawable) {
+	innerList.add(drawable);
+    }
+
+    protected void addAll(final Collection<Drawable> drawable) {
+	innerList.addAll(drawable);
     }
 
     /**
@@ -145,6 +186,7 @@ public class Frame implements Element, Drawable, WidthRespecting, Dividable {
 
     /**
      * Convenience method for setting both border color and stroke.
+     * 
      * @param borderColor
      *            the border color.
      * @param borderStroke
@@ -154,7 +196,7 @@ public class Frame implements Element, Drawable, WidthRespecting, Dividable {
 	setBorderColor(borderColor);
 	setBorderStroke(borderStroke);
     }
-    
+
     /**
      * @return the color to use to draw the background.
      */
@@ -373,16 +415,14 @@ public class Frame implements Element, Drawable, WidthRespecting, Dividable {
      * @return the sum of left/right padding and border width.
      */
     protected float getHorizontalShapeSpacing() {
-	return 2 * getBorderWidth()
-		+ getPaddingLeft() + getPaddingRight();
+	return 2 * getBorderWidth() + getPaddingLeft() + getPaddingRight();
     }
 
     /**
-     * @return the sum of top/bottom  padding and border width.
+     * @return the sum of top/bottom padding and border width.
      */
     protected float getVerticalShapeSpacing() {
-	return 2 * getBorderWidth()
-		+ getPaddingTop() + getPaddingBottom();
+	return 2 * getBorderWidth() + getPaddingTop() + getPaddingBottom();
     }
 
     /**
@@ -418,7 +458,17 @@ public class Frame implements Element, Drawable, WidthRespecting, Dividable {
 	if (getGivenWidth() != null) {
 	    return getGivenWidth() + getMarginLeft() + getMarginRight();
 	}
-	return inner.getWidth() + getHorizontalSpacing();
+	return getMaxWidth(innerList) + getHorizontalSpacing();
+    }
+
+    protected float getMaxWidth(List<Drawable> drawableList) throws IOException {
+	float max = 0;
+	if (drawableList != null) {
+	    for (Drawable inner : drawableList) {
+		max = Math.max(max, inner.getWidth());
+	    }
+	}
+	return max;
     }
 
     @Override
@@ -426,7 +476,17 @@ public class Frame implements Element, Drawable, WidthRespecting, Dividable {
 	if (getGivenHeight() != null) {
 	    return getGivenHeight() + getMarginTop() + getMarginBottom();
 	}
-	return inner.getHeight() + getVerticalSpacing();
+	return getHeight(innerList) + getVerticalSpacing();
+    }
+
+    protected float getHeight(List<Drawable> drawableList) throws IOException {
+	float height = 0;
+	if (drawableList != null) {
+	    for (Drawable inner : drawableList) {
+		height += inner.getHeight();
+	    }
+	}
+	return height;
     }
 
     @Override
@@ -453,6 +513,12 @@ public class Frame implements Element, Drawable, WidthRespecting, Dividable {
     public void setMaxWidth(float maxWidth) {
 	this.maxWidth = maxWidth;
 
+	for (Drawable inner : innerList) {
+	    setMaxWidth(inner, maxWidth);
+	}
+    }
+
+    private void setMaxWidth(final Drawable inner, float maxWidth) {
 	if (inner instanceof WidthRespecting) {
 	    if (getGivenWidth() != null) {
 		((WidthRespecting) inner).setMaxWidth(getGivenWidth()
@@ -468,11 +534,12 @@ public class Frame implements Element, Drawable, WidthRespecting, Dividable {
      * Propagates the max width to the inner item if there is a given size, but
      * no absolute position.
      * 
-     * @throws IOException by pdfbox.
+     * @throws IOException
+     *             by pdfbox.
      */
     protected void setInnerMaxWidthIfNecessary() throws IOException {
 	if (getAbsolutePosition() == null && getGivenWidth() != null) {
-	    setMaxWidth(getGivenWidth()-getHorizontalShapeSpacing());
+	    setMaxWidth(getGivenWidth() - getHorizontalShapeSpacing());
 	}
     }
 
@@ -490,8 +557,10 @@ public class Frame implements Element, Drawable, WidthRespecting, Dividable {
 		-getMarginTop() - halfBorderWidth);
 
 	if (getShape() != null) {
-	    float shapeWidth = getWidth() - getMarginLeft() - getMarginRight() - getBorderWidth();
-	    float shapeHeight = getHeight() -getMarginTop() - getMarginBottom() - getBorderWidth();
+	    float shapeWidth = getWidth() - getMarginLeft() - getMarginRight()
+		    - getBorderWidth();
+	    float shapeHeight = getHeight() - getMarginTop()
+		    - getMarginBottom() - getBorderWidth();
 
 	    if (getBackgroundColor() != null) {
 		getShape().fill(pdDocument, contentStream, upperLeft,
@@ -508,12 +577,19 @@ public class Frame implements Element, Drawable, WidthRespecting, Dividable {
 	Position innerUpperLeft = upperLeft.add(getPaddingLeft()
 		+ halfBorderWidth, -getPaddingTop() - halfBorderWidth);
 
-	inner.draw(pdDocument, contentStream, innerUpperLeft, drawListener);
+	for (Drawable inner : innerList) {
+	    inner.draw(pdDocument, contentStream, innerUpperLeft, drawListener);
+	    innerUpperLeft = innerUpperLeft.add(0, -inner.getHeight());
+	}
     }
 
     @Override
     public Drawable removeLeadingEmptyVerticalSpace() throws IOException {
-	inner = inner.removeLeadingEmptyVerticalSpace();
+	if (innerList.size() > 0) {
+	    Drawable drawableWithoutLeadingVerticalSpace = innerList.get(0)
+		    .removeLeadingEmptyVerticalSpace();
+	    innerList.set(0, drawableWithoutLeadingVerticalSpace);
+	}
 	return this;
     }
 
@@ -522,34 +598,115 @@ public class Frame implements Element, Drawable, WidthRespecting, Dividable {
 	    throws IOException {
 	setInnerMaxWidthIfNecessary();
 
-	Dividable innerDividable = null;
-	if (inner instanceof Dividable) {
-	    innerDividable = (Dividable) inner;
-	} else {
-	    innerDividable = new Cutter(inner);
-	}
-
 	if (remainingHeight - getVerticalSpacing() <= 0) {
 	    return new Divided(new VerticalSpacer(remainingHeight), this);
 	}
 
-	// some space left on this page for the inner element
+	// find first inner that does not fit on page
 	float spaceLeft = remainingHeight - getVerticalSpacing();
-	Divided divided = innerDividable.divide(spaceLeft, nextPageHeight
-		- getVerticalSpacing());
+
+	DividedList dividedList = divideList(innerList, spaceLeft);
+
+	float spaceLeftForDivided = spaceLeft
+		- getHeight(dividedList.getHead());
+	Divided divided = null;
+
+	if (dividedList.getDrawableToDivide() != null) {
+	    Dividable innerDividable = null;
+	    if (dividedList.getDrawableToDivide() instanceof Dividable) {
+		innerDividable = (Dividable) dividedList.getDrawableToDivide();
+	    } else {
+		innerDividable = new Cutter(dividedList.getDrawableToDivide());
+	    }
+	    // some space left on this page for the inner element
+	    divided = innerDividable.divide(spaceLeftForDivided, nextPageHeight
+		    - getVerticalSpacing());
+	}
 
 	Float firstHeight = getGivenHeight() == null ? null : remainingHeight;
 	Float tailHeight = getGivenHeight() == null ? null : getGivenHeight()
 		- spaceLeft;
 
-	Frame first = new Frame(divided.getFirst(), getGivenWidth(),
-		firstHeight);
+	// create head sub frame
+	Frame first = new Frame(getGivenWidth(), firstHeight);
 	copyAllButInnerAndSizeTo(first);
-	Frame tail = new Frame(divided.getTail(), getGivenWidth(), tailHeight);
+	if (dividedList.getHead() != null) {
+	    first.addAll(dividedList.getHead());
+	}
+	if (divided != null) {
+	    first.add(divided.getFirst());
+	}
+
+	// create tail sub frame
+	Frame tail = new Frame(getGivenWidth(), tailHeight);
 	copyAllButInnerAndSizeTo(tail);
+	if (divided != null) {
+	    tail.add(divided.getTail());
+	}
+	if (dividedList.getTail() != null) {
+	    tail.addAll(dividedList.getTail());
+	}
 
 	return new Divided(first, tail);
     }
 
+    private DividedList divideList(List<Drawable> items, float spaceLeft)
+	    throws IOException {
+	List<Drawable> head = null;
+	List<Drawable> tail = null;
+	Drawable toDivide = null;
+
+	float tmpHeight = 0;
+	int index = 0;
+	while (tmpHeight < spaceLeft) {
+	    tmpHeight += items.get(index).getHeight();
+
+	    if (tmpHeight == spaceLeft) {
+		// we can split between two drawables
+		head = items.subList(0, index + 1);
+		if (index + 1 < items.size()) {
+		    tail = items.subList(index + 1, items.size());
+		}
+	    }
+
+	    if (tmpHeight > spaceLeft) {
+		head = items.subList(0, index);
+		toDivide = items.get(index);
+		if (index + 1 < items.size()) {
+		    tail = items.subList(index + 1, items.size());
+		}
+	    }
+
+	    ++index;
+	}
+
+	return new DividedList(head, toDivide, tail);
+    }
+
+    public static class DividedList {
+	private List<Drawable> head;
+	private Drawable drawableToDivide;
+	private List<Drawable> tail;
+
+	public DividedList(List<Drawable> head, Drawable drawableToDivide,
+		List<Drawable> tail) {
+	    this.head = head;
+	    this.drawableToDivide = drawableToDivide;
+	    this.tail = tail;
+	}
+
+	public List<Drawable> getHead() {
+	    return head;
+	}
+
+	public Drawable getDrawableToDivide() {
+	    return drawableToDivide;
+	}
+
+	public List<Drawable> getTail() {
+	    return tail;
+	}
+
+    }
 
 }

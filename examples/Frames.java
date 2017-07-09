@@ -71,14 +71,18 @@ public class Frames {
 	paragraph.addMarkup("Frames also paginate, see here:\n\n", 13, BaseFont.Times);
 	paragraph.addMarkup(text2, 11, BaseFont.Times);
 	paragraph.addMarkup(text2, 11, BaseFont.Times);
-	paragraph.addMarkup(text2, 11, BaseFont.Times);
-	paragraph.addMarkup(text2, 11, BaseFont.Times);
 	frame = new Frame(paragraph, null, null);
 	frame.setShape(new RoundRect(10));
 	frame.setBorder(Color.magenta, new Stroke(3));
 	frame.setBackgroundColor(new Color(255,240,180));
 	frame.setPadding(20, 15, 10, 15);
 	frame.setMargin(50, 50, 20, 10);
+	
+	paragraph = new Paragraph();
+	paragraph.addMarkup(text2, 11, BaseFont.Times);
+	paragraph.addMarkup(text2, 11, BaseFont.Times);
+	frame.add(paragraph);
+
 	document.add(frame);
 
 	final OutputStream outputStream = new FileOutputStream("frames.pdf");
