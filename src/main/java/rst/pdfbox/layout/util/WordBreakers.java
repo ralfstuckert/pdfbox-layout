@@ -52,7 +52,7 @@ public class WordBreakers {
 	/**
 	 * To be implemented by subclasses. Give your best to break the word
 	 * softly using your strategy, otherwise return <code>null</code>.
-	 * 
+	 *
 	 * @param word
 	 *            the word to break.
 	 * @param fontDescriptor
@@ -70,7 +70,7 @@ public class WordBreakers {
 	/**
 	 * Breaks the word hard at the outermost position that fits the given
 	 * max width.
-	 * 
+	 *
 	 * @param word
 	 *            the word to break.
 	 * @param fontDescriptor
@@ -103,8 +103,12 @@ public class WordBreakers {
 		--cutIndex;
 	    }
 
-	    return new Pair<String>(word.substring(0, cutIndex),
-		    word.substring(cutIndex));
+        if (cutIndex==0) {
+        return null;
+        }
+        String first = word.substring(0, cutIndex);
+        String second = word.substring(cutIndex);
+        return new Pair<String>(first,second);
 	}
 
     }
