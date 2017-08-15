@@ -1,3 +1,5 @@
+package examples;
+
 import java.awt.Color;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
@@ -13,10 +15,12 @@ import rst.pdfbox.layout.shape.Stroke;
 import rst.pdfbox.layout.text.Alignment;
 import rst.pdfbox.layout.text.BaseFont;
 import rst.pdfbox.layout.text.Constants;
+import rst.pdfbox.layout.text.DrawContext;
 import rst.pdfbox.layout.text.Position;
 import rst.pdfbox.layout.text.TextFlow;
 import rst.pdfbox.layout.text.TextFlowUtil;
 import rst.pdfbox.layout.text.TextSequenceUtil;
+import rst.pdfbox.layout.text.annotations.AnnotationDrawListener;
 
 public class LowLevelText {
 
@@ -26,10 +30,31 @@ public class LowLevelText {
 	final PDPage page = new PDPage(Constants.A4);
 	float pageWidth = page.getMediaBox().getWidth();
 	float pageHeight = page.getMediaBox().getHeight();
-
+	
 	test.addPage(page);
-	PDPageContentStream contentStream = new PDPageContentStream(test, page,
+	final PDPageContentStream contentStream = new PDPageContentStream(test, page,
 		true, true);
+
+	// AnnotationDrawListener is only needed if you use annoation based stuff, e.g. hyperlinks
+	AnnotationDrawListener annotationDrawListener = new AnnotationDrawListener(new DrawContext() {
+
+	    @Override
+	    public PDDocument getPdDocument() {
+		return test;
+	    }
+
+	    @Override
+	    public PDPage getCurrentPage() {
+		return page;
+	    }
+
+	    @Override
+	    public PDPageContentStream getCurrentPageContentStream() {
+		return contentStream;
+	    }
+	    
+	});
+	annotationDrawListener.beforePage(null);
 
 	TextFlow text = TextFlowUtil
 		.createTextFlowFromMarkup(
@@ -44,10 +69,11 @@ public class LowLevelText {
 	float xOffset = TextSequenceUtil.getOffset(text, pageWidth,
 		Alignment.Right);
 	text.drawText(contentStream, new Position(xOffset, pageHeight - 50),
-		Alignment.Right, null);
+		Alignment.Right, annotationDrawListener);
 
 	String textBlock = "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, "
-		+ "sed diam nonumy eirmod tempor invidunt ut labore et dolore magna "
+		+ "{link[https://github.com/ralfstuckert/pdfbox-layout/]}pdfbox layout{link} "
+		+ "sed diam nonumy eirmod invidunt ut labore et dolore magna "
 		+ "aliquyam erat, _sed diam_ voluptua. At vero eos et *accusam et justo* "
 		+ "duo dolores et ea rebum.\n\nStet clita kasd gubergren, no sea takimata "
 		+ "sanctus est *Lorem ipsum _dolor* sit_ amet. Lorem ipsum dolor sit amet, "
@@ -61,7 +87,7 @@ public class LowLevelText {
 	text.setMaxWidth(200);
 	xOffset = TextSequenceUtil.getOffset(text, pageWidth, Alignment.Center);
 	text.drawText(contentStream, new Position(xOffset, pageHeight - 100),
-		Alignment.Justify, null);
+		Alignment.Justify, annotationDrawListener);
 
 	// draw a round rect box with text
 	text.setMaxWidth(350);
@@ -69,20 +95,22 @@ public class LowLevelText {
 	float y = pageHeight - 300;
 	float paddingX = 20;
 	float paddingY = 15;
-	float boxWidth = text.getWidth() + 2*paddingX;
-	float boxHeight = text.getHeight() + 2*paddingY;
+	float boxWidth = text.getWidth() + 2 * paddingX;
+	float boxHeight = text.getHeight() + 2 * paddingY;
 
 	Shape shape = new RoundRect(20);
-	shape.fill(test, contentStream, new Position(x, y), 
-		boxWidth, boxHeight, Color.pink, null);
-	shape.draw(test, contentStream, new Position(x, y), 
-		boxWidth, boxHeight, Color.blue, new Stroke(3), null);
-	 // now the text
+	shape.fill(test, contentStream, new Position(x, y), boxWidth,
+		boxHeight, Color.pink, null);
+	shape.draw(test, contentStream, new Position(x, y), boxWidth,
+		boxHeight, Color.blue, new Stroke(3), null);
+	// now the text
 	text.drawText(contentStream, new Position(x + paddingX, y - paddingY),
-		Alignment.Center, null);
+		Alignment.Center, annotationDrawListener);
 
-	
+	annotationDrawListener.afterPage(null);
 	contentStream.close();
+	
+	annotationDrawListener.afterRender();
 
 	final OutputStream outputStream = new FileOutputStream(
 		"lowleveltext.pdf");
