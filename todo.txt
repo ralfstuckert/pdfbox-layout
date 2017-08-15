@@ -1,2 +1,9 @@
-Avoid recalculating (rewrapping) by caching the wrapping result
-Bug underline when preceeded by bigger font size
+- nested layouts
+  - layout needs to calculate dimensions of container
+  - layout needs paginate redivide content
+  - invalidate() to allow caching of dimensions?
+- flow (images)
+
+
+height, width, remainingHeight, pageWidth->clipping, 
+currentPosition, movePosition, pageFormat->margins, getUpperLeft
