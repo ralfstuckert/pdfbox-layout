@@ -10,7 +10,6 @@ import org.apache.pdfbox.pdmodel.font.PDType1Font;
  * {@link PDType1Font#HELVETICA Helveticy}.
  * 
  * @author Ralf
- *
  */
 public class BaseFont {
 
@@ -27,6 +26,13 @@ public class BaseFont {
     private PDFont italicFont;
     private PDFont boldItalicFont;
 
+    /**
+     * Constructor for creating new font with its bold and italic variants.
+     * @param plainFont standard font
+     * @param boldFont bold variant of the font
+     * @param italicFont italic variant of the font
+     * @param boldItalicFont bold and italic variant of the font
+     */
     public BaseFont(PDFont plainFont, PDFont boldFont, PDFont italicFont, PDFont boldItalicFont) {
         this.plainFont = plainFont;
         this.boldFont = boldFont;
