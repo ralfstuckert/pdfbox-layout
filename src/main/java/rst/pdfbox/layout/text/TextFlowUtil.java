@@ -83,7 +83,7 @@ public class TextFlowUtil {
      * is rendered like this:
      * 
      * <pre>
-     * Markup supports <b>bold</b>, <em>italic</em>, and <b>even <em>mixed</b> markup</em>.
+     * Markup supports <b>bold</b>, <em>italic</em>, and <b>even <em>mixed</em> markup</b>.
      * </pre>
      * 
      * Use backslash to escape special characters '*', '_' and '\' itself:
