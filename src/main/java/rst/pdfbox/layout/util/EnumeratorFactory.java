@@ -13,7 +13,7 @@ import rst.pdfbox.layout.util.Enumerators.RomanEnumerator;
  * Enumerators are created using this factory. It allows you to register and use
  * your own enumerations, if the built ins does not satisfy your needs.<br>
  * Currently supported are:
- * <table>
+ * <table summary="">
  * <tr><th>Name</th><th>Key</th><th>Seperator</th></tr>
  * <tr><td>Arabic</td><td align="center">1</td><td align="center">.</td></tr>
  * <tr><td>Roman</td><td align="center">I</td><td align="center">.</td></tr>

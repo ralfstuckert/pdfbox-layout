@@ -1,5 +1,7 @@
 package rst.pdfbox.layout.elements;
 
+import rst.pdfbox.layout.text.Position;
+
 /**
  * In order to avoid dependencies to AWT, we use our own Rectangle class here.
  */
@@ -21,6 +23,14 @@ public class Rectangle extends Dimension {
     public float getY() {
 	return y;
     }
+
+	/**
+	 * Helper method for getting Position instance
+	 * @return Position instance with x and y coordinates
+	 */
+	public Position getPosition() {
+		return new Position(x, y);
+	}
 
     @Override
     public String toString() {
