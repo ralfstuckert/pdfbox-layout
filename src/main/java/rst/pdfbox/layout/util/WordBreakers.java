@@ -97,6 +97,9 @@ public class WordBreakers {
 	    } else if (currentWidth < maxWidth) {
 		while (currentWidth < maxWidth) {
 		    ++cutIndex;
+		    if (cutIndex > word.length()) {
+		    	break;
+		    }
 		    currentWidth = getStringWidth(word.substring(0, cutIndex),
 			    fontDescriptor);
 		}
