@@ -1,4 +1,3 @@
-package examples;
 
 import java.awt.Color;
 import java.io.FileOutputStream;
