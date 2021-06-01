@@ -1,6 +1,6 @@
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '2.3'
+    gradleVersion = '3.1'
 }
 
 buildscript {
@@ -43,8 +43,8 @@ subprojects {
   }
   
   jar {
-    sourceCompatibility = '1.7'
-    targetCompatibility = '1.7'
+    sourceCompatibility = '1.8'
+    targetCompatibility = '1.8'
   }
   
   javadoc {
@@ -97,8 +97,8 @@ subprojects {
   task compileExamples(type: JavaCompile, dependsOn: 'compileJava') {
     source = fileTree(dir: "examples", include: '**/*.java')
     destinationDir = file("examples")
-    sourceCompatibility = '1.7'
-    targetCompatibility = '1.7'
+    sourceCompatibility = '1.8'
+    targetCompatibility = '1.8'
     dependencyCacheDir = file("${buildDir}/dependency-cache")
     classpath = sourceSets.main.compileClasspath
   }
