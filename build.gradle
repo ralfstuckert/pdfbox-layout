@@ -22,6 +22,7 @@ subprojects {
 
     apply plugin: "java"
     apply plugin: 'org.dm.bundle'
+    apply plugin: 'maven-publish'
 
     group = 'com.github.ralfstuckert.pdfbox-layout'
     version = '1.0.1'
@@ -81,6 +82,10 @@ subprojects {
                 version = version
 
                 from components.java
+
+                artifact sourceJar {
+                    classifier "sources"
+                }
             }
         }
         repositories {
