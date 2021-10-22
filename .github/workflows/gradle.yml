@@ -26,3 +26,11 @@ jobs:
       run: chmod +x gradlew
     - name: Build with Gradle
       run: ./gradlew build
+    - name: upload test diffs
+      if: always()
+      uses: actions/upload-artifact@v2
+      with:
+        name: test-diffs
+        path: |
+          pdfbox1-layout/*.diff.png
+          pdfbox2-layout/*.diff.png
