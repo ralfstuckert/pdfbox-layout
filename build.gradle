@@ -76,16 +76,12 @@ subprojects {
 
     publishing {
         publications {
-            maven(MavenPublication) {
+            mavenJava(MavenPublication) {
                 groupId = group
                 artifactId = project.name
                 version = version
 
                 from components.java
-
-                artifact sourceJar {
-                    classifier "sources"
-                }
             }
         }
         repositories {
