@@ -170,7 +170,7 @@ public class ExampleTest {
   public static BufferedImage compareImage(final BufferedImage img1,
                                            final BufferedImage img2) throws IOException {
 
-    final double colorDistanceTolerance = 0.01;
+    final double colorDistanceTolerance = 0.05;
     final int w = img1.getWidth();
     final int h = img1.getHeight();
     final int[] p1 = img1.getRGB(0, 0, w, h, null, 0, w);
