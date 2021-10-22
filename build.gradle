@@ -73,6 +73,27 @@ subprojects {
         archives examplesJar
     }
 
+    publishing {
+        publications {
+            maven(MavenPublication) {
+                groupId = group
+                artifactId = project.name
+                version = version
+
+                from components.java
+            }
+        }
+        repositories {
+            maven {
+                name = "GitHubPackages"
+                url = "https://maven.pkg.github.com/ralfstuckert/pdfbox-layout"
+                credentials {
+                    username = System.getenv("USERNAME")
+                    password = System.getenv("TOKEN")
+                }
+            }
+        }
+    }
 
     task createExamples(description: 'Creates the example pdfs', dependsOn: 'compileExamples') << {
         def oldPdfs = fileTree("examples").include('**/*.pdf')
